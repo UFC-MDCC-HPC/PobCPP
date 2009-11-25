@@ -1,0 +1,97 @@
+2009-11-25 Eduardo Gurgel <edgurgel@gmail.com>
+* New repository.
+
+2009-10-07 Eduardo Gurgel <edgurgel@gmail.com>
+* PobcppEnumerators almost perfect.
+
+2009-09-30 Eduardo Gurgel <edgurgel@gmail.com>
+* Trying to transform PobcppEnumerators in C++. (Segfaulting...)
+
+2009-09-23 Eduardo Gurgel <edgurgel@gmail.com>
+* Cleaning up.
+
+2009-09-23 Eduardo Gurgel <edgurgel@gmail.com>
+* Elsa accepts enumerated units.
+
+2009-08-31 Eduardo Gurgel <edgurgel@gmail.com>
+* Elsa modified to handle unit.
+* pobcpp.h created. AST visitor to handle unitary unit.
+
+2009-08-31 Eduardo Gurgel <edgurgel@gmail.com>
+* Adding Elsa C++ Parser. It will be modified to parse PObC++.
+
+2009-07-22 Eduardo Gurgel <edgurgel@gmail.com>
+* Communicators are working.
+* Many classes were modified to handle Unit_Types.
+* Observation: Template is a pain in the ass.
+
+2009-07-16 Eduardo Gurgel <edgurgel@gmail.com>
+* Channel concept is dead.
+* Communicators will arise. Basic_Communicator(using MPI) will be the default.
+* Unit_Type class created to handle typeinfo information.
+* Basic_Communicator only created... It doesn't work now.
+
+2009-07-06 Eduardo Gurgel <edgurgel@gmail.com>
+* Rank type created to handle node ranks.
+* Better Environment definition.
+* Initial idea to run unit calls.
+
+2009-06-12 Eduardo Gurgel <edgurgel@gmail.com>
+* doc directory created.
+* Initial documentation created to describe the language.
+
+2009-05-31 Eduardo Gurgel <edgurgel@gmail.com>
+* Adding comments at Environment class.
+* TODO updated.
+
+2009-05-29 Eduardo Gurgel <edgurgel@gmail.com>
+* Now world communication will exist inside Paralle_Object super class.
+* Better algorithm to distribute units configuration.
+
+2009-05-26 Eduardo Gurgel <edgurgel@gmail.com>
+* Environment class created to handle initial configuration.
+* Example modified to use Environment functions.
+
+2009-05-16 Eduardo Gurgel <edgurgel@gmail.com>
+* Better definition to example/pob_macro.[h,cpp] and some comments
+
+2009-05-16 Eduardo Gurgel <edgurgel@gmail.com>
+* New directory structure.
+* New build system. CMake removed. BJam will work for us.
+
+2009-03-26 Eduardo Gurgel <edgurgel@gmail.com>
+* Synchronous_Channel comments.
+* Little workaround at example/pob_macro.cpp
+
+2009-03-26 Eduardo Gurgel <edgurgel@gmail.com>
+* Synchronous_Channel::{get, send} implemented
+* example/* updated to work with synchronous_channel
+* Parallel_Object class created and added to CMakeLists.txt
+* Added parallel_class to pob.def.h
+
+2009-03-24 Eduardo Gurgel <edgurgel@gmail.com>
+* synchronous_channel macro created
+* Synchronous_Channel class created. 
+
+2009-03-24 Eduardo Gurgel <edgurgel@gmail.com>
+* CMake will be used as build system. More info at http://cmake.org
+
+2009-03-23 Eduardo Gurgel <edgurgel@gmail.com>
+* Master_Unit class created. Someday it will be necessary...
+
+2009-03-23 Eduardo Gurgel <edgurgel@gmail.com>
+* communication.h created.
+
+2009-03-23 Eduardo Gurgel <edgurgel@gmail.com>
+* Example updated.
+* Macro definitions added to pob.def.h.
+* Removed whitespaces at src/unit.cpp.
+
+2009-03-23 Eduardo Gurgel <edgurgel@gmail.com>
+* TODO updated.
+
+2009-03-22 Eduardo Gurgel <edgurgel@gmail.com>
+* Class Pobcpp::Unit created.
+
+2009-03-22 Eduardo Gurgel <edgurgel@gmail.com>
+* Starting...
