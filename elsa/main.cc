@@ -468,7 +468,7 @@ void doit(int argc, char **argv)
 
   checkHeap();
 
-  PObCppPrint(unit);
+  PObCppPre(unit);
   // print abstract syntax tree
   if (tracingSys("printAST")) {
     unit->debugPrint(cout, 0);
@@ -715,6 +715,7 @@ void doit(int argc, char **argv)
     }
   }
 
+  	PObCppPrint(unit);
   // dsw: pretty printing
   if (tracingSys("prettyPrint")) {
     traceProgress() << "dsw pretty print...\n";

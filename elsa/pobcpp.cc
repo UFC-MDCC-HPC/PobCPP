@@ -3,20 +3,19 @@
 #include <iostream>
 #include "cc_type.h"
 
-bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
+bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
     return subvisitTS_classSpec(type->asTS_classSpec());
   }
   return true;
 }
 
-
-bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
+bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   // Checking if it is a Unit.
   if(spec->keyword == TI_UNIT) {
-		PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit");
-		BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname);
-		spec->bases = spec->bases->prepend(bcs);
+//		PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit");
+//		BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname);
+//		spec->bases = spec->bases->prepend(bcs);
 
     FakeList<PobcppEnumeratorSpec> *pobcppEnum = spec->enumerators;
     if(pobcppEnum->isNotEmpty()) {
@@ -40,6 +39,29 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 
   }
   return true;
+}
+
+bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
+  if (type->isTS_classSpec()) {
+    return subvisitTS_classSpec(type->asTS_classSpec());
+  }
+  return true;
+}
+
+
+bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
+  // Checking if it is a Unit.
+  if(spec->keyword == TI_UNIT) {
+		PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
+		BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
+		spec->bases = spec->bases->prepend(bcs); // Adding to the unit
+  }
+  return true;
+}
+
+void PObCppPre(TranslationUnit *unit) {
+  PObCppPreTypedASTVisitor fp;
+  unit->traverse(fp);
 }
 void PObCppPrint(TranslationUnit *unit) {
   PObCppVisitor fp;
