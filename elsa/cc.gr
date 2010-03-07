@@ -1190,6 +1190,7 @@ nonterm(UberModifiers) UberModifier {
   // function-specifier
   -> "inline"    { return UM_INLINE; }
   -> "virtual"   { return UM_VIRTUAL; }
+  -> "parallel"  { return UM_PARALLEL; } // PObC++ parallel function modifier.
   //-> "explicit"  { return UM_EXPLICIT; }    // can only appear in CDtorModifier
 
   // decl-specifier terminals

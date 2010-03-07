@@ -197,13 +197,14 @@ char const * const declFlagNames[NUM_DECLFLAGS] = {
   "explicit",
   "friend",
   "typedef",        // 9
+  "parallel",
 
   "(enumerator)",
   "(global)",
   "(initialized)",
   "(builtin)",
   "(bound tparam)", // 14
-  "(addrtaken)",
+ // "(addrtaken)",
   "(parameter)",
   "(universal)",
   "(existential)",

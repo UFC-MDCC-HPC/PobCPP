@@ -62,8 +62,8 @@ TOK_LONG,                "long",                      :    n
 TOK_MUTABLE,             "mutable",                   :    n  p
 TOK_NAMESPACE,           "namespace",                 :    n  p
 TOK_NEW,                 "new",                       :    n  p
-TOK_UNIT,                "unit",                      :    n  p
 TOK_OPERATOR,            "operator",                  :    n  p
+TOK_PARALLEL,            "parallel",                  :    n  p
 TOK_PASCAL,              "pascal",                    :    n
 TOK_PRIVATE,             "private",                   :    n  p
 TOK_PROTECTED,           "protected",                 :    n  p
@@ -87,6 +87,7 @@ TOK_TYPEDEF,             "typedef",                   :    n
 TOK_TYPEID,              "typeid",                    :    n  p
 TOK_TYPENAME,            "typename",                  :    n  p
 TOK_UNION,               "union",                     :    n
+TOK_UNIT,                "unit",                      :    n  p
 TOK_UNSIGNED,            "unsigned",                  :    n
 TOK_USING,               "using",                     :    n  p
 TOK_VIRTUAL,             "virtual",                   :    n  p

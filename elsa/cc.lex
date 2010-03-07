@@ -162,6 +162,7 @@ PPCHAR        ([^\\\n]|{BACKSL}{NOTNL})
 "new"              return tok(TOK_NEW);
 "unit"             return tok(TOK_UNIT);
 "operator"         return tok(TOK_OPERATOR);
+"parallel"         return tok(TOK_PARALLEL);
 "pascal"           return tok(TOK_PASCAL);
 "private"          return tok(TOK_PRIVATE);
 "protected"        return tok(TOK_PROTECTED);

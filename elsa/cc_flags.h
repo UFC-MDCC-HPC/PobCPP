@@ -97,15 +97,16 @@ enum DeclFlags {
   DF_EXPLICIT    = 0x00000080,
   DF_FRIEND      = 0x00000100,
   DF_TYPEDEF     = 0x00000200,
+  DF_PARALLEL    = 0x00000400,    // PObC++
 
   DF_NAMESPACE   = 0x04000000,    // names of namespaces
   DF_SOURCEFLAGS = 0x040003FF,    // all flags that come from keywords in the source
 
   // semantic flags on Variables
-  DF_ENUMERATOR  = 0x00000400,    // true for values in an 'enum' (enumerators in the terminology of the C++ standard)
-  DF_GLOBAL      = 0x00000800,    // set for globals, unset for locals
-  DF_INITIALIZED = 0x00001000,    // true if has been declared with an initializer (or, for functions, with code)
-  DF_BUILTIN     = 0x00002000,    // true for e.g. __builtin_constant_p -- don't emit later
+  DF_ENUMERATOR  = 0x00000800,    // true for values in an 'enum' (enumerators in the terminology of the C++ standard)
+  DF_GLOBAL      = 0x00001000,    // set for globals, unset for locals
+  DF_INITIALIZED = 0x00002000,    // true if has been declared with an initializer (or, for functions, with code)
+  DF_BUILTIN     = 0x00004000,    // true for e.g. __builtin_constant_p -- don't emit later
   DF_PARAMETER   = 0x00010000,    // true if this is a function parameter or a handler "parameter"
   DF_MEMBER      = 0x00080000,    // true for members of classes (data, static data, functions); *not* true for namespace members
   DF_DEFINITION  = 0x00100000,    // set once we've seen this Variable's definition
@@ -128,7 +129,7 @@ enum DeclFlags {
   // VML-based verifier.  In a pinch, one of these values could be
   // re-used for something that only occurs in C++ code, since the old
   // verifier only works with C code.
-  DF_ADDRTAKEN   = 0x00008000,    // true if it's address has been (or can be) taken
+//DF_ADDRTAKEN   = 0x00008000,    // true if it's address has been (or can be) taken
   DF_UNIVERSAL   = 0x00020000,    // universally-quantified variable
   DF_EXISTENTIAL = 0x00040000,    // existentially-quantified
 
@@ -504,7 +505,7 @@ enum UberModifiers {
   UM_NONE         = 0,
 
   // decl flags
-  UM_AUTO         = 0x00000001,
+  UM_AUTO         = 0x00000001,    // 1
   UM_REGISTER     = 0x00000002,
   UM_STATIC       = 0x00000004,
   UM_EXTERN       = 0x00000008,
@@ -517,35 +518,36 @@ enum UberModifiers {
   UM_FRIEND       = 0x00000100,
   UM_TYPEDEF      = 0x00000200,
 
-  UM_DECLFLAGS    = 0x000003FF,
+  UM_PARALLEL     = 0x00000400,    // 11 PObC++
+  UM_DECLFLAGS    = 0x000007FF, 
 
   // cv-qualifier
-  UM_CONST        = 0x00000400,
-  UM_VOLATILE     = 0x00000800,
-  UM_RESTRICT     = 0x00001000,    // C99
+  UM_CONST        = 0x00000800,
+  UM_VOLATILE     = 0x00001000,
+  UM_RESTRICT     = 0x00002000,    // C99
 
-  UM_CVFLAGS      = 0x00001C00,
+  UM_CVFLAGS      = 0x00003800,
 
   // type keywords
-  UM_WCHAR_T      = 0x00002000,
-  UM_BOOL         = 0x00004000,
-  UM_SHORT        = 0x00008000,
-  UM_INT          = 0x00010000,
-  UM_LONG         = 0x00020000,
-  UM_SIGNED       = 0x00040000,
-  UM_UNSIGNED     = 0x00080000,
-  UM_FLOAT        = 0x00100000,
-  UM_DOUBLE       = 0x00200000,
-  UM_VOID         = 0x00400000,
-  UM_LONG_LONG    = 0x00800000,    // GNU extension
-  UM_CHAR         = 0x01000000,    // large value b/c got bumped by UM_RESTRICT
-  UM_COMPLEX      = 0x02000000,    // C99/GNU
-  UM_IMAGINARY    = 0x04000000,    // C99
+  UM_WCHAR_T      = 0x00004000,    //15
+  UM_BOOL         = 0x00008000,
+  UM_SHORT        = 0x00010000,
+  UM_INT          = 0x00020000,
+  UM_LONG         = 0x00040000,
+  UM_SIGNED       = 0x00080000,
+  UM_UNSIGNED     = 0x00100000,
+  UM_FLOAT        = 0x00200000,
+  UM_DOUBLE       = 0x00400000,
+  UM_VOID         = 0x00800000,
+  UM_LONG_LONG    = 0x01000000,    // GNU extension
+  UM_CHAR         = 0x02000000,    // large value b/c got bumped by UM_RESTRICT
+  UM_COMPLEX      = 0x04000000,    // C99/GNU
+  UM_IMAGINARY    = 0x08000000,    // C99
 
-  UM_TYPEKEYS     = 0x07FFE000,
+  UM_TYPEKEYS     = 0x0FFFC000,
 
-  UM_ALL_FLAGS    = 0x07FFFFFF,
-  UM_NUM_FLAGS    = 27             // # bits set in UM_ALL_FLAGS
+  UM_ALL_FLAGS    = 0x7FFFFFFF,
+  UM_NUM_FLAGS    = 28             // # bits set in UM_ALL_FLAGS
 };
 
 // string repr.
@@ -553,8 +555,15 @@ extern char const * const uberModifierNames[UM_NUM_FLAGS];
 sm::string toString(UberModifiers m);
 
 // select particular subsets
-inline DeclFlags uberDeclFlags(UberModifiers m)
-  { return (DeclFlags)(m & UM_DECLFLAGS); }
+inline DeclFlags uberDeclFlags(UberModifiers m)  { 
+//  if(m & UM_PARALLEL) {
+//    DeclFlags d = ((DeclFlags)(m & UM_DECLFLAGS));
+//    d |= DF_PARALLEL;
+//    return d;
+//  }
+//  else
+    return (DeclFlags)(m & UM_DECLFLAGS); 
+}
 inline CVFlags uberCVFlags(UberModifiers m)
   { return (CVFlags)(m & UM_CVFLAGS); }
 
