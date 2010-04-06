@@ -7,6 +7,7 @@
 
 #include <map> //std::pair
 #include <string>
+#include <typeinfo>
 
 namespace Pobcpp {
 

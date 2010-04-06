@@ -2,8 +2,7 @@
 #define __COMMUNICATOR_H__
 
 #include "unit_type.h"
-
-
+#include <typeinfo>
 
 namespace Pobcpp {
 
