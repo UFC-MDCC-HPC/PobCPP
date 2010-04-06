@@ -4,8 +4,6 @@ namespace Pobcpp {
 
 Unit_Type::Unit_Type() : unit_type() { }
 
-Unit_Type::Unit_Type(const char* _unit_type) : unit_type(std::string(_unit_type)) { }
-
 Unit_Type::~Unit_Type() { }
 
 bool Unit_Type::operator==(const Unit_Type& _unit_type) const {
