@@ -47,12 +47,12 @@ void create_unit(Unit* _created_unit);
 
 template<typename TypePObject, typename TypeUnit>
 void create_unit(Unit* _created_unit) {
-	boost::mpi::communicator world;
+//	boost::mpi::communicator world;
 
 	// Exchange with others units, each rank.
 	TypeUnit* typeunit;
-	Unit_Type unit_type(typeid(typeunit).name());
-	set_global_rank(world.rank());
+//	Unit_Type unit_type(typeid(typeunit).name());
+//	set_global_rank(world.rank());
 //	world.allgather(...); // send the tuple<unit_type,world.rank()>
 	// Check if everybody is ok and
 	// Construct comm object with each type and rank.
