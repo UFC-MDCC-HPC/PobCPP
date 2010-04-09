@@ -1,4 +1,3 @@
-using gcc ;
 
 project parallel_object_cpp ;
 

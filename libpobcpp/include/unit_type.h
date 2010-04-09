@@ -40,11 +40,11 @@ template<class Archive> void Unit_Type::serialize(Archive& ar, const unsigned in
 
 }
 
-class POb_TypeArray {
+class Pob_Type_Array {
 public:
-	POb_TypeArray(unsigned int _size) : size(_size), types(new Unit_Type[_size])  { }
+	Pob_Type_Array(unsigned int _size) : size(_size), types(new Unit_Type[_size])  { }
 
-	~POb_TypeArray() {
+	~Pob_Type_Array() {
 		delete[] types;		
 	}
 

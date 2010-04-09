@@ -1,7 +1,8 @@
 #include "pobcpp.h"
 
-#include <iostream>
 #include "cc_type.h"
+
+#include <iostream>
 
 bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
@@ -11,11 +12,7 @@ bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 }
 
 bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
-  // Checking if it is a Unit.
-  if(spec->keyword == TI_UNIT) {
-//		PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit");
-//		BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname);
-//		spec->bases = spec->bases->prepend(bcs);
+  if(spec->keyword == TI_UNIT) { // unit?
 
     FakeList<PobcppEnumeratorSpec> *pobcppEnum = spec->enumerators;
     if(pobcppEnum->isNotEmpty()) {
@@ -50,11 +47,30 @@ bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 
 
 bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
-  // Checking if it is a Unit.
-  if(spec->keyword == TI_UNIT) {
-		PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
-		BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
-		spec->bases = spec->bases->prepend(bcs); // Adding to the unit
+  if(spec->keyword == TI_UNIT) { // unit ?
+    PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
+    BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
+    spec->bases = spec->bases->prepend(bcs); // Adding to the unit
+  } 
+  else if(spec->keyword == TI_CLASS) {
+    unsigned short units = 0;  // How many units exist inside this class?
+    FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
+      if(iter.data()->isMR_decl()) {
+        MR_decl* iter_decl = iter.data()->asMR_decl();
+				if(iter_decl->d->spec->isTS_classSpec()) {
+          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT)
+						units++;
+        }
+      }
+    }
+    // Append this definition:
+    // Pob_Type_Array __get_types() {
+    //   Pob_Type_Array pobtypes(units);
+    //   pobtypes.add_type<unit A>(0);
+		//   pobtypes.add_type<unit B>(1);
+		//   ...	
+		//   return pobtypes;
+    // }
   }
   return true;
 }

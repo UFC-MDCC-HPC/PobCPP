@@ -1,5 +1,12 @@
+2010-09-04 Eduardo Gurgel <edgurgel@gmail.com>
+* Removing useless files.
+* Creating a reflective array to each parallel class.
+
 2010-08-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Minor bugfix.
+
+2010-06-04 Eduardo Gurgel <edgurgel@gmail.com>
+* POb_Type_Array defined.
 
 2010-05-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Draft.
