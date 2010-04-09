@@ -13,27 +13,19 @@ bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 
 bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   if(spec->keyword == TI_UNIT) { // unit?
-
-    FakeList<PobcppEnumeratorSpec> *pobcppEnum = spec->enumerators;
-    if(pobcppEnum->isNotEmpty()) {
-      int size = pobcppEnum->count();
-      for(int i = 0; i < size; i++) {
-        PobcppEnumeratorSpec *pobcppEnumSpec = pobcppEnum->nth(i);
-
-        DeclFlags toApply = DF_NONE;
-        FakeList<Declarator>* declList; 
-        Declarator* decl = new Declarator(new D_name(SourceLoc(),
-                                          new PQ_name(SourceLoc(), pobcppEnumSpec->name)),
-                                          NULL);
-        
-        declList = FakeList<Declarator>::makeList(decl);
-        TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_INT);
-        constInt->setCVOnce(CV_CONST);
-        MR_decl *newEnumerator = new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
-        spec->members->list.append(newEnumerator);
-      }
+    FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
+      DeclFlags toApply = DF_NONE;
+      FakeList<Declarator>* declList; 
+      Declarator* decl = new Declarator(new D_name(SourceLoc(),
+                                        new PQ_name(SourceLoc(), pobcppEnumSpec->name)),
+                                        NULL);
+      
+      declList = FakeList<Declarator>::makeList(decl);
+      TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_INT);
+      constInt->setCVOnce(CV_CONST);
+      MR_decl *newEnumerator = new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
+      spec->members->list.append(newEnumerator);
     }
-
   }
   return true;
 }
@@ -71,6 +63,14 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		//   ...	
 		//   return pobtypes;
     // }
+    DeclFlags dflag = DF_STATIC;
+		TS_name *tsname = new TS_name(SourceLoc(), new PQ_name(SourceLoc(), "Pob_Type_Array"), false);
+		D_func *dfunc = new D_func(SourceLoc(), new D_name(SourceLoc(), new PQ_name(SourceLoc(), "__get_types")), NULL, CV_NONE, NULL, NULL); // FIXME
+		Declarator *decl = new Declarator(dfunc, NULL); // FIXME
+				//new Initializer(SourceLoc(), SourceLoc()));
+    Function* function = new Function(dflag, tsname, decl, NULL, NULL, NULL); // FIXME
+		MR_func *newFunc = new MR_func(SourceLoc(), SourceLoc(), function);
+    spec->members->list.append(newFunc);
   }
   return true;
 }

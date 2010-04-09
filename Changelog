@@ -1,4 +1,7 @@
 2010-09-04 Eduardo Gurgel <edgurgel@gmail.com>
+* Initial definition of __get_types() function.
+
+2010-09-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Removing useless files.
 * Creating a reflective array to each parallel class.
 
