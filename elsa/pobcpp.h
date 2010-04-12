@@ -7,6 +7,8 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   public:
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+  private:
+  SourceLoc loc;
 };
 
 class PObCppVisitor : public ASTVisitor {

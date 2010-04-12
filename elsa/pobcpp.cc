@@ -27,6 +27,47 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       spec->members->list.append(newEnumerator);
     }
   }
+  else if(spec->keyword == TI_CLASS) {
+    std::cout << "Nome da classe: " << spec->name->toString() << std::endl;
+    if(spec->name->toString() == "Pob_Type_Array")
+      loc = spec->loc;
+    unsigned short units = 0;  // How many units exist inside this class?
+    FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
+      if(iter.data()->isMR_decl()) {
+        MR_decl* iter_decl = iter.data()->asMR_decl();
+        if(iter_decl->d->spec->isTS_classSpec()) {
+          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
+            units++;
+          }
+        }
+      }
+    }
+		if(!units)
+			return true;
+    std::cout << units << " units found." << std::endl;
+    // Append this definition:
+    // Pob_Type_Array __get_types() {
+    //   Pob_Type_Array pobtypes(units);
+    //   pobtypes.add_type<unit A>(0);
+		//   pobtypes.add_type<unit B>(1);
+		//   ...	
+		//   return pobtypes;
+    // }
+    DeclFlags dflag = DF_NONE;
+		
+		TS_name *tsname = new TS_name(loc, new PQ_name(loc, "Pob_Type_Array"), false);
+		D_func *dfunc = new D_func(loc, 
+                               new D_name(loc,
+                               new PQ_name(loc, "__get_types")),
+                               NULL,
+                               CV_NONE,
+                               NULL,
+                               NULL);
+		Declarator *decl = new Declarator(dfunc, NULL); // FIXME
+    Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), new ASTList<Statement>), NULL); // FIXME
+		MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
+    spec->members->list.append(newFunc);
+  }
   return true;
 }
 
@@ -44,34 +85,6 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
     spec->bases = spec->bases->prepend(bcs); // Adding to the unit
   } 
-  else if(spec->keyword == TI_CLASS) {
-    unsigned short units = 0;  // How many units exist inside this class?
-    FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
-      if(iter.data()->isMR_decl()) {
-        MR_decl* iter_decl = iter.data()->asMR_decl();
-				if(iter_decl->d->spec->isTS_classSpec()) {
-          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT)
-						units++;
-        }
-      }
-    }
-    // Append this definition:
-    // Pob_Type_Array __get_types() {
-    //   Pob_Type_Array pobtypes(units);
-    //   pobtypes.add_type<unit A>(0);
-		//   pobtypes.add_type<unit B>(1);
-		//   ...	
-		//   return pobtypes;
-    // }
-    DeclFlags dflag = DF_STATIC;
-		TS_name *tsname = new TS_name(SourceLoc(), new PQ_name(SourceLoc(), "Pob_Type_Array"), false);
-		D_func *dfunc = new D_func(SourceLoc(), new D_name(SourceLoc(), new PQ_name(SourceLoc(), "__get_types")), NULL, CV_NONE, NULL, NULL); // FIXME
-		Declarator *decl = new Declarator(dfunc, NULL); // FIXME
-				//new Initializer(SourceLoc(), SourceLoc()));
-    Function* function = new Function(dflag, tsname, decl, NULL, NULL, NULL); // FIXME
-		MR_func *newFunc = new MR_func(SourceLoc(), SourceLoc(), function);
-    spec->members->list.append(newFunc);
-  }
   return true;
 }
 
