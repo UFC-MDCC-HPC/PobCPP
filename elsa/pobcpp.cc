@@ -28,9 +28,9 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
   else if(spec->keyword == TI_CLASS) {
-    std::cout << "Nome da classe: " << spec->name->toString() << std::endl;
     if(spec->name->toString() == "Pob_Type_Array")
       loc = spec->loc;
+
     unsigned short units = 0;  // How many units exist inside this class?
     FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
       if(iter.data()->isMR_decl()) {
@@ -44,7 +44,6 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
 		if(!units)
 			return true;
-    std::cout << units << " units found." << std::endl;
     // Append this definition:
     // Pob_Type_Array __get_types() {
     //   Pob_Type_Array pobtypes(units);
@@ -55,17 +54,16 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     // }
     DeclFlags dflag = DF_NONE;
 		
-		TS_name *tsname = new TS_name(loc, new PQ_name(loc, "Pob_Type_Array"), false);
+		TS_simple* tsname = new TS_simple(loc, ST_INT); // We will exchange this int for a Pob_Type_Array.
 		D_func *dfunc = new D_func(loc, 
-                               new D_name(loc,
-                               new PQ_name(loc, "__get_types")),
+                               new D_name(loc, new PQ_name(loc, "__get_types")),
                                NULL,
                                CV_NONE,
                                NULL,
                                NULL);
-		Declarator *decl = new Declarator(dfunc, NULL); // FIXME
+    Declarator *decl = new Declarator(dfunc, NULL); // FIXME
     Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), new ASTList<Statement>), NULL); // FIXME
-		MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
+    MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
     spec->members->list.append(newFunc);
   }
   return true;
@@ -84,16 +82,42 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
     BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
     spec->bases = spec->bases->prepend(bcs); // Adding to the unit
-  } 
+  }
+  else if(spec->keyword == TI_CLASS) {
+    if(spec->name->toString() == "Pob_Type_Array") {
+      ctype = spec->ctype;
+    }
+  }
   return true;
+}
+
+bool PObCppVisitor::visitFunction(Function* func) {
+  if(ctype == NULL) return true;
+  if(func->nameAndParams != NULL) {
+    if(func->nameAndParams->decl != NULL) {
+      if(func->nameAndParams->decl->isD_func()) {
+        if(func->nameAndParams->decl->asD_func()->base != NULL) {
+          if(func->nameAndParams->decl->asD_func()->base->isD_name()) {
+            D_name* funcName = func->nameAndParams->decl->asD_func()->base->asD_name();
+            if(funcName->name->toString() == "__get_types") {
+              delete func->funcType->retType;
+              func->funcType->retType = bt->makeCVAtomicType(ctype,CV_NONE);
+            }
+          }
+        }
+      }
+    }
+  }
+	return true;
 }
 
 void PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;
   unit->traverse(fp);
 }
-void PObCppPrint(TranslationUnit *unit) {
+void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt) {
   PObCppVisitor fp;
+  fp.bt = &bt;
   unit->traverse(fp);
 }
 

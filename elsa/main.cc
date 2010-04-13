@@ -679,6 +679,8 @@ void doit(int argc, char **argv)
       vis.cloneDefunctChildren = true;
     }
 
+    PObCppPrint(unit, tfac);
+		unit->debugPrint(cout, 0);
     // do elaboration
     unit->traverse(vis.loweredVisitor);
 
@@ -715,7 +717,6 @@ void doit(int argc, char **argv)
     }
   }
 
-  	PObCppPrint(unit);
   // dsw: pretty printing
   if (tracingSys("prettyPrint")) {
     traceProgress() << "dsw pretty print...\n";
