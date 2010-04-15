@@ -1,3 +1,6 @@
+2010-14-04 Eduardo Gurgel <edgurgel@gmail.com>
+* __get_types() better defined.
+
 2010-12-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Almost there. Trying to add __get_types() to already generated AST.
 

@@ -21,7 +21,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
                                         NULL);
       
       declList = FakeList<Declarator>::makeList(decl);
-      TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_INT);
+      TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_UNSIGNED_INT);
       constInt->setCVOnce(CV_CONST);
       MR_decl *newEnumerator = new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
       spec->members->list.append(newEnumerator);
@@ -38,6 +38,8 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
         if(iter_decl->d->spec->isTS_classSpec()) {
           if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
             units++;
+            classes.push_back(ClassAndUnit(spec->name->asPQ_name()->name,
+                                           iter_decl->d->spec->asTS_classSpec()->name->asPQ_name()->name));
           }
         }
       }
@@ -61,8 +63,25 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
                                CV_NONE,
                                NULL,
                                NULL);
-    Declarator *decl = new Declarator(dfunc, NULL); // FIXME
-    Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), new ASTList<Statement>), NULL); // FIXME
+    Declarator *decl = new Declarator(dfunc, NULL);
+
+    ASTList<Statement>* stms = new ASTList<Statement>();
+    FakeList<ArgExpression>* args;
+    FakeList<Declarator>* declList; 
+    ArgExpression* arg = new ArgExpression(new E_intLit(loc, SourceLoc(), "42")); //FIXME exchange 42 for units
+    args = FakeList<ArgExpression>::makeList(arg);
+    Declarator* declpobtypes = new Declarator(new D_name(SourceLoc(),
+                                              new PQ_name(SourceLoc(), "pobtypes")),
+                                              new IN_ctor(loc, args));
+      
+    declList = FakeList<Declarator>::makeList(declpobtypes);
+
+    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_simple(loc, ST_INT), declList));
+    stms->append(sdecl);
+    for(unsigned int i = 0; i < units; i++) {
+      //FIXME 
+    }
+    Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), stms), NULL);
     MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
     spec->members->list.append(newFunc);
   }
@@ -111,13 +130,16 @@ bool PObCppVisitor::visitFunction(Function* func) {
 	return true;
 }
 
-void PObCppPre(TranslationUnit *unit) {
+std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;
   unit->traverse(fp);
+	return fp.classes; // FIXME create a get_classesAndUnits() function.
 }
-void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt) {
+void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt, std::vector<ClassAndUnit>& _classes) {
   PObCppVisitor fp;
   fp.bt = &bt;
+	fp.classes = _classes; //FIXME create a constructor. 
+
   unit->traverse(fp);
 }
 

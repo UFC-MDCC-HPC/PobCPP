@@ -468,7 +468,7 @@ void doit(int argc, char **argv)
 
   checkHeap();
 
-  PObCppPre(unit);
+	std::vector<ClassAndUnit> classes = PObCppPre(unit); // PObC++ modification.
   // print abstract syntax tree
   if (tracingSys("printAST")) {
     unit->debugPrint(cout, 0);
@@ -679,8 +679,7 @@ void doit(int argc, char **argv)
       vis.cloneDefunctChildren = true;
     }
 
-    PObCppPrint(unit, tfac);
-		unit->debugPrint(cout, 0);
+    PObCppPrint(unit, tfac, classes); //PObC++ modification
     // do elaboration
     unit->traverse(vis.loweredVisitor);
 
