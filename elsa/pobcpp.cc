@@ -26,9 +26,11 @@ bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
   if(function->nameAndParams != NULL) {
     if(function->nameAndParams->decl->isD_func()) {
       if(function->nameAndParams->decl->asD_func()->base->isD_name()) {
-        PQ_name* funcName = function->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name();
-        if(funcName->toString() == "add_type")
-          addTypeStr =funcName->name;
+        if(function->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
+          PQ_name* funcName = function->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name();
+          if(funcName->toString() == "add_type")
+            addTypeStr =funcName->name;
+        }
       }
 		}
   }
@@ -52,11 +54,14 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
   else if(spec->keyword == TI_CLASS) {
-    if(spec->name->toString() == "Pob_Type_Array") {
-      loc = spec->loc;
-      if(spec->name->isPQ_name())
-        pobTypeArrayStr = spec->name->asPQ_name()->name;
-		}
+    if(spec->name != NULL) {
+      if(spec->name->isPQ_name()) {
+	      if(spec->name->asPQ_name()->toString() == "Pob_Type_Array") {
+  	      loc = spec->loc;
+      	  pobTypeArrayStr = spec->name->asPQ_name()->name;
+		 	  }
+      }
+    }
     unsigned short units = 0;  // How many units exist inside this class?
     FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
       if(iter.data()->isMR_decl()) {
