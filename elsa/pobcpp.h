@@ -1,21 +1,26 @@
 #ifndef __POBCPPVISITOR_H__
 #define __POBCPPVISITOR_H__
 
-#include "cc_ast.h"       // C++ AST (r)
+#include "cc_ast.h"          // C++ AST (r)
+#include "strtable.h" // StringTable
 #include <vector>
 #include <string>
 
 //FIXME Use a better data structure to handle classes and related units.
 
 struct ClassAndUnit {
-	ClassAndUnit(std::string c, std::string u) : c(c), u(u) { }
-  std::string c;
-	std::string u;
+	ClassAndUnit(StringRef c, StringRef u) : c(c), u(u) { }
+  StringRef c;
+	StringRef u;
 };
 
 class PObCppPreTypedASTVisitor : public ASTVisitor {
   public:
+	StringTable* table;
+	StringRef pobTypeArrayStr;
+	StringRef addTypeStr;
 	std::vector<ClassAndUnit> classes;
+	virtual bool visitFunction(Function* func);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   private:
@@ -34,7 +39,7 @@ class PObCppVisitor : public ASTVisitor {
 	CompoundType* ctype;
 };
 
-std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit);
+std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit, StringTable* table);
 
 void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt, std::vector<ClassAndUnit>& _classes);
 

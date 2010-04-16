@@ -1,3 +1,6 @@
+2010-15-04 Eduardo Gurgel <edgurgel@gmail.com>
+* Removed __get_types workaround.
+
 2010-14-04 Eduardo Gurgel <edgurgel@gmail.com>
 * __get_types() better defined.
 

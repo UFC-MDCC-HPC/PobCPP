@@ -398,6 +398,7 @@ void doit(int argc, char **argv)
   // out here.  Feel free to refactor.
   ArrayStack<Variable*> madeUpVariables;
   ArrayStack<Variable*> builtinVars;
+	std::vector<ClassAndUnit> classes; // PObC++ modification.
 
   int parseWarnings = 0;
   long parseTime = 0;
@@ -462,18 +463,18 @@ void doit(int argc, char **argv)
 
     //unit->debugPrint(cout, 0);
 
+		classes = PObCppPre(unit, &strTable); // PObC++ modification.
     delete parseContext;
     delete tables;
   }
 
   checkHeap();
 
-	std::vector<ClassAndUnit> classes = PObCppPre(unit); // PObC++ modification.
   // print abstract syntax tree
   if (tracingSys("printAST")) {
     unit->debugPrint(cout, 0);
   }
-
+	
   //if (unit) {     // when "-tr trivialActions" it's NULL...
   //  cout << "ambiguous nodes: " << numAmbiguousNodes(unit) << endl;
   //}
