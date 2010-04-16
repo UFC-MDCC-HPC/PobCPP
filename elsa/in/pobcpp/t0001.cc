@@ -7,10 +7,15 @@ class Pob_Type_Array {
 
 };
 class A {
-	void func() { 
+	Pob_Type_Array func() { 
 		Pob_Type_Array pobtypes(5);
 		pobtypes.add_type<int>(42);
+		return pobtypes;
 	}
 	unit B {};
 	unit C {};
+};
+
+class D {
+	unit X { };
 };

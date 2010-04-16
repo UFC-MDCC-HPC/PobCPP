@@ -16,7 +16,6 @@ struct ClassAndUnit {
 
 class PObCppPreTypedASTVisitor : public ASTVisitor {
   public:
-	StringTable* table;
 	StringRef pobTypeArrayStr;
 	StringRef addTypeStr;
 	std::vector<ClassAndUnit> classes;
@@ -39,7 +38,7 @@ class PObCppVisitor : public ASTVisitor {
 	CompoundType* ctype;
 };
 
-std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit, StringTable* table);
+std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit);
 
 void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt, std::vector<ClassAndUnit>& _classes);
 

@@ -82,7 +82,6 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     // }
     DeclFlags dflag = DF_NONE;
 		
-	//	TS_simple* tsname = new TS_simple(loc, ST_INT); // We will exchange this int for a Pob_Type_Array.
 		if(pobTypeArrayStr == NULL) {
 			pobTypeArrayStr = "Pob_Type_Array";
 		}
@@ -102,7 +101,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     ASTList<Statement>* stms = new ASTList<Statement>();
     FakeList<ArgExpression>* args;
     FakeList<Declarator>* declList; 
-    ArgExpression* arg = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(units))); //FIXME exchange 42 for units
+    ArgExpression* arg = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(units)));
     args = FakeList<ArgExpression>::makeList(arg);
     Declarator* declpobtypes = new Declarator(new D_name(SourceLoc(),
                                               new PQ_name(SourceLoc(), "pobtypes")),
@@ -110,22 +109,29 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       
     declList = FakeList<Declarator>::makeList(declpobtypes);
 
-    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_name(loc, new PQ_name(loc, pobTypeArrayStr) , false), declList));
+    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_name(loc, new PQ_name(loc, pobTypeArrayStr) , false), declList)); // Pob_Type_Array pobtypes(units);
     stms->append(sdecl);
 
-    for(unsigned int i = 0; i < units; i++) {
+		unsigned int j = 0; // Unit order
+    for(unsigned int i = 0; i < classes.size(); i++) { // FIXME Better search algorithm.
+			if(classes[i].c != spec->name->asPQ_name()->name)
+				continue;
       FakeList<ArgExpression>* addTypeArgs;
-      ArgExpression* arg1 = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(i))); //FIXME exchange 42 for units
+      ArgExpression* arg1 = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(j)));
       addTypeArgs = FakeList<ArgExpression>::makeList(arg1);
+			// FIXME Find a sane way to instantiate the below statement.
       S_expr* sexpr = new S_expr(loc, SourceLoc(), new FullExpression(
                                  new E_funCall(loc, SourceLoc(),
                                                new E_fieldAcc(loc, SourceLoc(),
                                                new E_variable(loc, SourceLoc(), new PQ_name(SourceLoc(), "pobtypes")),
                                                               new PQ_template(loc, addTypeStr, 
-                                                                              new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs)));
+                                                                              new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs))); //   pobtypes.add_type<unit A>(0);
 
       stms->append(sexpr);
+			j++;
     }
+		S_return* sreturn = new S_return(loc, SourceLoc(), new FullExpression(new E_variable(loc, SourceLoc(), new PQ_name(SourceLoc(), "pobtypes")))); //   return pobtypes;
+		stms->append(sreturn);
     Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), stms), NULL);
     MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
     spec->members->list.append(newFunc);
@@ -155,9 +161,8 @@ bool PObCppVisitor::visitFunction(Function* func) {
 	return true;
 }
 
-std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit, StringTable* table) {
+std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;
-	fp.table = table;
 	fp.pobTypeArrayStr = NULL;
 	fp.addTypeStr = NULL;
   unit->traverse(fp);
