@@ -10,7 +10,7 @@ SMBASE        := ../../../smbase
 AST           := ../../../ast
 ELKHOUND      := ../..
 
-CXX := g++
+CXX := g++-4.1.2
 
 # Elkhound runtime support library
 LIBELKHOUND := $(ELKHOUND)/libelkhound.a

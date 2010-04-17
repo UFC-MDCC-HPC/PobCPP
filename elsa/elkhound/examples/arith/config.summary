@@ -6,7 +6,7 @@ echo "  command:     ./configure "
 echo ""
 echo "Compile flags:"
 echo "  CC:          gcc"
-echo "  CXX:         g++"
+echo "  CXX:         g++-4.1.2"
 echo "  CCFLAGS:     -g -Wall -Wno-deprecated -D__UNIX__ -O2 -DNDEBUG -D__LINUX__"
 cat <<EOF
   AST:         ../../../ast

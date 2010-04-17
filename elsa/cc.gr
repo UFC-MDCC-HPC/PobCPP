@@ -1190,7 +1190,7 @@ nonterm(UberModifiers) UberModifier {
   // function-specifier
   -> "inline"    { return UM_INLINE; }
   -> "virtual"   { return UM_VIRTUAL; }
-  -> "parallel"  { return UM_PARALLEL; } // PObC++ parallel function modifier.
+//  -> "parallel"  { return UM_PARALLEL; } // PObC++ parallel function modifier.
   //-> "explicit"  { return UM_EXPLICIT; }    // can only appear in CDtorModifier
 
   // decl-specifier terminals
@@ -1939,7 +1939,7 @@ nonterm(PQName*) ClassHeadName {
 nonterm(enum TypeIntr) ClassKey {
   -> "class"       { return TI_CLASS; }
   -> "struct"      { return TI_STRUCT; }
-  -> "unit"        { return TI_UNIT; }
+  -> "unit"        { return TI_UNIT; } // PObC++ unit
   -> "union"       { return TI_UNION; }
 }
 

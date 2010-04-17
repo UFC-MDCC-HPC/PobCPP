@@ -71,7 +71,7 @@ static void printDeclFlags(BPEnv &bp, DeclFlags dflags,
     HANDLE_FLAG(DF_EXPLICIT, "explicit")
     HANDLE_FLAG(DF_FRIEND, "friend")
     HANDLE_FLAG(DF_TYPEDEF, "typedef")
-    HANDLE_FLAG(DF_PARALLEL, "parallel")
+//    HANDLE_FLAG(DF_PARALLEL, "parallel")
     #undef HANDLE_FLAG
   }
 }

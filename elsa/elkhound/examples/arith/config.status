@@ -26,7 +26,7 @@ EOF
 sed -e "s|@CCFLAGS@|-g -Wall -Wno-deprecated -D__UNIX__ -O2 -DNDEBUG -D__LINUX__|g" \
     -e "s|@CFLAGS@|-g -Wall -D__UNIX__ -O2 -DNDEBUG -D__LINUX__|g" \
     -e "s|@CC@|gcc|g" \
-    -e "s|@CXX@|g++|g" \
+    -e "s|@CXX@|g++-4.1.2|g" \
     -e "s|@CROSSTARGET@|0|g" \
     -e "s|@EXE@||g" \
     -e "s|@SMBASE@|../../../smbase|g" \
