@@ -1,14 +1,13 @@
+#include "communication.h"
 #include <iostream>
-#include "pob_macro.h"
+#include "create_unit.h"
 
-int main (int argc, char* argv[]) {
+#include "pobexample.h"
 
-    pob_init;
-    POb pob;
-		std::cout << "==" << world.rank() << "==" << "Parallel Object constructed " << std::endl;
-    barrier;
-    pob.main ();
-    std::cout << "--------- " << world.rank() <<  std::endl;
-
-    return 0;
+int main(int argc, char** argv) { 
+	pob_init;
+	HelloWorld::Hello h;
+	create_unit(&h);
+	h.sendHello();
+	return 0;
 }

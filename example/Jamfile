@@ -1,2 +1,5 @@
-exe example : main.cpp pob_macro.cpp ../libpobcpp : <include>.
+exe example1 : main.cpp ../libpobcpp : <include>.
+<include>../libpobcpp/include ;
+
+exe example2 : main2.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include ;

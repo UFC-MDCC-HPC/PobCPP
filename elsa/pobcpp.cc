@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 
 //Helper function
 char* itoa(int value) {
@@ -14,12 +15,13 @@ char* itoa(int value) {
 	char* s = new char[str.size()];
 	return strcpy(s, str.c_str());
 }
-
-bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
-  if (type->isTS_classSpec()) {
-    return subvisitTS_classSpec(type->asTS_classSpec());
-  }
-  return true;
+bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
+	if(tf->isTF_namespaceDefn()) {
+		if(std::string(tf->asTF_namespaceDefn()->name) == "Pobcpp") {
+			pobCppNamespaceStr = tf->asTF_namespaceDefn()->name;
+		}
+	}
+	return true;
 }
 
 bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
@@ -35,6 +37,13 @@ bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
 		}
   }
 	return true;
+}
+
+bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
+  if (type->isTS_classSpec()) {
+    return subvisitTS_classSpec(type->asTS_classSpec());
+  }
+  return true;
 }
 
 bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
@@ -86,14 +95,17 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		//   return pobtypes;
     // }
     DeclFlags dflag = DF_NONE;
-		
+	
+		if(pobCppNamespaceStr == NULL) {
+			pobCppNamespaceStr = "Pobcpp";
+		}
 		if(pobTypeArrayStr == NULL) {
 			pobTypeArrayStr = "Pob_Type_Array";
 		}
     if(addTypeStr == NULL) {
       addTypeStr = "add_type";
     }
-		TS_name* tsname = new TS_name(loc, new PQ_name(loc, pobTypeArrayStr), false);
+		TS_name* tsname = new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)), false);
 		D_func *dfunc = new D_func(loc, 
                                new D_name(loc, new PQ_name(loc, "__get_types")),
                                NULL,
@@ -114,7 +126,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       
     declList = FakeList<Declarator>::makeList(declpobtypes);
 
-    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_name(loc, new PQ_name(loc, pobTypeArrayStr) , false), declList)); // Pob_Type_Array pobtypes(units);
+    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)) , false), declList)); // Pob_Type_Array pobtypes(units);
     stms->append(sdecl);
 
 		unsigned int j = 0; // Unit order
@@ -168,6 +180,7 @@ bool PObCppVisitor::visitFunction(Function* func) {
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;
+	fp.pobCppNamespaceStr = NULL;
 	fp.pobTypeArrayStr = NULL;
 	fp.addTypeStr = NULL;
   unit->traverse(fp);

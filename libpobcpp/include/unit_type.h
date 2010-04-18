@@ -2,7 +2,6 @@
 #define __UNIT_TYPE_H__
 
 #include <string>
-#include <iostream>
 #include <typeinfo>
 
 #include <boost/serialization/serialization.hpp>

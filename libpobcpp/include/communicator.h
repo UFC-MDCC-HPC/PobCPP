@@ -2,7 +2,6 @@
 #define __COMMUNICATOR_H__
 
 #include "unit_type.h"
-#include <typeinfo>
 
 namespace Pobcpp {
 
@@ -14,15 +13,15 @@ public:
 
 	template<typename Type, typename Data>
 	void send(Data data, const int tag) {
-		Type* unit;
-		Unit_Type unit_type(typeid(unit).name());	
+		Type* un;
+		Unit_Type unit_type(typeid(un).name());	
 		static_cast<Derived*>(this)->sync_send(unit_type, data, tag);
 	}
 
 	template<typename Type, typename Data>
 	Data receive(const int tag) {
-		Type* unit;
-		Unit_Type unit_type(typeid(unit).name());	
+		Type* un;
+		Unit_Type unit_type(typeid(un).name());	
 		return static_cast<Derived*>(this)->sync_receive(unit_type, tag, Data());
 	}
 
@@ -41,7 +40,6 @@ Communicator<Derived>::Communicator() : env(0) { }
 template<typename Derived>
 void Communicator<Derived>::set_environment(Environment* _env) { 
 	env = _env;
-	static_cast<Derived*>(this)->env_setted();
 }
 
 template<typename Derived>

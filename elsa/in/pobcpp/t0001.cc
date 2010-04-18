@@ -1,3 +1,12 @@
+namespace Pobcpp {
+
+
+
+class Unit {
+
+
+};
+
 class Pob_Type_Array { 
 	public:
 	Pob_Type_Array(int a) { }
@@ -6,9 +15,10 @@ class Pob_Type_Array {
 		}
 
 };
+}
 class A {
-	Pob_Type_Array func() { 
-		Pob_Type_Array pobtypes(5);
+	Pobcpp::Pob_Type_Array func() { 
+		Pobcpp::Pob_Type_Array pobtypes(5);
 		pobtypes.add_type<int>(42);
 		return pobtypes;
 	}
