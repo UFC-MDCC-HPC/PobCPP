@@ -1,3 +1,7 @@
+2010-20-04 Eduardo Gurgel <edgurgel@gmail.com>
+* create_unit defined.
+* Example bugfixed.
+
 2010-18-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Elsa modified to handle Pobcpp namespace defined by libpobcpp.
 * libpobcpp totally redefined.

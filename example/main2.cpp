@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
 	pob_init;
 
 	HelloWorld::World w;
-	create_unit(&w);
+	create_unit<HelloWorld, HelloWorld::World>(&w);
 	std::cout << w.recvHello() << std::endl;
 	return 0;
 }

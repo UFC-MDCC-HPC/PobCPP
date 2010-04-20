@@ -2,8 +2,8 @@
 #include "unit.h"
 
 class HelloWorld {
-	class World;
 	public:
+	unit World;
 	unit Hello {
 		public:
 		void sendHello() {
