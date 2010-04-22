@@ -3,52 +3,45 @@
 
 #include "unit_type.h"
 #include "communicator.h"
-#include "communication.h"
 #include "environment.h"
-
-#include <iostream>
 
 namespace Pobcpp {
 
-class Basic_Communicator : public Communicator<Basic_Communicator> {
+class Basic_Communicator {
 public:
 	Basic_Communicator(); 
 	~Basic_Communicator();
 
-	template<typename Data>
-	void sync_send(const Unit_Type& _unit_type, Data _data, const int _tag);
+	void set_environment(Environment* _env);
+	
+	template<typename Type, typename Data>
+	void send(Data data, const int tag);
 
-	template<typename Data>
-	Data sync_receive(const Unit_Type& _unit_type, const int _tag, Data _data_type);
+	void send(const Unit_Type& _unit_type, int _data, const int _tag);
+
+	template<typename Type, typename Data>
+	Data receive(const int _tag);
+
+	int receive(const Unit_Type& _unit_type, int _data_type, const int _tag);
 
 private:
 
-	boost::mpi::communicator world; // FIXME Should be a intracommunicator. Only between units.
+	Environment* env;
 };
 
-template<typename Data>
-void Basic_Communicator::sync_send(const Unit_Type& _unit_type, Data _data, const int _tag) {
-	if(env) {
-		if(env->isComplete()) {
-			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Sync_send to "<< _unit_type << " - " << unit_rank << std::endl;
-			world.send(unit_rank, _tag, _data);	
-		}
-	}
+template<typename Type, typename Data>
+void Basic_Communicator::send(Data _data, const int _tag) {
+		Type* un;
+		Unit_Type unit_type(un);	
+		send(unit_type, _data, _tag);
 }
 
-template<typename Data>
-Data Basic_Communicator::sync_receive(const Unit_Type& _unit_type, const int _tag, Data _data_type) {
+template<typename Type, typename Data>
+Data Basic_Communicator::receive(const int _tag) {
 	Data data;
-	//get rank
-	if(env) {
-		if(env->isComplete()) {
-			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Sync_receive from "<< _unit_type << " - " << unit_rank << std::endl;
-			world.recv(unit_rank , _tag, data);
-		}
-	}
-	return data;
+	Type* un;
+	Unit_Type unit_type(un);	
+	return receive(unit_type, data, _tag);
 }
 
 }

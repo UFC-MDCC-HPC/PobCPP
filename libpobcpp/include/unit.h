@@ -1,14 +1,9 @@
 #ifndef __UNIT__
 #define __UNIT__
 
-#include <typeinfo>
-
-#include "unit_type.h"
-#include <iostream>
+#include "basic_communicator.h"
 
 namespace Pobcpp {
-
-class Basic_Communicator;
 
 class Unit {
 protected:
@@ -22,8 +17,7 @@ protected:
      * Destructor
      */
     virtual ~Unit();
-   
-private:
+public: //FIXME 
 		Basic_Communicator* comm;
 };
 

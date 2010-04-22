@@ -20,6 +20,7 @@ public:
 
 	unsigned int get_rank (const Unit_Type& _unit_type);
 
+	void set_complete();
 	bool isComplete() const;
 	
 private:

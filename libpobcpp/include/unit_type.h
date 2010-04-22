@@ -41,22 +41,33 @@ template<class Archive> void Unit_Type::serialize(Archive& ar, const unsigned in
 
 class Pob_Type_Array {
 public:
-	Pob_Type_Array(unsigned int _size) : size(_size), types(new Unit_Type[_size])  { }
+	Pob_Type_Array(const unsigned int _size) : sizearray(_size), types(new Unit_Type[_size])  { }
 
 	~Pob_Type_Array() {
 		delete[] types;		
 	}
 
+	const unsigned int size() { return sizearray; } const
+
+	Unit_Type get_type(unsigned int _i) const {
+		if(_i < sizearray) {
+			return types[_i];
+		}
+		else return Unit_Type();
+	}
+
 	template<typename Type>
 	void add_type(unsigned int _i) {
-		Unit_Type type(Type*);
+		Type* t;
+		Unit_Type type(t);
 		types[_i] = type;			
 	}
 
 	template<typename Type>
 	bool compare_type() {
-		Unit_Type type(Type*);
-		for(unsigned int i = 0; i < size; i++) {
+		Type* t;
+		Unit_Type type(t);
+		for(unsigned int i = 0; i < sizearray; i++) {
 			if(types[i] == type)
 				return true;
 		}
@@ -64,7 +75,7 @@ public:
 	}
 
 private:
-unsigned int size;
+const unsigned int sizearray;
 Unit_Type* types;
 
 };

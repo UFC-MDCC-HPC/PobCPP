@@ -1,9 +1,4 @@
 #include "environment.h"
-//#include "communication.h"
-
-//#include <boost/serialization/map.hpp>
-//#include <boost/foreach.hpp>
-//#define foreach BOOST_FOREACH
 
 namespace Pobcpp {
 
@@ -24,9 +19,14 @@ void Environment::add(const Unit_Type& _unit_type, const unsigned int& rank) {
 	units_rank[_unit_type] = rank;
 }
 
+void Environment::set_complete() { 
+	complete = true;
+}
+
 bool Environment::isComplete() const {
 	return complete;
 }
+
 
 }
 
