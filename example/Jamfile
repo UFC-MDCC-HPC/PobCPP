@@ -3,3 +3,6 @@ exe example1 : main.cpp ../libpobcpp : <include>.
 
 exe example2 : main2.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include ;
+
+exe example3 : main3.cpp ../libpobcpp : <include>.
+<include>../libpobcpp/include ;

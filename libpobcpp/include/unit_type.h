@@ -3,7 +3,6 @@
 
 #include <string>
 #include <typeinfo>
-
 #include <boost/serialization/serialization.hpp>
 
 namespace Pobcpp {

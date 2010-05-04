@@ -10,5 +10,7 @@ int main(int argc, char** argv) {
 	HelloWorld::World w;
 	create_unit<HelloWorld>(&w);
 	std::cout << w.recvHello() << std::endl;
+	std::cout << "End World program" << std::endl;
+	MPI_Finalize();
 	return 0;
 }

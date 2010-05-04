@@ -4,6 +4,9 @@
 #include "unit_type.h"
 #include "communicator.h"
 #include "environment.h"
+#include <mpi.h>
+
+#include <string>
 
 namespace Pobcpp {
 
@@ -13,20 +16,24 @@ public:
 	~Basic_Communicator();
 
 	void set_environment(Environment* _env);
+	void set_intracomm(MPI_Comm _comm);
 	
 	template<typename Type, typename Data>
 	void send(Data data, const int tag);
 
 	void send(const Unit_Type& _unit_type, int _data, const int _tag);
+	void send(const Unit_Type& _unit_type, std::string _data, const int _tag);
 
 	template<typename Type, typename Data>
 	Data receive(const int _tag);
 
 	int receive(const Unit_Type& _unit_type, int _data_type, const int _tag);
+	std::string receive(const Unit_Type& _unit_type, std::string _data_type, const int _tag);
 
 private:
 
 	Environment* env;
+	MPI_Comm comm;
 };
 
 template<typename Type, typename Data>
