@@ -680,7 +680,7 @@ void doit(int argc, char **argv)
       vis.cloneDefunctChildren = true;
     }
 
-    PObCppPrint(unit, tfac, classes); //PObC++ modification
+    //PObCppPrint(unit, tfac, classes); //PObC++ modification
     // do elaboration
     unit->traverse(vis.loweredVisitor);
 

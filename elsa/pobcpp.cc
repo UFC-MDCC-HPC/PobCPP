@@ -48,6 +48,7 @@ bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 
 bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   if(spec->keyword == TI_UNIT) { // unit?
+		// Adding "real" enumerators to unit definition.
     FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
       DeclFlags toApply = DF_NONE;
       FakeList<Declarator>* declList; 
@@ -61,14 +62,24 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       MR_decl *newEnumerator = new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
       spec->members->list.append(newEnumerator);
     }
+
+    if(unitTypeStr == NULL) {
+      unitTypeStr = "Unit";
+	  }
+    // Create base class
+		PQName* pqname = new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, unitTypeStr));
+    BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
+    spec->bases = spec->bases->prepend(bcs); // Adding to the unit
   }
   else if(spec->keyword == TI_CLASS) {
     if(spec->name != NULL) {
       if(spec->name->isPQ_name()) {
-	      if(spec->name->asPQ_name()->toString() == "Pob_Type_Array") {
+	      if(spec->name->asPQ_name()->toString() == "Pob_Type_Array") { //FIXME Check if it is defined inside Pobcpp namespace.
   	      loc = spec->loc;
       	  pobTypeArrayStr = spec->name->asPQ_name()->name;
-		 	  }
+		 	  } else if(spec->name->asPQ_name()->toString() == "Unit") { //FIXME Check if it is defined inside Pobcpp namespace.
+            unitTypeStr = spec->name->asPQ_name()->name;
+          }
       }
     }
     unsigned short units = 0;  // How many units exist inside this class?
@@ -94,17 +105,10 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		//   ...	
 		//   return pobtypes;
     // }
-    DeclFlags dflag = DF_NONE;
-	
-		if(pobCppNamespaceStr == NULL) {
-			pobCppNamespaceStr = "Pobcpp";
-		}
-		if(pobTypeArrayStr == NULL) {
-			pobTypeArrayStr = "Pob_Type_Array";
-		}
-    if(addTypeStr == NULL) {
-      addTypeStr = "add_type";
-    }
+    DeclFlags dflag = DF_STATIC;
+
+    checkStrings();
+
 		TS_name* tsname = new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)), false);
 		D_func *dfunc = new D_func(loc, 
                                new D_name(loc, new PQ_name(loc, "__get_types")),
@@ -156,6 +160,17 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   return true;
 }
 
+void PObCppPreTypedASTVisitor::checkStrings() { 
+  if(pobCppNamespaceStr == NULL) {
+    pobCppNamespaceStr = "Pobcpp";
+  }
+  if(pobTypeArrayStr == NULL) {
+	  pobTypeArrayStr = "Pob_Type_Array";
+	}
+  if(addTypeStr == NULL) {
+    addTypeStr = "add_type";
+  }
+}
 bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
     return subvisitTS_classSpec(type->asTS_classSpec());
@@ -166,11 +181,11 @@ bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 
 bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 	// FIXME
-  if(spec->keyword == TI_UNIT) { // unit ?
+  /*if(spec->keyword == TI_UNIT) { // unit ?
     PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
     BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
     spec->bases = spec->bases->prepend(bcs); // Adding to the unit
-  }
+  }*/
   return true;
 }
 
@@ -183,6 +198,7 @@ std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
 	fp.pobCppNamespaceStr = NULL;
 	fp.pobTypeArrayStr = NULL;
 	fp.addTypeStr = NULL;
+	fp.unitTypeStr = NULL;
   unit->traverse(fp);
 	return fp.classes; // FIXME create a get_classesAndUnits() function.
 }

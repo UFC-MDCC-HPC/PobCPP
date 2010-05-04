@@ -16,28 +16,31 @@ struct ClassAndUnit {
 
 class PObCppPreTypedASTVisitor : public ASTVisitor {
   public:
-	StringRef pobCppNamespaceStr;
-	StringRef pobTypeArrayStr;
-	StringRef addTypeStr;
-	std::vector<ClassAndUnit> classes;
-	virtual bool visitTopForm(TopForm* tf);
-	virtual bool visitFunction(Function* func);
+  StringRef pobCppNamespaceStr;
+  StringRef pobTypeArrayStr;
+  StringRef addTypeStr;
+  StringRef unitTypeStr;
+  std::vector<ClassAndUnit> classes;
+  
+  virtual bool visitTopForm(TopForm* tf);
+  virtual bool visitFunction(Function* func);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
-	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+  virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   private:
+  void checkStrings();
   SourceLoc loc;
 };
 
 class PObCppVisitor : public ASTVisitor {
   public:
   BasicTypeFactory* bt;
-	std::vector<ClassAndUnit> classes;
+  std::vector<ClassAndUnit> classes;
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
-	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
-	virtual bool visitFunction(Function* func);
+  virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+  virtual bool visitFunction(Function* func);
   private:
   SourceLoc loc;
-	CompoundType* ctype;
+  CompoundType* ctype;
 };
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit);

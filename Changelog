@@ -1,3 +1,9 @@
+2010-04-05 Eduardo Gurgel <edgurgel@gmail.com>
+* pobcpp.cc : - Added pobTypeStr to handle Pobcpp::Unit.
+              - Moved BaseClassSpec modification to PObCpppreTypeASTVisitor.
+* create_unit.h - Removing debug messages.
+* pobexample.pobh.h - Now we can work with comm without fear.
+
 2010-02-05 Eduardo Gurgel <edgurgel@gmail.com>
 * create_unit.h : New create_unit function to null units.
 

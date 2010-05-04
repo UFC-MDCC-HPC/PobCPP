@@ -52,26 +52,26 @@ void create_unit(TypeUnit* _created_unit) {
 				env->add(types.at(i).first, types.at(i).second);
 //				ranks.push_back(types.at(i).second);
 				ranks[i] = types.at(i).second;
-				std::cout << "==" << world.rank() << "==" << "Rank " << ranks[i] << " set." << std::endl;
+//				std::cout << "==" << world.rank() << "==" << "Rank " << ranks[i] << " set." << std::endl;
 			}
 		}
 	}
 	if(check == typearray.size()) {
-		std::cout << "Creating group "<< std::endl;
+//		std::cout << "Creating group "<< std::endl;
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
 		MPI_Comm comm;
 		MPI_Comm_group(MPI_COMM_WORLD, &orig_group);
-		std::cout << "Incl group "<< std::endl;
+	//	std::cout << "Incl group "<< std::endl;
 		MPI_Group_incl(orig_group, typearray.size(), ranks, &new_group);
-		std::cout << "Comm create "<< std::endl;
+	//	std::cout << "Comm create "<< std::endl;
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
 		if(_created_unit) {
 			_created_unit->comm->set_intracomm(comm);
 			_created_unit->comm->set_environment(env);
 			env->set_complete();
 		}
-		std::cout << "==" << world.rank() << "==" << "Unit created "<< std::endl;
+		//std::cout << "==" << world.rank() << "==" << "Unit created "<< std::endl;
 	}
 	// Construct comm object with MPI_IntraCommunicator
 }

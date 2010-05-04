@@ -7,7 +7,7 @@ class HelloWorld {
 	unit Hello {
 		public:
 		void sendHello() {
-	//		comm->send<HelloWorld::World>(2, 1);
+			comm->send<HelloWorld::World>(42, 1);
 		}
 
 	};
@@ -15,7 +15,7 @@ class HelloWorld {
 	unit World {
 		public:
 		int recvHello() {
-//			return comm->receive<HelloWorld::Hello, int>(1);
+			return comm->receive<HelloWorld::Hello, int>(1);
 		}
 
 	};

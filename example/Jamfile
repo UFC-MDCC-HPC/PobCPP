@@ -1,8 +1,8 @@
 exe example1 : main.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include ;
+<include>../libpobcpp/include <include>/usr/include/openmpi ;
 
 exe example2 : main2.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include ;
+<include>../libpobcpp/include <include>/usr/include/openmpi ;
 
 exe example3 : main3.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include ;
+<include>../libpobcpp/include <include>/usr/include/openmpi ;
