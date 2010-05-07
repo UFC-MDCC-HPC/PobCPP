@@ -46,21 +46,26 @@ bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   return true;
 }
 
+MR_decl* createEnumerator(StringRef name) {
+  DeclFlags toApply = DF_NONE;
+  FakeList<Declarator>* declList; 
+  Declarator* decl = new Declarator(new D_name(SourceLoc(),
+                                    new PQ_name(SourceLoc(), name)),
+                                    NULL);
+  
+  declList = FakeList<Declarator>::makeList(decl);
+  TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_UNSIGNED_INT);
+  constInt->setCVOnce(CV_CONST);
+  return new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
+
+}
+
 bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   if(spec->keyword == TI_UNIT) { // unit?
 		// Adding "real" enumerators to unit definition.
     FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
-      DeclFlags toApply = DF_NONE;
-      FakeList<Declarator>* declList; 
-      Declarator* decl = new Declarator(new D_name(SourceLoc(),
-                                        new PQ_name(SourceLoc(), pobcppEnumSpec->name)),
-                                        NULL);
-      
-      declList = FakeList<Declarator>::makeList(decl);
-      TypeSpecifier *constInt = new TS_simple(SourceLoc(), ST_UNSIGNED_INT);
-      constInt->setCVOnce(CV_CONST);
-      MR_decl *newEnumerator = new MR_decl(SourceLoc(), SourceLoc(), new Declaration(toApply, constInt, declList));
-      spec->members->list.append(newEnumerator);
+      spec->members->list.append(createEnumerator(pobcppEnumSpec->name));
+      spec->members->list.append(createEnumerator(pobcppEnumSpec->size));
     }
 
     if(unitTypeStr == NULL) {
@@ -90,7 +95,8 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
           if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
             units++;
             classes.push_back(ClassAndUnit(spec->name->asPQ_name()->name,
-                                           iter_decl->d->spec->asTS_classSpec()->name->asPQ_name()->name));
+                                           iter_decl->d->spec->asTS_classSpec()->name->asPQ_name()->name,
+                                           iter_decl->d->spec->asTS_classSpec()->enumerators->count()));
           }
         }
       }
@@ -145,8 +151,8 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
                                  new E_funCall(loc, SourceLoc(),
                                                new E_fieldAcc(loc, SourceLoc(),
                                                new E_variable(loc, SourceLoc(), new PQ_name(SourceLoc(), "pobtypes")),
-                                                              new PQ_template(loc, addTypeStr, 
-                                                                              new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs))); //   pobtypes.add_type<unit A>(0);
+                                               new PQ_template(loc, addTypeStr,
+                                                               new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs))); //   pobtypes.add_type<unit A>(0);
 
       stms->append(sexpr);
 			j++;

@@ -2,16 +2,16 @@
 #define __POBCPPVISITOR_H__
 
 #include "cc_ast.h"          // C++ AST (r)
-#include "strtable.h" // StringTable
 #include <vector>
 #include <string>
 
 //FIXME Use a better data structure to handle classes and related units.
 
 struct ClassAndUnit {
-	ClassAndUnit(StringRef c, StringRef u) : c(c), u(u) { }
+	ClassAndUnit(StringRef c, StringRef u, unsigned int enumerators = 0) : c(c), u(u), enumerators(enumerators) { }
   StringRef c;
 	StringRef u;
+	unsigned int enumerators;
 };
 
 class PObCppPreTypedASTVisitor : public ASTVisitor {
@@ -26,6 +26,7 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   virtual bool visitFunction(Function* func);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+
   private:
   void checkStrings();
   SourceLoc loc;

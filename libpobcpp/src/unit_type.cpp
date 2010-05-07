@@ -2,7 +2,7 @@
 
 namespace Pobcpp {
 
-Unit_Type::Unit_Type() : unit_type() { }
+Unit_Type::Unit_Type() : unit_type(), enumerators(0) { }
 
 Unit_Type::~Unit_Type() { }
 

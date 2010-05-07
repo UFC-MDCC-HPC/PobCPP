@@ -11,7 +11,7 @@ class Unit_Type {
 public:
 	Unit_Type();
 	template<typename Unit>
-	Unit_Type(Unit* _unit);
+	Unit_Type(Unit* _unit, unsigned int _enumerators = 0);
 	~Unit_Type();
 
 	bool operator==(const Unit_Type& _unit_type) const;
@@ -23,19 +23,21 @@ public:
 
 private:
 	std::string unit_type;
+	unsigned int enumerators;
 
 	friend class boost::serialization::access;
 	template<class Archive> void serialize(Archive&, const unsigned int);		
 };
 
 template<typename Unit>
-Unit_Type::Unit_Type(Unit* _unit) {
+Unit_Type::Unit_Type(Unit* _unit, unsigned int _enumerators) {
 	unit_type = typeid(_unit).name();
+	enumerators = _enumerators;
 }
 
 template<class Archive> void Unit_Type::serialize(Archive& ar, const unsigned int /* file_version */) {
 	ar & unit_type;
-
+	ar & enumerators;
 }
 
 class Pob_Type_Array {
@@ -43,7 +45,7 @@ public:
 	Pob_Type_Array(const unsigned int _size) : sizearray(_size), types(new Unit_Type[_size])  { }
 
 	~Pob_Type_Array() {
-		delete[] types;		
+		//delete[] types;		 FIXME
 	}
 
 	const unsigned int size() { return sizearray; } const
@@ -56,12 +58,12 @@ public:
 	}
 
 	template<typename Type>
-	void add_type(unsigned int _i) {
+	void add_type(unsigned int _i, unsigned int enumerators = 0) {
 		Type* t;
-		Unit_Type type(t);
+		Unit_Type type(t, enumerators);
 		types[_i] = type;			
 	}
-
+	
 	template<typename Type>
 	bool compare_type() {
 		Type* t;

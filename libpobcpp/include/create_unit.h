@@ -1,7 +1,6 @@
 #ifndef __CREATE_UNIT__
 #define __CREATE_UNIT__
 
-
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/group.hpp>
 //#include <boost/mpi/environment.hpp>
@@ -14,8 +13,15 @@ namespace Pobcpp {
 	class No_Unit : public Pobcpp::Unit { };
 }
 
-template<class ParallelObject, class TypeUnit>
-void create_unit(TypeUnit* _created_unit);
+bool is_no_unit(const Pobcpp::Unit_Type& unit_type) {
+	Pobcpp::No_Unit* no_unit;
+	if(unit_type == Pobcpp::Unit_Type(no_unit))
+		return true;
+	return false;
+}
+
+template<typename TypePObject, typename TypeUnit>
+void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> = std::make_pair(0,0));
 
 template<typename TypePObject>
 void create_unit() {
@@ -24,7 +30,12 @@ void create_unit() {
 }
 
 template<typename TypePObject, typename TypeUnit>
-void create_unit(TypeUnit* _created_unit) {
+void create_unit(TypeUnit* _created_unit, unsigned int i, unsigned int n) {
+	create_unit<TypePObject>(_created_unit, std::make_pair(i,n));
+}
+
+template<typename TypePObject, typename TypeUnit>
+void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>) {
 	boost::mpi::communicator world;
 	boost::mpi::group wgroup = world.group();
 	boost::mpi::group group;
@@ -39,39 +50,50 @@ void create_unit(TypeUnit* _created_unit) {
 
 	// Check if every type is ok.
 	unsigned int check = 0;
-//	std::vector<unsigned int> ranks;
 	Pobcpp::Environment* env = new Pobcpp::Environment();
-	Pobcpp::No_Unit* no_unit;
-	if(!(unit_type == Pobcpp::Unit_Type(no_unit)))
-		env->add(unit_type, rank);	
+//	if(!(unit_type == Pobcpp::Unit_Type(no_unit)))
+//		env->add(unit_type, rank);	
 	int* ranks = new int[typearray.size()];
 	for(unsigned int i = 0; i < types.size(); i++) {
 		for(unsigned int j = 0; j < typearray.size(); j++) {
 			if(types.at(i).first == typearray.get_type(j)) {
 				check++;
-				env->add(types.at(i).first, types.at(i).second);
-//				ranks.push_back(types.at(i).second);
+	//			env->add(types.at(i).first, types.at(i).second);
 				ranks[i] = types.at(i).second;
-//				std::cout << "==" << world.rank() << "==" << "Rank " << ranks[i] << " set." << std::endl;
 			}
 		}
 	}
+	for(unsigned int i = 0; i < typearray.size(); i++)
+		std::cout << "==" << unit_type << "== - " << ranks[i] << " ";
+	std::cout << std::endl;
 	if(check == typearray.size()) {
-//		std::cout << "Creating group "<< std::endl;
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
 		MPI_Comm comm;
 		MPI_Comm_group(MPI_COMM_WORLD, &orig_group);
-	//	std::cout << "Incl group "<< std::endl;
 		MPI_Group_incl(orig_group, typearray.size(), ranks, &new_group);
-	//	std::cout << "Comm create "<< std::endl;
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
+		if(!is_no_unit(unit_type)) {
+			boost::mpi::communicator bcomm(comm, boost::mpi::comm_attach);
+			std::cout << "Comm create "<< std::endl;			
+			int inew_rank = -1;
+			MPI_Group_rank (new_group, &inew_rank); 
+			std::cout << "New rank true - " << inew_rank << std::endl;			
+			unsigned int new_rank = bcomm.rank();
+			std::cout << "New rank " << bcomm.rank() << std::endl;			
+			all_gather(bcomm, std::make_pair(unit_type, new_rank), types); // send the pair<unit_type,world.rank()>
+			std::cout << unit_type << "All_gather "<< std::endl;			
+			for(unsigned int i = 0; i < types.size(); i++)
+				env->add(types.at(i).first, types.at(i).second);
+			env->add(unit_type, new_rank);	
+		}
+
 		if(_created_unit) {
 			_created_unit->comm->set_intracomm(comm);
 			_created_unit->comm->set_environment(env);
 			env->set_complete();
+			// FIXME: Ranks need to be updated to new comm.
 		}
-		//std::cout << "==" << world.rank() << "==" << "Unit created "<< std::endl;
 	}
 	// Construct comm object with MPI_IntraCommunicator
 }
