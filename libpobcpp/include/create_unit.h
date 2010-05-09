@@ -51,21 +51,20 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>)
 	// Check if every type is ok.
 	unsigned int check = 0;
 	Pobcpp::Environment* env = new Pobcpp::Environment();
-//	if(!(unit_type == Pobcpp::Unit_Type(no_unit)))
-//		env->add(unit_type, rank);	
-	int* ranks = new int[typearray.size()];
+	std::vector<unsigned int> temp_ranks;
 	for(unsigned int i = 0; i < types.size(); i++) {
 		for(unsigned int j = 0; j < typearray.size(); j++) {
 			if(types.at(i).first == typearray.get_type(j)) {
 				check++;
-	//			env->add(types.at(i).first, types.at(i).second);
-				ranks[i] = types.at(i).second;
+				temp_ranks.push_back(types.at(i).second);
 			}
 		}
 	}
-	for(unsigned int i = 0; i < typearray.size(); i++)
-		std::cout << "==" << unit_type << "== - " << ranks[i] << " ";
-	std::cout << std::endl;
+	
+	int* ranks = new int[temp_ranks.size()];
+	for(unsigned int i = 0; i < temp_ranks.size(); i++)
+		ranks[i] = temp_ranks[i];
+
 	if(check == typearray.size()) {
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
@@ -73,26 +72,19 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>)
 		MPI_Comm_group(MPI_COMM_WORLD, &orig_group);
 		MPI_Group_incl(orig_group, typearray.size(), ranks, &new_group);
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
+		// Time to set Environment.
 		if(!is_no_unit(unit_type)) {
 			boost::mpi::communicator bcomm(comm, boost::mpi::comm_attach);
-			std::cout << "Comm create "<< std::endl;			
 			int inew_rank = -1;
 			MPI_Group_rank (new_group, &inew_rank); 
-			std::cout << "New rank true - " << inew_rank << std::endl;			
 			unsigned int new_rank = bcomm.rank();
-			std::cout << "New rank " << bcomm.rank() << std::endl;			
 			all_gather(bcomm, std::make_pair(unit_type, new_rank), types); // send the pair<unit_type,world.rank()>
-			std::cout << unit_type << "All_gather "<< std::endl;			
 			for(unsigned int i = 0; i < types.size(); i++)
 				env->add(types.at(i).first, types.at(i).second);
 			env->add(unit_type, new_rank);	
-		}
-
-		if(_created_unit) {
 			_created_unit->comm->set_intracomm(comm);
 			_created_unit->comm->set_environment(env);
 			env->set_complete();
-			// FIXME: Ranks need to be updated to new comm.
 		}
 	}
 	// Construct comm object with MPI_IntraCommunicator

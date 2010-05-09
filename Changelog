@@ -1,3 +1,6 @@
+2010-09-05 Eduardo Gurgel <edgurgel@gmail.com>
+* create_unit.h : Bugfix.
+
 2010-07-05 Eduardo Gurgel <edgurgel@gmail.com>
 * pobcpp.h - Enumerator imlpementation completed.
 * created_unit.h : enumerated unit creation process implementation initiated.
