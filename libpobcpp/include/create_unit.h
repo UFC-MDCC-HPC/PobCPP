@@ -20,6 +20,38 @@ bool is_no_unit(const Pobcpp::Unit_Type& unit_type) {
 	return false;
 }
 
+class Enum_Checker {
+public:
+	Enum_Checker() : checking(0) { }
+
+	void add(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_n) {
+		types[_unit_type] = std::make_pair(0, _enum_n);
+	}
+
+	bool check(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_i, unsigned int _enum_n) {
+		std::pair current_pair = types[_unit_type];
+		if(current_pair.second != _enum_n)
+			return false;
+		if(current_pair.first == _enum_n)
+			return false;
+
+		current_pair.first++;
+		types[_unit_type] = current_pair;
+		if(current_pair.first == _enum_n)
+			checking++;
+	}
+
+	bool check(void) const {
+		if(checking == types.size())
+			return true;
+	}
+
+private:
+	unsigned int checking;
+	std::map<Pobcpp::Unit_Type, std::pair<unsigned int, unsigned int> > types;
+};
+
+
 template<typename TypePObject, typename TypeUnit>
 void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> = std::make_pair(0,0));
 
@@ -44,6 +76,11 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 	unsigned int enum_n = _enums.second;
 
 	Pobcpp::Pob_Type_Array typearray =  TypePObject::__get_types(); // POb units.
+	for(unsigned int i = 0; i < typearray.size(); i++) {
+		if(typearray[i].has_enumerators()) {
+//FIXME
+		}
+	}
 	Pobcpp::Unit_Type unit_type(_created_unit);
 	//enum
 	if(enum_n != 0)
