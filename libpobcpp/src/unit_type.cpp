@@ -7,7 +7,7 @@ Unit_Type::Unit_Type() : unit_type(), enumerators(0) { }
 Unit_Type::~Unit_Type() { }
 
 bool Unit_Type::operator==(const Unit_Type& _unit_type) const {
-	if(unit_type == _unit_type.unit_type)
+	if(unit_type == _unit_type.unit_type && enumerators == _unit_type.enumerators)
 		return true;
 	else
 		return false;

@@ -35,14 +35,19 @@ void create_unit(TypeUnit* _created_unit, unsigned int i, unsigned int n) {
 }
 
 template<typename TypePObject, typename TypeUnit>
-void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>) {
+void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> _enums) {
 	boost::mpi::communicator world;
 	boost::mpi::group wgroup = world.group();
 	boost::mpi::group group;
 	unsigned int rank = world.rank();
+	unsigned int enum_i = _enums.first;
+	unsigned int enum_n = _enums.second;
 
 	Pobcpp::Pob_Type_Array typearray =  TypePObject::__get_types(); // POb units.
 	Pobcpp::Unit_Type unit_type(_created_unit);
+	//enum
+	if(enum_n != 0)
+		unit_type.set_enums(_enums);
 
 	// Exchange with others units, each rank.
 	std::vector<std::pair<Pobcpp::Unit_Type, unsigned int> > types;
@@ -50,7 +55,6 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>)
 
 	// Check if every type is ok.
 	unsigned int check = 0;
-	Pobcpp::Environment* env = new Pobcpp::Environment();
 	std::vector<unsigned int> temp_ranks;
 	for(unsigned int i = 0; i < types.size(); i++) {
 		for(unsigned int j = 0; j < typearray.size(); j++) {
@@ -74,6 +78,7 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int>)
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
 		// Time to set Environment.
 		if(!is_no_unit(unit_type)) {
+			Pobcpp::Environment* env = new Pobcpp::Environment();
 			boost::mpi::communicator bcomm(comm, boost::mpi::comm_attach);
 			int inew_rank = -1;
 			MPI_Group_rank (new_group, &inew_rank); 

@@ -4,6 +4,7 @@
 #include <string>
 #include <typeinfo>
 #include <boost/serialization/serialization.hpp>
+#include <map>
 
 namespace Pobcpp {
 
@@ -13,6 +14,13 @@ public:
 	template<typename Unit>
 	Unit_Type(Unit* _unit, unsigned int _enumerators = 0);
 	~Unit_Type();
+
+	void set_enums(std::pair<unsigned int, unsigned int> _enums) {
+		enums = _enums;
+	}
+	bool has_enumerators(void) const {
+		return enumerators;
+	}
 
 	bool operator==(const Unit_Type& _unit_type) const;
 	bool operator<(const Unit_Type& _unit_type) const;
@@ -24,6 +32,7 @@ public:
 private:
 	std::string unit_type;
 	unsigned int enumerators;
+	std::pair<unsigned int, unsigned int> enums;
 
 	friend class boost::serialization::access;
 	template<class Archive> void serialize(Archive&, const unsigned int);		
@@ -38,6 +47,7 @@ Unit_Type::Unit_Type(Unit* _unit, unsigned int _enumerators) {
 template<class Archive> void Unit_Type::serialize(Archive& ar, const unsigned int /* file_version */) {
 	ar & unit_type;
 	ar & enumerators;
+	ar & enums;
 }
 
 class Pob_Type_Array {
