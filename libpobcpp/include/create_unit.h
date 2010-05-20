@@ -24,31 +24,41 @@ class Enum_Checker {
 public:
 	Enum_Checker() : checking(0) { }
 
-	void add(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_n) {
-		types[_unit_type] = std::make_pair(0, _enum_n);
+	void add(const Pobcpp::Unit_Type& _unit_type) {
+		types[_unit_type] = std::make_pair(0, -1);
 	}
 
-	bool check(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_i, unsigned int _enum_n) {
-		std::pair current_pair = types[_unit_type];
-		if(current_pair.second != _enum_n)
+	bool check(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_n) {
+		//unsigned int _enum_i = _unit_type.get_enums().first;
+		if(types.count(_unit_type) == 0) {
+			std::cout << "lascou pq não tem ninguem" << std::endl;
 			return false;
-		if(current_pair.first == _enum_n)
+		}
+		std::pair<unsigned int, int> current_pair = types[_unit_type];
+		std::cout << "current pair 1 - " << current_pair.first << std::endl;
+		if(current_pair.second == -1) {
+			current_pair.second = _enum_n;
+			current_pair.first = _enum_n + 1;
+		} else if(current_pair.second != _enum_n) {
 			return false;
-
-		current_pair.first++;
+		}
+		if(current_pair.first == 0) {
+			return false;
+		}
+		current_pair.first--;
 		types[_unit_type] = current_pair;
-		if(current_pair.first == _enum_n)
+		if(current_pair.first == 0)
 			checking++;
+		return true;
 	}
 
-	bool check(void) const {
-		if(checking == types.size())
-			return true;
+	int check(void) const {
+			return checking;
 	}
 
 private:
 	unsigned int checking;
-	std::map<Pobcpp::Unit_Type, std::pair<unsigned int, unsigned int> > types;
+	std::map<Pobcpp::Unit_Type, std::pair<int, int> > types;
 };
 
 
@@ -66,6 +76,26 @@ void create_unit(TypeUnit* _created_unit, unsigned int i, unsigned int n) {
 	create_unit<TypePObject>(_created_unit, std::make_pair(i,n));
 }
 
+struct Unit_Type_Pack {
+	Unit_Type_Pack(Pobcpp::Unit_Type unit_type,
+	               std::pair<unsigned int, unsigned int> enums,
+								 unsigned int rank) :
+	               unit_type(unit_type),
+								 enums(enums),
+								 rank(rank) { }
+	Unit_Type_Pack() { }
+	Pobcpp::Unit_Type unit_type;
+	std::pair<unsigned int, unsigned int> enums;
+	unsigned int rank;
+	template<class Archive>
+	void serialize(Archive & ar, const unsigned int version) {
+		ar & unit_type;
+		ar & rank;
+		ar & enums;
+	}
+
+};
+
 template<typename TypePObject, typename TypeUnit>
 void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> _enums) {
 	boost::mpi::communicator world;
@@ -74,44 +104,62 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 	unsigned int rank = world.rank();
 	unsigned int enum_i = _enums.first;
 	unsigned int enum_n = _enums.second;
+	Enum_Checker enum_checker;
 
 	Pobcpp::Pob_Type_Array typearray =  TypePObject::__get_types(); // POb units.
 	for(unsigned int i = 0; i < typearray.size(); i++) {
-		if(typearray[i].has_enumerators()) {
-//FIXME
+		if(typearray.get_type(i).has_enumerators()) {
+			enum_checker.add(typearray.get_type(i));
 		}
 	}
 	Pobcpp::Unit_Type unit_type(_created_unit);
 	//enum
-	if(enum_n != 0)
-		unit_type.set_enums(_enums);
-
+	if(enum_n != 0) {
+//		unit_type.set_enums(_enums);
+		unit_type.set_enumerators(1);
+	}
 	// Exchange with others units, each rank.
-	std::vector<std::pair<Pobcpp::Unit_Type, unsigned int> > types;
-	all_gather(world, std::make_pair(unit_type, rank), types); // send the pair<unit_type,world.rank()>
+//	std::vector<std::pair<Pobcpp::Unit_Type, unsigned int> > types;
+//	typedef std::pair<Pobcpp::Unit_Type, std::pair<unsigned int, unsigned int> > Type_and_Enum;
+	//std::vector<std::pair< std::pair<Pobcpp::Unit_Type, std::pair<unsigned int, unsigned int> > , unsigned int> > types;
+	std::vector<Unit_Type_Pack> types;
+	all_gather(world, Unit_Type_Pack(unit_type, _enums, rank), types); // send the pair<unit_type,world.rank()>
 
 	// Check if every type is ok.
 	unsigned int check = 0;
 	std::vector<unsigned int> temp_ranks;
 	for(unsigned int i = 0; i < types.size(); i++) {
 		for(unsigned int j = 0; j < typearray.size(); j++) {
-			if(types.at(i).first == typearray.get_type(j)) {
-				check++;
-				temp_ranks.push_back(types.at(i).second);
+			if(!types.at(i).unit_type.has_enumerators()) {
+				if(types.at(i).unit_type == typearray.get_type(j)) {
+					std::cout << "==" << unit_type <<"== Reco this type: " << types.at(i).unit_type << std::endl;
+					check++;
+					temp_ranks.push_back(types.at(i).rank);
+				}
+			} else {
+				if(types.at(i).unit_type == typearray.get_type(j)) {
+					if(enum_checker.check(types.at(i).unit_type, types.at(i).enums.second)) {
+						std::cout << "==" << unit_type <<"== Reco this ENUM type: " << types.at(i).unit_type << std::endl;
+						temp_ranks.push_back(types.at(i).rank);
+					}
+				}
 			}
 		}
 	}
-	
+	check += enum_checker.check();
 	int* ranks = new int[temp_ranks.size()];
-	for(unsigned int i = 0; i < temp_ranks.size(); i++)
+	std::cout << "Temp ranks size" << temp_ranks.size() << std::endl;
+	for(unsigned int i = 0; i < temp_ranks.size(); i++) {
 		ranks[i] = temp_ranks[i];
-
+		std::cout << "==" << unit_type <<"== Rank:: " << ranks[i] << std::endl;
+	}
+	std::cout << "==" << unit_type <<"== My check value is: " << check << " and typearray.size is " << typearray.size() << std::endl;
 	if(check == typearray.size()) {
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
 		MPI_Comm comm;
 		MPI_Comm_group(MPI_COMM_WORLD, &orig_group);
-		MPI_Group_incl(orig_group, typearray.size(), ranks, &new_group);
+		MPI_Group_incl(orig_group, temp_ranks.size(), ranks, &new_group);
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
 		// Time to set Environment.
 		if(!is_no_unit(unit_type)) {
@@ -120,14 +168,18 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 			int inew_rank = -1;
 			MPI_Group_rank (new_group, &inew_rank); 
 			unsigned int new_rank = bcomm.rank();
-			all_gather(bcomm, std::make_pair(unit_type, new_rank), types); // send the pair<unit_type,world.rank()>
+			unit_type.set_enums(_enums);
+			std::cout << "==" << unit_type << " " << _enums.first << " == novo rank: " << new_rank << std::endl;
+			all_gather(bcomm, Unit_Type_Pack(unit_type, _enums, rank), types); // send the pair<unit_type,world.rank()>
 			for(unsigned int i = 0; i < types.size(); i++)
-				env->add(types.at(i).first, types.at(i).second);
+				env->add(types.at(i).unit_type, types.at(i).rank);
 			env->add(unit_type, new_rank);	
 			_created_unit->comm->set_intracomm(comm);
 			_created_unit->comm->set_environment(env);
 			env->set_complete();
 		}
+	} else {
+		std::cerr << "Error while instantiting POb" << std::endl;
 	}
 	// Construct comm object with MPI_IntraCommunicator
 }

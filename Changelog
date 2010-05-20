@@ -1,3 +1,6 @@
+2010-20-05 Eduardo Gurgel <edgurgel@gmail.com>
+* Almost complete create_unit to enumerated units.
+
 2010-13-05 Eduardo Gurgel <edgurgel@gmail.com>
 * create_unit.h: bugfix;
 

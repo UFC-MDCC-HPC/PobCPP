@@ -16,10 +16,20 @@ public:
 	~Unit_Type();
 
 	void set_enums(std::pair<unsigned int, unsigned int> _enums) {
+		enumerators = 1;
 		enums = _enums;
 	}
+
+	std::pair<unsigned int, unsigned int> get_enums() const {
+		return enums;
+	}
+
 	bool has_enumerators(void) const {
 		return enumerators;
+	}
+
+	void set_enumerators(unsigned int _enumerators) {
+		enumerators = _enumerators;
 	}
 
 	bool operator==(const Unit_Type& _unit_type) const;

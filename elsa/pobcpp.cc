@@ -145,7 +145,13 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 				continue;
       FakeList<ArgExpression>* addTypeArgs;
       ArgExpression* arg1 = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(j)));
-      addTypeArgs = FakeList<ArgExpression>::makeList(arg1);
+			if(classes[i].enumerators != 0) {
+      	ArgExpression* arg2 = new ArgExpression(new E_intLit(loc, SourceLoc(), itoa(classes[i].enumerators)));
+      	addTypeArgs = FakeList<ArgExpression>::makeList(arg2);
+				addTypeArgs = addTypeArgs->prepend(arg1);
+			} else {
+      	addTypeArgs = FakeList<ArgExpression>::makeList(arg1);
+			}
 			// FIXME Find a sane way to instantiate the below statement.
       S_expr* sexpr = new S_expr(loc, SourceLoc(), new FullExpression(
                                  new E_funCall(loc, SourceLoc(),
