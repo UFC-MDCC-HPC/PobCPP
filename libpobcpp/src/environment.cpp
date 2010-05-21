@@ -1,5 +1,7 @@
 #include "environment.h"
 
+#include <iostream>
+
 namespace Pobcpp {
 
 Environment::Environment(void) : complete(false), my_rank(0) { }
@@ -20,6 +22,10 @@ void Environment::add(const Unit_Type& _unit_type, const unsigned int& rank) {
 }
 
 void Environment::set_complete() { 
+	std::map<Unit_Type, unsigned int>::iterator iter;
+	for(iter = units_rank.begin(); iter != units_rank.end(); ++iter ) {
+		std::cout << "Unit_Type: " << iter->first << ", Rank: " << iter->second << std::endl;
+	}			
 	complete = true;
 }
 

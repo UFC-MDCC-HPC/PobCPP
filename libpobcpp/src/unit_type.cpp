@@ -1,4 +1,5 @@
 #include "unit_type.h"
+#include <algorithm>
 
 namespace Pobcpp {
 
@@ -18,13 +19,17 @@ bool Unit_Type::operator==(const Unit_Type& _unit_type) const {
 }
 
 bool Unit_Type::operator<(const Unit_Type& _unit_type) const {
+#define lex_compare lexicographical_compare(unit_type.begin(), unit_type.end(), \
+	                        _unit_type.unit_type.begin(), _unit_type.unit_type.end()) 
 	if(!has_enumerators()) {
-		if(unit_type < _unit_type.unit_type) 
+//		if(unit_type < _unit_type.unit_type) 
+			if(lex_compare)
 			return true;
 		else
 			return false;
 	} else {
-		if(unit_type < _unit_type.unit_type) {
+//		if(unit_type < _unit_type.unit_type) {
+			if(lex_compare) {
 			return true;
 		}
 		else if (unit_type == _unit_type.unit_type) {
@@ -39,7 +44,7 @@ bool Unit_Type::operator<(const Unit_Type& _unit_type) const {
 }
 
 std::ostream& operator<<(std::ostream& ostream, const Unit_Type& _unit_type) {
-	ostream << _unit_type.unit_type;
+	ostream << _unit_type.unit_type << " (" << _unit_type.enums.first << "," << _unit_type.enums.second << ")";
 	return ostream;
 }
 

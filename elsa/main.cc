@@ -682,7 +682,7 @@ void doit(int argc, char **argv)
 
     //PObCppPrint(unit, tfac, classes); //PObC++ modification
     // do elaboration
-    unit->traverse(vis.loweredVisitor);
+//    unit->traverse(vis.loweredVisitor);
 
     // print abstract syntax tree annotated with types
     if (tracingSys("printElabAST")) {

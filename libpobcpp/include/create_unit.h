@@ -31,11 +31,11 @@ public:
 	bool check(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_n) {
 		//unsigned int _enum_i = _unit_type.get_enums().first;
 		if(types.count(_unit_type) == 0) {
-			std::cout << "lascou pq não tem ninguem" << std::endl;
+//			std::cout << "lascou pq não tem ninguem" << std::endl;
 			return false;
 		}
 		std::pair<unsigned int, int> current_pair = types[_unit_type];
-		std::cout << "current pair 1 - " << current_pair.first << std::endl;
+//		std::cout << "current pair 1 - " << current_pair.first << std::endl;
 		if(current_pair.second == -1) {
 			current_pair.second = _enum_n;
 			current_pair.first = _enum_n + 1;
@@ -132,14 +132,14 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 		for(unsigned int j = 0; j < typearray.size(); j++) {
 			if(!types.at(i).unit_type.has_enumerators()) {
 				if(types.at(i).unit_type == typearray.get_type(j)) {
-					std::cout << "==" << unit_type <<"== Reco this type: " << types.at(i).unit_type << std::endl;
+		//			std::cout << "==" << unit_type <<"== Reco this type: " << types.at(i).unit_type << std::endl;
 					check++;
 					temp_ranks.push_back(types.at(i).rank);
 				}
 			} else {
 				if(types.at(i).unit_type == typearray.get_type(j)) {
 					if(enum_checker.check(types.at(i).unit_type, types.at(i).enums.second)) {
-						std::cout << "==" << unit_type <<"== Reco this ENUM type: " << types.at(i).unit_type << std::endl;
+			//			std::cout << "==" << unit_type <<"== Reco this ENUM type: " << types.at(i).unit_type << std::endl;
 						temp_ranks.push_back(types.at(i).rank);
 					}
 				}
@@ -148,12 +148,12 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 	}
 	check += enum_checker.check();
 	int* ranks = new int[temp_ranks.size()];
-	std::cout << "Temp ranks size" << temp_ranks.size() << std::endl;
+	//std::cout << "Temp ranks size" << temp_ranks.size() << std::endl;
 	for(unsigned int i = 0; i < temp_ranks.size(); i++) {
 		ranks[i] = temp_ranks[i];
-		std::cout << "==" << unit_type <<"== Rank:: " << ranks[i] << std::endl;
+		//std::cout << "==" << unit_type <<"== Rank:: " << ranks[i] << std::endl;
 	}
-	std::cout << "==" << unit_type <<"== My check value is: " << check << " and typearray.size is " << typearray.size() << std::endl;
+//	std::cout << "==" << unit_type <<"== My check value is: " << check << " and typearray.size is " << typearray.size() << std::endl;
 	if(check == typearray.size()) {
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
@@ -169,11 +169,11 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 			MPI_Group_rank (new_group, &inew_rank); 
 			unsigned int new_rank = bcomm.rank();
 			unit_type.set_enums(_enums);
-			std::cout << "==" << unit_type << " " << _enums.first << " == novo rank: " << new_rank << std::endl;
+			std::cout << "==" << unit_type << " == novo rank: " << new_rank << std::endl;
 			all_gather(bcomm, Unit_Type_Pack(unit_type, _enums, rank), types); // send the pair<unit_type,world.rank()>
 			for(unsigned int i = 0; i < types.size(); i++)
 				env->add(types.at(i).unit_type, types.at(i).rank);
-			env->add(unit_type, new_rank);	
+//			env->add(unit_type, new_rank);	
 			_created_unit->comm->set_intracomm(comm);
 			_created_unit->comm->set_environment(env);
 			env->set_complete();
