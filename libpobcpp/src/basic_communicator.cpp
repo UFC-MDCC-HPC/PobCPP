@@ -22,8 +22,8 @@ void Basic_Communicator::send(const Unit_Type& _unit_type, int _data, const int 
 	if(env && world) {
 		if(env->isComplete()) {
 			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Sending " << _data << " to "<< _unit_type << " - " << unit_rank << std::endl;
 			world.send(unit_rank, _tag, _data);	
+			std::cout << "Sending " << _data << " to "<< _unit_type << " - " << unit_rank << std::endl;
 		}
 	}
 }
@@ -33,8 +33,8 @@ void Basic_Communicator::send(const Unit_Type& _unit_type, std::string _data, co
 	if(env) {
 		if(env->isComplete()) {
 			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Sending " << _data << " to "<< _unit_type << " - " << unit_rank << std::endl;
 			world.send(unit_rank, _tag, _data);	
+			std::cout << "Sending " << _data << " to "<< _unit_type << " - " << unit_rank << std::endl;
 		}
 	}
 }
@@ -45,8 +45,8 @@ int Basic_Communicator::receive(const Unit_Type& _unit_type, int _data_type, con
 	if(env && world) {
 		if(env->isComplete()) {
 			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Receiving " << data << " from "<< _unit_type << " - " << unit_rank << std::endl;
 			world.recv(unit_rank , _tag, data);
+			std::cout << "Received " << data << " from "<< _unit_type << " - " << unit_rank << std::endl;
 		}
 	}
 	return data;
@@ -58,8 +58,8 @@ std::string Basic_Communicator::receive(const Unit_Type& _unit_type, std::string
 	if(env) {
 		if(env->isComplete()) {
 			unsigned int unit_rank = env->get_rank(_unit_type);
-			std::cout << "Receiving " << data << " from "<< _unit_type << " - " << unit_rank << std::endl;
 			world.recv(unit_rank , _tag, data);
+			std::cout << "Received " << data << " from "<< _unit_type << " - " << unit_rank << std::endl;
 		}
 	}
 	return data;

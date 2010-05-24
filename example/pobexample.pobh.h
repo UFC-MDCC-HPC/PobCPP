@@ -17,7 +17,7 @@ class HelloWorld {
 		public:
 		int recvHello() {
 			comm->receive<HelloWorld::Hello, int>(1);
-			comm->receive<HelloWorld::Nothing, int>(0,2);
+			comm->receive<HelloWorld::Nothing, int>(2,0);
 		}
 
 	};
