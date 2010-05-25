@@ -1,6 +1,4 @@
-lib mpi ;
-
-exe example1 : mpi main.cpp ../libpobcpp : <include>.
+exe example1 : main.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;
 
 exe example2 : main2.cpp ../libpobcpp : <include>.

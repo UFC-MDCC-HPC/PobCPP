@@ -39,7 +39,7 @@ public:
 		if(current_pair.second == -1) {
 			current_pair.second = _enum_n;
 			current_pair.first = _enum_n + 1;
-		} else if(current_pair.second != _enum_n) {
+		} else if((unsigned int) current_pair.second != _enum_n) {
 			return false;
 		}
 		if(current_pair.first == 0) {
