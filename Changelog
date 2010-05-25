@@ -1,3 +1,6 @@
+2010-25-05 Eduardo Gurgel <edgurgel@gmail.com>
+* basic_communicator.h,.cpp : gather function added.
+
 2010-24-05 Eduardo Gurgel <edgurgel@gmail.com>
 * examples/ folder created to tests.
 * basic_communicator.h,.cpp : broadcast function added.
