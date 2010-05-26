@@ -11,7 +11,6 @@ void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype& _data
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			world.send(unit_rank, _tag, _data);	\
-			std::cout << "Sending " << _data << " to "<< _unit_type << " - " << unit_rank << std::endl; \
 		} \
 	} \
 } 
@@ -24,7 +23,6 @@ datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			world.recv(unit_rank , _tag, data); \
-			std::cout << "Received " << data << " from "<< _unit_type << " - " << unit_rank << std::endl; \
 		} \
 	} \
 	return data; \
@@ -37,7 +35,6 @@ void Basic_Communicator::broadcast(const Unit_Type& _unit_type, datatype& value)
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			boost::mpi::broadcast(world, value, unit_rank); \
-			std::cout << "Broadcast executed " << " root: "<< _unit_type << " - " << unit_rank << std::endl; \
 		} \
 	} \
 }
@@ -48,7 +45,6 @@ void Basic_Communicator::broadcast(const Unit_Type& _unit_type, datatype* values
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			boost::mpi::broadcast(world, values, n, unit_rank); \
-			std::cout << "Broadcast executed " << " root: "<< _unit_type << " - " << unit_rank << std::endl; \
 		} \
 	} \
 }
@@ -60,7 +56,17 @@ void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype& in_
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			boost::mpi::gather(world, in_value, out_values, unit_rank); \
-			std::cout << "Gather executed " << " root: "<< _unit_type << " - " << unit_rank << std::endl; \
+		} \
+	} \
+}
+
+#define Basic_Communicator_gather_array_impl(datatype) \
+void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype* in_values, int n, datatype* out_values) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			boost::mpi::gather(world, in_values, n, out_values, unit_rank); \
 		} \
 	} \
 }
@@ -77,31 +83,70 @@ void Basic_Communicator::set_environment(Environment* _env) {
 void Basic_Communicator::set_intracomm(MPI_Comm _comm) {
 	comm = _comm;
 }
+typedef std::pair<int, int> pair_int_int;
+typedef std::pair<float, int> pair_float_int;
+typedef std::pair<double, int> pair_double_int;
 
 Basic_Communicator_send_impl(int);
+Basic_Communicator_send_impl(unsigned int);
 Basic_Communicator_send_impl(float);
 Basic_Communicator_send_impl(double);
+Basic_Communicator_send_impl(char);
 Basic_Communicator_send_impl(std::string);
+Basic_Communicator_send_impl(pair_int_int);
+Basic_Communicator_send_impl(pair_float_int);
+Basic_Communicator_send_impl(pair_double_int);
 
 Basic_Communicator_receive_impl(int);
+Basic_Communicator_receive_impl(unsigned int);
 Basic_Communicator_receive_impl(float);
 Basic_Communicator_receive_impl(double);
+Basic_Communicator_receive_impl(char);
 Basic_Communicator_receive_impl(std::string);
+Basic_Communicator_receive_impl(pair_int_int);
+Basic_Communicator_receive_impl(pair_float_int);
+Basic_Communicator_receive_impl(pair_double_int);
 
 Basic_Communicator_broadcast_impl(int);
+Basic_Communicator_broadcast_impl(unsigned int);
 Basic_Communicator_broadcast_impl(float);
 Basic_Communicator_broadcast_impl(double);
+Basic_Communicator_broadcast_impl(char);
 Basic_Communicator_broadcast_impl(std::string);
+Basic_Communicator_broadcast_impl(pair_int_int);
+Basic_Communicator_broadcast_impl(pair_float_int);
+Basic_Communicator_broadcast_impl(pair_double_int);
 
 Basic_Communicator_broadcast_array_impl(int);
+Basic_Communicator_broadcast_array_impl(unsigned int);
 Basic_Communicator_broadcast_array_impl(float);
 Basic_Communicator_broadcast_array_impl(double);
+Basic_Communicator_broadcast_array_impl(char);
 Basic_Communicator_broadcast_array_impl(std::string);
+Basic_Communicator_broadcast_array_impl(pair_int_int);
+Basic_Communicator_broadcast_array_impl(pair_float_int);
+Basic_Communicator_broadcast_array_impl(pair_double_int);
 
 Basic_Communicator_gather_impl(int);
+Basic_Communicator_gather_impl(unsigned int);
 Basic_Communicator_gather_impl(float);
 Basic_Communicator_gather_impl(double);
+Basic_Communicator_gather_impl(char);
 Basic_Communicator_gather_impl(std::string);
+Basic_Communicator_gather_impl(pair_int_int);
+Basic_Communicator_gather_impl(pair_float_int);
+Basic_Communicator_gather_impl(pair_double_int);
+
+Basic_Communicator_gather_array_impl(int);
+Basic_Communicator_gather_array_impl(unsigned int);
+Basic_Communicator_gather_array_impl(float);
+Basic_Communicator_gather_array_impl(double);
+Basic_Communicator_gather_array_impl(char);
+Basic_Communicator_gather_array_impl(std::string);
+Basic_Communicator_gather_array_impl(pair_int_int);
+Basic_Communicator_gather_array_impl(pair_float_int);
+Basic_Communicator_gather_array_impl(pair_double_int);
+
 }
 
 
