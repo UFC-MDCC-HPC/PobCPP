@@ -23,21 +23,33 @@ public:
 public:
 	//FIXME implement array send and receive
 	template<typename Type, typename Data>
-	void send(const Data& data, const int tag, unsigned int _enumi = 0);
+	void send(const Data& data, const int tag);
+	template<typename Type, typename Data>
+	void send(const unsigned int _enumi, const Data& data, const int tag);
 
 	template<typename Type, typename Data>
-	Data receive(const int _tag, unsigned int _enumi = 0);
+	Data receive(const unsigned int _enumi, const int _tag);
+	template<typename Type, typename Data>
+	Data receive(const int _tag);
 
 // Collective
 	template<typename Type, typename Data>
-	void broadcast(Data& value, unsigned int _enumi = 0);
+	void broadcast(Data& value);
 	template<typename Type, typename Data>
-	void broadcast(Data* values, int n, unsigned int _enumi = 0);
+	void broadcast(const unsigned int _enumi, Data& value);
+	template<typename Type, typename Data>
+	void broadcast(Data* values, int n);
+	template<typename Type, typename Data>
+	void broadcast(const unsigned int _enumi, Data* values, int n);
 
 	template<typename Type, typename Data>
-	void gather(const Data& in_value, Data* out_values, unsigned int _enumi = 0);
+	void gather(const Data& in_value, Data* out_values);
 	template<typename Type, typename Data>
-	void gather(const Data* in_values, int n, Data* out_values, unsigned int _enumi = 0);
+	void gather(const unsigned int _enumi, const Data& in_value, Data* out_values);
+	template<typename Type, typename Data>
+	void gather(const Data* in_values, int n, Data* out_values);
+	template<typename Type, typename Data>
+	void gather(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);
 
 private:
 	// Implementations
@@ -107,7 +119,12 @@ private:
 };
 
 template<typename Type, typename Data>
-void Basic_Communicator::send(const Data& _data, const int _tag, unsigned int _enumi) {
+void Basic_Communicator::send(const Data& _data, const int _tag) {
+	send<Type>(0, _data, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::send(const unsigned int _enumi, const Data& _data, const int _tag) {
 	Type* un;
 	Unit_Type unit_type(un);
 	unit_type.set_enums(std::make_pair(_enumi,0));
@@ -115,7 +132,12 @@ void Basic_Communicator::send(const Data& _data, const int _tag, unsigned int _e
 }
 
 template<typename Type, typename Data>
-Data Basic_Communicator::receive(const int _tag, unsigned int _enumi) {
+Data Basic_Communicator::receive(const int _tag) {
+	return receive<Type, Data>(0, _tag);
+}
+
+template<typename Type, typename Data>
+Data Basic_Communicator::receive(const unsigned int _enumi, const int _tag) {
 	Data data;
 	Type* un;
 	Unit_Type unit_type(un);	
@@ -124,7 +146,12 @@ Data Basic_Communicator::receive(const int _tag, unsigned int _enumi) {
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::broadcast(Data& value, unsigned int _enumi) {
+void Basic_Communicator::broadcast(Data& value) {
+	return broadcast<Type>(0, value);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::broadcast(const unsigned int _enumi, Data& value) {
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
@@ -132,7 +159,12 @@ void Basic_Communicator::broadcast(Data& value, unsigned int _enumi) {
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::broadcast(Data* value, int n, unsigned int _enumi) {
+void Basic_Communicator::broadcast(Data* value, int n) {
+	return broadcast<Type>(0, value, n);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::broadcast(const unsigned int _enumi, Data* value, int n) {
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
@@ -140,7 +172,12 @@ void Basic_Communicator::broadcast(Data* value, int n, unsigned int _enumi) {
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::gather(const Data& in_value, Data* out_values, unsigned int _enumi) {
+void Basic_Communicator::gather(const Data& in_value, Data* out_values) {
+	return gather<Type>(0, in_value, out_values);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::gather(const unsigned int _enumi, const Data& in_value, Data* out_values) {
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
@@ -148,7 +185,12 @@ void Basic_Communicator::gather(const Data& in_value, Data* out_values, unsigned
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::gather(const Data* in_values, int n, Data* out_values, unsigned int _enumi) {
+void Basic_Communicator::gather(const Data* in_values, int n, Data* out_values) {
+	return gather<Type>(0, in_values, n, out_values);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::gather(const unsigned int _enumi, const Data* in_values, int n, Data* out_values) {
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));

@@ -1,3 +1,6 @@
+#include "job.h"
+#include "result.h"
+
 class Farm {
 
    public: 

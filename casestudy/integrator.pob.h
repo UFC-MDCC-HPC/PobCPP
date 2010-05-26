@@ -1,6 +1,8 @@
 #include "farm.h"
+#include "unit_type.h"
+#include "unit.h"
 
-class Integrator: public Farm {
+class Romberg_Integrator: public Farm {
 
    unit Manager : public Farm::Manager
    {   
