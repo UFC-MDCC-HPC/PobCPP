@@ -1,4 +1,7 @@
 2010-26-05 Eduardo Gurgel <edgurgel@gmail.com>
+* Case Study implementation - continuation
+
+2010-26-05 Eduardo Gurgel <edgurgel@gmail.com>
 * basic_communicator.h,.cpp : Bugfix.
 * Case Study implementation initiated.
 
