@@ -1,46 +1,55 @@
+#include "create_unit.h"
 #include "integrator_main.h"
 
 #include "integrator.h"
+#include <iostream>
+#include <cmath>
+#include <algorithm>
 
-int IntegratorMain::Root::main() {
-      #pragma omp parallel
-      {
-        Romberg_Integrator::Manager *m 
-             = new Romberg_Integrator::Manager(0.0, 1.0, 5, 2);
-				create_unit<Romberg_Integrator>(m);
-        double result;
-        #pragma omp sections
-        {
-            #pragma omp section
-             m->generate_subproblems();         
-            #pragma omp section
-             m->synchronize_jobs();   
-            #pragma omp section
-             m->work(); 
-            #pragma omp section
-             m->synchronize_results();   
-            #pragma omp section
-            result = m->combine_subproblems_results();      
-
-        }      
-        cout << "Result is " << result << endl;
-      }
-    }
+int IntegratorMain::Root::main(int dim_num, int dim_partition_size, int number_of_partitions, int workers) {
+	int num_jobs = (int)std::pow(dim_partition_size, dim_num);
+	int num_local_jobs = num_jobs / workers;
+//	m->dim_num = dim_num;
+//	m->dim_partition_size = dim_partition_size;
+//	m->workers = workers;
+	//m->num_jobs = num_jobs;
+//	m->num_local_jobs = num_local_jobs;
+//	m->number_of_partitions = number_of_partitions;
+	Romberg_Integrator::Manager *m  = new Romberg_Integrator::Manager(dim_num, dim_partition_size, number_of_partitions, num_jobs, num_local_jobs, workers);
+	std::cout << "Trying to create Manager. " << std::endl;
+	create_unit<Romberg_Integrator>(m);
+	std::cout << "Manager created. " << std::endl;
+	double result;
+	std::cout << "Jobs created: " << num_jobs << std::endl;
+	m->generate_subproblems();         
+	std::cout << "Root - Problems generated " << std::endl;
+	m->synchronize_jobs();   
+	std::cout << "Root - Jobs synchronized " << std::endl;
+	m->synchronize_results();   
+	std::cout << "Root - Results synchronized " << std::endl;
+	result = m->combine_subproblems_results();      
+	std::cout << "Root - Result is " << result << std::endl;
+	return 0;
 }
 
-int IntegratorMain::Peer::main() {
-      #pragma omp parallel 
-      {
-        RombergIntegrator::Worker *w = new RombergIntegrator::Worker(function, 0.00001, 16);
-				create_unit<Romberg_Integrator>(w, j, n);
-        #pragma omp sections
-        {
-            #pragma omp section
-             w-> distribute_subproblems();         
-            #pragma omp section
-             w -> integrate();
-        }
-      }
-
+int IntegratorMain::Peer::main(int it_max, double tol, int dim_num, int dim_partition_size, int number_of_partitions) {
+	int workers = n;
+	int num_jobs = (int)std::pow(dim_partition_size, dim_num);
+	int num_local_jobs = num_jobs / workers;
+/*	w->tol = tol;
+	w->number_of_partitions = number_of_partitions;
+	w->dim_num = dim_num;
+	w->dim_partition_size = dim_partition_size;
+	w->num_local_jobs = num_local_jobs;*/
+	Romberg_Integrator::Worker *w = new Romberg_Integrator::Worker(it_max, tol, dim_num,dim_partition_size, number_of_partitions, num_local_jobs, j,n);
+	create_unit<Romberg_Integrator>(w,std::make_pair(j, workers));
+	std::cout << "Worker " << j << "," << workers << " created." << std::endl;
+	w->synchronize_jobs();   
+	std::cout << "W(" << j << "," << n << ") " << "Jobs synchronized " << std::endl;
+	w->work();
+	std::cout << "W(" << j << "," << n << ") "<< "Work done " << std::endl;
+	w->synchronize_results();   
+	std::cout << "W(" << j << "," << n << ") "<< "Results synchronized " << std::endl;
+	return 0;
 }
 

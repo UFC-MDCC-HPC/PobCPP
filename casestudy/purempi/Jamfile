@@ -1,0 +1,3 @@
+lib boost_mpi-mt ;
+
+exe purempi : main.cpp nintlib/nintlib.cpp boost_mpi-mt : <include>nintlib <include>/usr/lib/openmpi/include ;

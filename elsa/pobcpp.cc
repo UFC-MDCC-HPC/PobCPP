@@ -112,6 +112,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		//   return pobtypes;
     // }
     DeclFlags dflag = DF_STATIC;
+    DeclFlags dflag_decl = DF_NONE;
 
     checkStrings();
 
@@ -136,7 +137,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       
     declList = FakeList<Declarator>::makeList(declpobtypes);
 
-    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag, new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)) , false), declList)); // Pob_Type_Array pobtypes(units);
+    S_decl* sdecl = new S_decl(loc, SourceLoc(), new Declaration(dflag_decl, new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)) , false), declList)); // Pob_Type_Array pobtypes(units);
     stms->append(sdecl);
 
 		unsigned int j = 0; // Unit order

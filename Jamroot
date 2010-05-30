@@ -1,4 +1,11 @@
-using gcc : 4.1 ;
+#using gcc : 4.1 ;
+using gcc :  :  g++ :  
+			   <compileflags>-fpermissive
+			   <compileflags>-g3
+#		       <linkflags>-fopenmp  
+#		       <linkflags>-Wl
+#		       <linkflags>-pg
+; 
 project parallel_object_cpp ;
 
 build-project libpobcpp ;

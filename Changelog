@@ -1,3 +1,8 @@
+2010-39-05 Eduardo Gurgel <edgurgel@gmail.com>
+* Case study complete.
+* create_unit.h: Bugifx
+* create_unit.cpp : new file.
+
 2010-26-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Case Study implementation - continuation
 

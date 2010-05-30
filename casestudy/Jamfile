@@ -1,14 +1,14 @@
-exe example1 : main.cpp ../libpobcpp : <include>.
+#using gcc :  :  g++ :  
+#			   <compileflags>-fpermissive
+#		       <linkflags>-fopenmp  
+#		       <linkflags>-Wl
+#		       <linkflags>-pg
+#; 
+
+lib nintlib : nintlib/nintlib.cpp ;
+
+exe example1 : nintlib integrator.cpp integrator_main.cpp main1.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;
 
-exe example2 : main2.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include <include>/usr/include/openmpi ;
-
-exe example3 : main3.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include <include>/usr/include/openmpi ;
-
-exe example4 : main4.cpp ../libpobcpp : <include>.
-<include>../libpobcpp/include <include>/usr/include/openmpi ;
-
-exe example5 : main5.cpp ../libpobcpp : <include>.
+exe example2 : nintlib integrator.cpp integrator_main.cpp main2.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;

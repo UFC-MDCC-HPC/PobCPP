@@ -10,6 +10,7 @@
 #include <string>
 
 namespace Pobcpp {
+//Move to a new file
 
 class Basic_Communicator {
 public:
@@ -28,9 +29,28 @@ public:
 	void send(const unsigned int _enumi, const Data& data, const int tag);
 
 	template<typename Type, typename Data>
+	void send(const Data* data, int n, const int tag);
+	template<typename Type, typename Data>
+	void send(const unsigned int _enumi, const Data* data, int n, const int tag);
+
+	template<typename Type, typename Data>
+	void isend(const Data& data, const int tag);
+	template<typename Type, typename Data>
+	void isend(const unsigned int _enumi, const Data& data, const int tag);
+
+	template<typename Type, typename Data>
+	void isend(const Data* data, int n, const int tag);
+	template<typename Type, typename Data>
+	void isend(const unsigned int _enumi, const Data* data, int n, const int tag);
+
+	template<typename Type, typename Data>
 	Data receive(const unsigned int _enumi, const int _tag);
 	template<typename Type, typename Data>
 	Data receive(const int _tag);
+	template<typename Type, typename Data>
+	void receive(const unsigned int _enumi, Data* data, int n, const int _tag);
+	template<typename Type, typename Data>
+	void receive(Data* data, int n, const int _tag);
 
 // Collective
 	template<typename Type, typename Data>
@@ -51,6 +71,15 @@ public:
 	template<typename Type, typename Data>
 	void gather(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);
 
+	template<typename Type, typename Data>
+	void reduce(const Data* in_values, int n);	
+	template<typename Type, typename Data>
+	void reduce(const unsigned int _enumi, const Data* in_values, int n);	
+	template<typename Type, typename Data>
+	void reduce(const Data* in_values, int n, Data* out_values);	
+	template<typename Type, typename Data>
+	void reduce(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);	
+
 private:
 	// Implementations
 	void send(const Unit_Type& _unit_type, const int& _data, const int _tag);
@@ -63,6 +92,36 @@ private:
 	void send(const Unit_Type& _unit_type, const std::pair<float, int> & _data, const int _tag);
 	void send(const Unit_Type& _unit_type, const std::pair<double, int> & _data, const int _tag);
 
+	void send(const Unit_Type& _unit_type, const int* _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const unsigned int* _data, int n ,const int _tag);
+	void send(const Unit_Type& _unit_type, const float* _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const double* _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const char* _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const std::string* _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const std::pair<int, int> * _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const std::pair<float, int> * _data, int n, const int _tag);
+	void send(const Unit_Type& _unit_type, const std::pair<double, int> * _data, int n, const int _tag);
+
+	void isend(const Unit_Type& _unit_type, const int& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const unsigned int& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const float& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const double& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const char& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::string& _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<int, int> & _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<float, int> & _data, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<double, int> & _data, const int _tag);
+
+	void isend(const Unit_Type& _unit_type, const int* _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const unsigned int* _data, int n ,const int _tag);
+	void isend(const Unit_Type& _unit_type, const float* _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const double* _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const char* _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::string* _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<int, int> * _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<float, int> * _data, int n, const int _tag);
+	void isend(const Unit_Type& _unit_type, const std::pair<double, int> * _data, int n, const int _tag);
+	
 	int receive(const Unit_Type& _unit_type, const int& _data_type, const int _tag);
 	unsigned int receive(const Unit_Type& _unit_type, const unsigned int& _data_type, const int _tag);
 	float receive(const Unit_Type& _unit_type, const float& _data_type, const int _tag);
@@ -72,6 +131,16 @@ private:
 	std::pair<int, int> receive(const Unit_Type& _unit_type, const std::pair<int, int>& _data_type, const int _tag);
 	std::pair<float, int> receive(const Unit_Type& _unit_type, const std::pair<float, int>& _data_type, const int _tag);
 	std::pair<double, int> receive(const Unit_Type& _unit_type, const std::pair<double, int>& _data_type, const int _tag);
+
+	void receive(const Unit_Type& _unit_type, int* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, unsigned int* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, float* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, double* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, char* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, std::string* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, std::pair<int, int>* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, std::pair<float, int>* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, std::pair<double, int>* _data_type, int n, const int _tag);
 
 	void broadcast(const Unit_Type& _unit_type, int& value);
 	void broadcast(const Unit_Type& _unit_type, unsigned int& value);
@@ -112,6 +181,9 @@ private:
 	void gather(const Unit_Type& _unit_type, const std::pair<int, int>* in_values, int n, std::pair<int, int>* out_values);
 	void gather(const Unit_Type& _unit_type, const std::pair<float, int>* in_values, int n, std::pair<float, int>* out_values);
 	void gather(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, int n, std::pair<double, int>* out_values);
+
+	void reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
+	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);
 private:
 
 	Environment* env;
@@ -132,6 +204,46 @@ void Basic_Communicator::send(const unsigned int _enumi, const Data& _data, cons
 }
 
 template<typename Type, typename Data>
+void Basic_Communicator::send(const Data* _data, int n, const int _tag) {
+	send<Type>(0, _data, n, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::send(const unsigned int _enumi, const Data* _data, int n, const int _tag) {
+	Type* un;
+	Unit_Type unit_type(un);
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	send(unit_type, _data, n, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::isend(const Data& _data, const int _tag) {
+	isend<Type>(0, _data, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::isend(const unsigned int _enumi, const Data& _data, const int _tag) {
+	Type* un;
+	Unit_Type unit_type(un);
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	isend(unit_type, _data, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::isend(const Data* _data, int n, const int _tag) {
+	isend<Type>(0, _data, n, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::isend(const unsigned int _enumi, const Data* _data, int n, const int _tag) {
+	Type* un;
+	Unit_Type unit_type(un);
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	isend(unit_type, _data, n, _tag);
+}
+
+
+template<typename Type, typename Data>
 Data Basic_Communicator::receive(const int _tag) {
 	return receive<Type, Data>(0, _tag);
 }
@@ -143,6 +255,19 @@ Data Basic_Communicator::receive(const unsigned int _enumi, const int _tag) {
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
 	return receive(unit_type, data, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::receive(Data* data, int n, const int _tag) {
+	receive<Type, Data>(0, data, n, _tag);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::receive(const unsigned int _enumi, Data* data, int n, const int _tag) {
+	Type* un;
+	Unit_Type unit_type(un);	
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	receive(unit_type, data, n, _tag);
 }
 
 template<typename Type, typename Data>
@@ -196,6 +321,33 @@ void Basic_Communicator::gather(const unsigned int _enumi, const Data* in_values
 	unit_type.set_enums(std::make_pair(_enumi,0));
 	return gather(unit_type, in_values, n, out_values);
 }
+
+template<typename Type, typename Data>
+void Basic_Communicator::reduce(const Data* in_values, int n) {
+	return reduce<Type>(0, in_values, n);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::reduce(const unsigned int _enumi, const Data* in_values, int n) {
+	Type* un;
+	Unit_Type unit_type(un);	
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	return reduce(unit_type, in_values, n);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::reduce(const Data* in_values, int n, Data* out_values) {
+	return reduce<Type>(0, in_values, n, out_values);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::reduce(const unsigned int _enumi, const Data* in_values, int n, Data* out_values) {
+	Type* un;
+	Unit_Type unit_type(un);	
+	unit_type.set_enums(std::make_pair(_enumi,0));
+	return reduce(unit_type, in_values, n, out_values);
+}
+
 }
 
 #endif

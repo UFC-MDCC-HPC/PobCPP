@@ -15,6 +15,39 @@ void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype& _data
 	} \
 } 
 
+#define Basic_Communicator_send_array_impl(datatype) \
+void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype* _data, int n, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.send(unit_rank, _tag, _data, n);	\
+		} \
+	} \
+} 
+
+#define Basic_Communicator_isend_impl(datatype) \
+void Basic_Communicator::isend(const Unit_Type& _unit_type, const datatype& _data, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.isend(unit_rank, _tag, _data);	\
+		} \
+	} \
+} 
+
+#define Basic_Communicator_isend_array_impl(datatype) \
+void Basic_Communicator::isend(const Unit_Type& _unit_type, const datatype* _data, int n, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.isend(unit_rank, _tag, _data, n);	\
+		} \
+	} \
+} 
+
 #define Basic_Communicator_receive_impl(datatype) \
 datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag) { \
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
@@ -23,6 +56,43 @@ datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
 			world.recv(unit_rank , _tag, data); \
+		} \
+	} \
+	return data; \
+} 
+
+#define Basic_Communicator_receive_array_impl(datatype) \
+void Basic_Communicator::receive(const Unit_Type& _unit_type, datatype* data, int n, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.recv(unit_rank , _tag, data, n); \
+		} \
+	} \
+} 
+
+#define Basic_Communicator_ireceive_impl(datatype) \
+datatype Basic_Communicator::ireceive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	datatype data; \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.irecv(unit_rank , _tag, data); \
+		} \
+	} \
+	return data; \
+} 
+
+#define Basic_Communicator_ireceive_array_impl(datatype) \
+datatype Basic_Communicator::ireceive(const Unit_Type& _unit_type, const datatype* _data_type, int n, const int _tag) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	datatype data; \
+	if(env && world) { \
+		if(env->isComplete()) { \
+			unsigned int unit_rank = env->get_rank(_unit_type); \
+			world.irecv(unit_rank , _tag, data, n); \
 		} \
 	} \
 	return data; \
@@ -70,6 +140,13 @@ void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype* in_
 		} \
 	} \
 }
+
+#define Basic_Communicator_send_and_isend_impl(datatype) \
+	Basic_Communicator_send_impl(datatype) \
+	Basic_Communicator_send_array_impl(datatype) \
+	Basic_Communicator_isend_impl(datatype) \
+	Basic_Communicator_isend_array_impl(datatype) \
+
 namespace Pobcpp {
 
 Basic_Communicator::Basic_Communicator() : env(0)  { }
@@ -87,15 +164,15 @@ typedef std::pair<int, int> pair_int_int;
 typedef std::pair<float, int> pair_float_int;
 typedef std::pair<double, int> pair_double_int;
 
-Basic_Communicator_send_impl(int);
-Basic_Communicator_send_impl(unsigned int);
-Basic_Communicator_send_impl(float);
-Basic_Communicator_send_impl(double);
-Basic_Communicator_send_impl(char);
-Basic_Communicator_send_impl(std::string);
-Basic_Communicator_send_impl(pair_int_int);
-Basic_Communicator_send_impl(pair_float_int);
-Basic_Communicator_send_impl(pair_double_int);
+Basic_Communicator_send_and_isend_impl(int);
+Basic_Communicator_send_and_isend_impl(unsigned int);
+Basic_Communicator_send_and_isend_impl(float);
+Basic_Communicator_send_and_isend_impl(double);
+Basic_Communicator_send_and_isend_impl(char);
+Basic_Communicator_send_and_isend_impl(std::string);
+Basic_Communicator_send_and_isend_impl(pair_int_int);
+Basic_Communicator_send_and_isend_impl(pair_float_int);
+Basic_Communicator_send_and_isend_impl(pair_double_int);
 
 Basic_Communicator_receive_impl(int);
 Basic_Communicator_receive_impl(unsigned int);
@@ -106,6 +183,16 @@ Basic_Communicator_receive_impl(std::string);
 Basic_Communicator_receive_impl(pair_int_int);
 Basic_Communicator_receive_impl(pair_float_int);
 Basic_Communicator_receive_impl(pair_double_int);
+
+Basic_Communicator_receive_array_impl(int);
+Basic_Communicator_receive_array_impl(unsigned int);
+Basic_Communicator_receive_array_impl(float);
+Basic_Communicator_receive_array_impl(double);
+Basic_Communicator_receive_array_impl(char);
+Basic_Communicator_receive_array_impl(std::string);
+Basic_Communicator_receive_array_impl(pair_int_int);
+Basic_Communicator_receive_array_impl(pair_float_int);
+Basic_Communicator_receive_array_impl(pair_double_int);
 
 Basic_Communicator_broadcast_impl(int);
 Basic_Communicator_broadcast_impl(unsigned int);
@@ -147,6 +234,24 @@ Basic_Communicator_gather_array_impl(pair_int_int);
 Basic_Communicator_gather_array_impl(pair_float_int);
 Basic_Communicator_gather_array_impl(pair_double_int);
 
+void Basic_Communicator::reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values) {
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
+	if(env && world) {
+		if(env->isComplete()) {
+			unsigned int unit_rank = env->get_rank(_unit_type);
+			boost::mpi::reduce(world, in_values, n, out_values, std::plus<double>(), unit_rank);
+		}
+	}
+}
+void Basic_Communicator::reduce(const Unit_Type& _unit_type, const double* in_values, int n) {
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
+	if(env && world) {
+		if(env->isComplete()) {
+			unsigned int unit_rank = env->get_rank(_unit_type);
+			boost::mpi::reduce(world, in_values, n, std::plus<double>(), unit_rank);
+		}
+	}
+}
 }
 
 

@@ -2,24 +2,18 @@
 #define __CREATE_UNIT__
 
 #include <boost/mpi/communicator.hpp>
+#include <boost/mpi/collectives.hpp>
 #include <boost/mpi/group.hpp>
 //#include <boost/mpi/environment.hpp>
 #include <map> //std::pair
 #include <boost/serialization/map.hpp> //std::pair serialize
-
+#include "unit.h"
 #include "unit_type.h"
 
+bool is_no_unit(const Pobcpp::Unit_Type& unit_type);
 namespace Pobcpp {
 	class No_Unit : public Pobcpp::Unit { };
 }
-
-bool is_no_unit(const Pobcpp::Unit_Type& unit_type) {
-	Pobcpp::No_Unit* no_unit;
-	if(unit_type == Pobcpp::Unit_Type(no_unit))
-		return true;
-	return false;
-}
-
 class Enum_Checker {
 public:
 	Enum_Checker() : checking(0) { }
@@ -38,7 +32,7 @@ public:
 //		std::cout << "current pair 1 - " << current_pair.first << std::endl;
 		if(current_pair.second == -1) {
 			current_pair.second = _enum_n;
-			current_pair.first = _enum_n + 1;
+			current_pair.first = _enum_n;
 		} else if((unsigned int) current_pair.second != _enum_n) {
 			return false;
 		}
@@ -112,7 +106,7 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 		}
 	}
 	Pobcpp::Unit_Type unit_type(_created_unit);
-	//std::cout << "==" << unit_type << "== Meu rank inicial é: " << rank << std::endl;
+//	std::cout << "==" << unit_type << "== Meu rank inicial é: " << rank << std::endl;
 	//enum
 	if(enum_n != 0) {
 //		unit_type.set_enums(_enums);
@@ -179,10 +173,9 @@ void create_unit(TypeUnit* _created_unit, std::pair<unsigned int, unsigned int> 
 			env->set_complete();
 		}
 	} else {
-		std::cerr << "Error while instantiting POb" << std::endl;
+		TypePObject* a;
+		std::cerr << "Error while instantiting POb(" << Pobcpp::Unit_Type(a) << ")! Check: " << check << " and typesize: " << typearray.size() << std::endl;
 	}
-	// Construct comm object with MPI_IntraCommunicator
 }
-
 #endif
 

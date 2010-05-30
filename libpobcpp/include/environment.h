@@ -1,11 +1,9 @@
 #ifndef __ENVIRONMENT_H__
 #define __ENVIRONMENT_H__
 
-#include "rank.h"
 #include "unit_type.h"
 
-#include <map> //std::pair
-#include <string>
+#include <map> 
 
 namespace Pobcpp {
 

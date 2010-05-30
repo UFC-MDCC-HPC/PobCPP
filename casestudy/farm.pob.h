@@ -1,38 +1,40 @@
-#include "job.h"
-#include "result.h"
+#ifndef __FARM_H_
+#define __FARM_H_
 
+
+#include "unit_type.h"
+#include "unit.h"
+
+template<typename Job, typename Result> 
 class Farm {
 
-   public: 
-     void synchronize_jobs();
-     void synchronize_results();
+	public: 
+	unit Manager {   
+		public: 
+		Job** all_jobs1;
+		Job** all_jobs2;
+		Result* all_results;
+		unsigned int workers;
 
-   unit Manager 
-   {   
-      private: 
-        list<Job> all_jobs;
-        list<Result> all_results;
-  
-      public: 
-        void addJob(Job job);
-        Result getNextResult();              
-        list<Result> getAllResults();              
-        virtual void* packJob(Job job);
-        virtual Result unpackResult(void* result);
-   };
-    
-   unit Worker [i:n] 
-   {                    
-      private: 
-        list<Job> local_jobs;
-        list<Result> local_results;
-     
-      public: 
-        void perform_jobs();
-        virtual Result work(Job job);              
-        virtual Job unpackJob(void* job);
-        virtual void* packResult(Result result);
-    };
- };
+		void addJobs(Job** jobs);
+		Result getNextResult();              
+		Result* getAllResults();              
+//		virtual void* packJob(Job* jobs);
+//		virtual Result unpackResult(void* result);
+	};
+	unit Worker {                    
+		public: 
+		Job* local_jobs1;
+		Job* local_jobs2;
+		Result* local_results;
+
+		void perform_jobs();
+//		virtual Result work(Job job);              
+//		virtual Job unpackJob(void* job);
+//		virtual void* packResult(Result result);
+	};
+};
 
 
+
+#endif
