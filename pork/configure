@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+# see License.txt for copyright and terms of use
+# Author: Taras Glek
+
+import getopt, sys, os.path, os, platform, subprocess
+
+def usage():
+    print """
+Usage: ./configure ...
+--elsa-dir=Elsa sources
+--with-rewriting-cxx=compiler with MCPP(used for rewriting)       [optional]
+--CXX=compiler to use when building piglet etc.                   [optional]
+--CXXFLAGS=any additional flags to pass to CXX                    [optional]
+""".strip()
+    pass
+
+def error(msg):
+    print >> sys.stderr, "Error: " + msg
+
+def checkdir(path,opt):
+    path = os.path.abspath(path)
+    print "Checking for " + opt + ": " + path
+    if not os.path.isdir(path):
+        error("directory '"+path+"' doesn't exist, specify correct directory with --" + opt)
+        return False
+    return path
+
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(
+            sys.argv[1:],
+            "h",
+            ["with-rewriting-cxx=",
+             "elsa-dir=",
+             "CXX=",
+             "CXXFLAGS="])
+    except getopt.GetoptError, err:
+        # print help information and exit:
+        print str(err) # will print something like "option -a not recognized"
+        usage()
+        sys.exit(2)
+    rewriting_cxx = "g++"
+    elsa_dir = "elsa/"
+    cxx = os.getenv("CXX", "g++")
+    cxxflags = os.getenv("CXXFLAGS", "-g -Wall -Wno-deprecated -O2")
+    for o, val in opts:
+        if o == "--with-rewriting-cxx":
+            rewriting_cxx = val
+        elif o == "--elsa-dir":
+            elsa_dir = val
+        elif o in ("-h", "--help"):
+            usage()
+            exit(0)
+        elif o in ('--CXX',):
+            cxx = val
+        elif o in ('--CXXFLAGS',):
+            cxxflags = val
+        else:
+            error("unhandled option " +  o)
+            usage()
+            sys.exit(2)
+
+    elsa_dir = checkdir(elsa_dir, "elsa")
+    if not elsa_dir:
+        error("""check out elsa with: hg clone http://hg.mozilla.org/elsa""")
+        exit(1)
+
+    piglet_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+    config = dict(REWRITING_CXX=rewriting_cxx,
+                  ELSA_DIR=elsa_dir,
+                  PIGLET_DIR=piglet_dir,
+                  CXX=cxx,
+                  CONFIG_CXXFLAGS=cxxflags)
+    porkyConfigVars = ('ELSA_DIR', 'PIGLET_DIR')
+
+    configHeader = "# %s"% (" ".join(["'" + a + "'" for a in sys.argv]))
+
+    f = open("config.mk", "w")
+    f.write("""%s
+%s
+""" % (configHeader,
+       "\n".join([k + "=" + v for k, v in config.iteritems()])))
+    f.close()
+
+    # can reuse gmake comment, but not assignment, syntax for python
+    f = open(os.path.join("porky", "config.py"), "w")
+    f.write("""%s
+%s
+""" % (configHeader,
+       "\n".join([ k +" = '"+ config[k] +"'" for k in porkyConfigVars ])))
+    f.close()
+
+    if os.path.exists("Makefile"):
+        os.unlink("Makefile")
+    os.symlink ("Makefile.in", "Makefile")
+    

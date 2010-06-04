@@ -5,10 +5,12 @@
 #		       <linkflags>-pg
 #; 
 
+lib boost_mpi-mt ;
+lib mpi ;
 lib nintlib : nintlib/nintlib.cpp ;
 
-exe example1 : nintlib integrator.cpp integrator_main.cpp main1.cpp ../libpobcpp : <include>.
+exe example1 : nintlib integrator.cpp integrator_main.cpp main1.cpp ../libpobcpp boost_mpi-mt : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;
 
-exe example2 : nintlib integrator.cpp integrator_main.cpp main2.cpp ../libpobcpp : <include>.
+exe example2 : nintlib integrator.cpp integrator_main.cpp main2.cpp ../libpobcpp boost_mpi-mt : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;

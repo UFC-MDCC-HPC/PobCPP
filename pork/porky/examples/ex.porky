@@ -1,0 +1,26 @@
+rewrite SyncPrimitiveUpgrade {
+  type PRLock**              => mozilla::Mutex**
+  type PRLock*               => mozilla::Mutex*
+  call PR_NewLock()          => new mozilla::Mutex()
+  call PR_DestroyLock(lock)  => delete lock
+  call PR_Lock(lock)         => lock->Lock()
+  call PR_Unlock(lock)       => lock->Unlock()
+
+  type PRMonitor**             => mozilla::Monitor**
+  type PRMonitor*              => mozilla::Monitor*
+  call PR_NewMonitor()         => new mozilla::Monitor()
+  call PR_DestroyMonitor(mon)  => delete mon
+  call PR_EnterMonitor(mon)    => mon->Enter()
+  call PR_ExitMonitor(mon)     => mon->Exit()
+  call PR_Wait(mon, ticks)     => mon->Wait(ticks)
+  call PR_Notify(mon)          => mon->Notify()
+  call PR_NotifyAll(mon)       => mon->NotifyAll()
+
+  type PRCondVar**                  => mozilla::CondVar**
+  type PRCondVar*                   => mozilla::CondVar*
+  call PR_NewCondVar(lock)          => new mozilla::CondVar(lock)
+  call PR_DestroyCondVar(cv)        => delete cv
+  call PR_WaitCondVar(cvar, ticks)  => cvar->Wait(ticks)
+  call PR_NotifyCondVar(cvar)       => cvar->Notify()
+  call PR_NotifyAllCondVar(cvar)    => cvar->NotifyAll()
+}

@@ -1,4 +1,8 @@
-2010-39-05 Eduardo Gurgel <edgurgel@gmail.com>
+2010-03-06 Eduardo Gurgel <edgurgel@gmail.com>
+* Trying to use pork instead of pure Elsa.
+* pork directory created. Elsa moved.
+
+2010-29-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Case study complete.
 * create_unit.h: Bugifx
 * create_unit.cpp : new file.
