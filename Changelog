@@ -1,3 +1,7 @@
+2010-05-06 Eduardo Gurgel <edgurgel@gmail.com>
+* pobcpp.cc created at pork directory : Now working directly with code. No more
+AST modification.
+
 2010-03-06 Eduardo Gurgel <edgurgel@gmail.com>
 * Trying to use pork instead of pure Elsa.
 * pork directory created. Elsa moved.
