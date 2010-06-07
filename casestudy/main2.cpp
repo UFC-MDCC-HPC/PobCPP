@@ -7,9 +7,9 @@ int main(int argc, char** argv) {
 	int it_max = 5;
 	double tol = 0.000001;
 
-	int dim_num = 5;
-	int dim_partition_size = 16;
-	int number_of_partitions = 32;
+	int dim_num = 3;
+	int dim_partition_size = 2;
+	int number_of_partitions = 8;
 
 	int size = world.size() - 1;
 	int i = world.rank() - 1;

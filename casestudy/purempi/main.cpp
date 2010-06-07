@@ -1,8 +1,11 @@
-#include <boost/mpi.hpp>
+#include <boost/mpi/collectives.hpp>
+#include <boost/mpi/nonblocking.hpp>
+#include <boost/mpi/communicator.hpp>
 #include <iostream>
 #include "nintlib/nintlib.H"
 #include <cmath>
 #include <algorithm>
+#include <cstring>
 namespace mpi = boost::mpi;
 
 double func(int dim_num, double* a) {
@@ -16,16 +19,28 @@ double func(int dim_num, double* a) {
 }
 
 double access(double* a,int j, int k, int width){
-	return a[j + width*k];
+//	return a[j + width*k];
+	return a[j*width + k];
 }
 
 void change(double* a,int j, int k, int width, double value) {
-	a[j + width*k] = value;
+//	a[j + width*k] = value;
+	a[j*width + k] = value;
 }
 
 int main(int argc, char* argv[]) {
 	mpi::environment env(argc, argv);
 	mpi::communicator world;
+	
+	int dim_num = 5;
+	int dim_partition_size = 16;
+	int number_of_partitions = 32;
+	if(argc == 4) {
+		dim_num = std::atoi(argv[1]);
+		dim_partition_size = std::atoi(argv[2]);
+		number_of_partitions = std::atoi(argv[3]);
+	}
+	
 	const int TAG_A = 1000;
 	const int TAG_B = 2000;
 
@@ -34,17 +49,13 @@ int main(int argc, char* argv[]) {
 	int* eval_num = new int(0);
 	double tol = 0.000001;
 
-	int dim_num = 5;
-	int dim_partition_size = 16;
-	int number_of_partitions = 32;
-
 	double* result;
 	int* sub_num;
 	
 	int rank = world.rank();
 	int size = world.size() - 1; // Workers
 
-	int num_jobs = (int)std::pow(dim_partition_size, dim_num);
+	int num_jobs = (int)std::pow((double)dim_partition_size, (double)dim_num);
 	int num_local_jobs = num_jobs / size;
 
 	if(rank == 0) {
@@ -81,16 +92,27 @@ int main(int argc, char* argv[]) {
 		// Distribute jobs.
 		int n = num_local_jobs*dim_num;
 
+/*                mpi::request reqs_a[size];
+                mpi::request reqs_b[size];*/
+		std::cout << "Sending" << std::endl;
 		for(int i = 1; i < size + 1; ++i) {
-			world.isend(i, TAG_A, a[i], n);
-			world.isend(i, TAG_B, b[i], n);
+		    world.send(i, TAG_A, a[i], n);
+		    world.send(i, TAG_B, b[i], n);
 		}
+		std::cout << "Sent" << std::endl;
+
+/*                mpi::wait_all(reqs_a, reqs_a + size);
+               mpi::wait_all(reqs_b, reqs_b + size);*/
+
 		//Receive results
     double result = 0.0;
     double* dummy_result = new double[num_local_jobs];
-		for(int i = 0; i < num_local_jobs; ++i)
-			dummy_result[i] = 0.0;
     double* local_result = new double[num_local_jobs];
+		for(int i = 0; i < num_local_jobs; ++i) {
+			dummy_result[i] = 0.0;
+			local_result[i] = 0.0;
+		}
+		std::cout << "Receiving results" << std::endl;
 	 	reduce(world, dummy_result, num_local_jobs, local_result,std::plus<double>(),0);
 		for(int i = 0; i < num_local_jobs; ++i)
 			result += local_result[i];
@@ -137,5 +159,4 @@ int main(int argc, char* argv[]) {
 		mpi::reduce(world, result, num_local_jobs, std::plus<double>(), 0);
 		
     }
-
 }

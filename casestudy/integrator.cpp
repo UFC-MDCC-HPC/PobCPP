@@ -14,11 +14,11 @@ double func(int dim_num, double* a) {
 }
 
 double access(double* a,int j, int k, int width) {
-		return a[j + width*k];
+		return a[j*width + k];
 }
 
 void change(double* a,int j, int k, int width, double value) {
-		a[j + width*k] = value;
+		a[j*width + k] = value;
 }
 
 void Romberg_Integrator::Manager::generate_subproblems() {
