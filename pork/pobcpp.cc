@@ -11,9 +11,9 @@ public:
 	virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec); 
 private:
-  void ensureInclude (char const *file);
 	void createEnumerator();
 	void appendPobTypeArrayFunc();
+	void appendPobunitBaseClass();
   Patcher &patcher;
 };
 
@@ -26,19 +26,45 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
 }
 
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
+	using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
+		CPPSourceLoc csl(spec->loc);
 		char const *file = sourceLocManager->getFile(spec->loc);
-		ensureInclude(file);
+		int iline = sourceLocManager->getLine(spec->loc);
+		string sline;
+		string::size_type found;
+		// Search for a ':' or a '{' and insert ' : public Pobcpp::Unit '
+		while(1) {
+			sline = patcher.getLine(iline, file);
+			std::cout << "Getting line: " << iline << std::endl;
+			std::cout << "Linha: " << sline << std::endl;
+			// ':' case
+			found = sline.find_first_of(':');
+
+			if(found != string::npos ) {
+				sline.insert(found+1, std::string(" public Pobcpp::Unit, "));
+				sline += " //";
+
+				break;
+			}
+			// '{' case
+			found = sline.find_first_of('{');
+			if(found != string::npos ) {
+				sline.insert(found-1, std::string(" : public Pobcpp::Unit "));
+				sline += " //";
+				break;
+			}
+			++iline;
+		}
+
+		csl.overrideLoc(sourceLocManager->encodeLineCol(file, iline, 1));
+		patcher.insertBefore(csl, sline, 0);
+
 	}
 	return true;
 }
  
-void Pobcpp::ensureInclude (char const *file) {
-	std::ifstream f(file);
-	UnboxedLoc loc(1, 1);
-	patcher.insertBefore(file, loc, "#include \"pobcpp.h\"\n");
-	f.close();
-}
+
 
 void Pobcpp::createEnumerator() {
 	//TODO

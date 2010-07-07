@@ -1,0 +1,15 @@
+elsa/ast
+elsa/elkhound/c
+elsa/elkhound/cc2
+elsa/elkhound/examples/arith
+elsa/elkhound/examples/gcom
+elsa/elkhound/examples/gcom1
+elsa/elkhound/examples/gcom4
+elsa/elkhound/examples/gcom5
+elsa/elkhound/examples/gcom7
+elsa/elkhound/examples
+elsa/elkhound/ocaml/occ2
+elsa/elkhound
+elsa/include
+elsa/smbase
+elsa
