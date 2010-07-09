@@ -1810,3 +1810,4 @@ squash_util.h
 stopwatch.cc
 test/patchertest-adjpatchsameline.cc
 test/patchertests.cc
+pobcpp.h

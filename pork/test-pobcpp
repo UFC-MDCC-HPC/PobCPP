@@ -1,0 +1,9 @@
+#!/bin/sh
+fname="$1"
+fname2="$2"
+#g++-4.1.2 -E -Wp,-K in/t0001.cpp > in/t0001.ii
+#./pobcpp in/t0001.ii in/t0001.cpp;
+g++-4.1.2 -E -Wp,-K $fname > $fname2
+./pobcpp $fname2 $fname;
+
+exit 0

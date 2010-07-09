@@ -1,3 +1,6 @@
+2010-09-07 Eduardo Gurgel <edgurgel@gmail.com>
+* Unit declaration (variable and forwarding declaration). Done.
+
 2010-07-07 Eduardo Gurgel <edgurgel@gmail.com>
 * Unit specification. Done.
 
