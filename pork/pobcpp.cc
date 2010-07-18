@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
 
 Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) {  }
 
@@ -10,15 +11,39 @@ Pobcpp::~Pobcpp() {
 	using std::string;
 	using std::map;
 	using std::pair;
-	// Generating patches
-	map<int, string >::iterator iter;
-	for(iter = patches.begin(); iter != patches.end(); ++iter ) {
-			//char const *file = sourceLocManager->getFile(spec->loc);
-		//CPPSourceLoc csl;
-		//csl.overrideLoc(sourceLocManager->encodeLineCol(file, iter->first, 1));
-		// FIXME
-		//patcher.insertBefore(csl, iter->second, 0);
-		patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first,1), iter->second);
+	using std::vector;
+	map<int, vector<PobcppPatch*> >::iterator iter;
+		for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
+			std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
+			vector<PobcppPatch*>::const_iterator viter;
+			int iline = iter->first;
+			std::string sline  = patcher.getLine(iline, file);
+			std::string line = sline;
+			unsigned int diff = 0;
+			for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
+				PobcppPatch* patch = *viter;
+				if(patch->kind == Insert) {
+					sline.insert(diff + patch->col-1, patch->str);
+					std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
+					std::cout << "Linha com patch: " << sline << std::endl;
+					diff += patch->str.length();
+				}
+				else {
+					diff -= patch->erase;
+					sline.erase(diff+ patch->col-2, patch->erase);
+					std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
+					std::cout << "Linha com patch: " << sline << std::endl;
+
+				}
+			}
+
+				//char const *file = sourceLocManager->getFile(spec->loc);
+			//CPPSourceLoc csl;
+			//csl.overrideLoc(sourceLocManager->encodeLineCol(file, iter->first, 1));
+			// FIXME
+			//patcher.insertBefore(csl, iter->second, 0);
+			sline += " //";
+			patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first,1), sline);
 	}
 	patches.clear();
 }
@@ -26,9 +51,9 @@ Pobcpp::~Pobcpp() {
 std::string Pobcpp::getLine(SourceLoc loc, int line) {
 	//char const *file = sourceLocManager->getFile(loc);
 	//	std::cout << "Getting line: " << line << std::endl;
-	if(patches.count(line)) {
-		return patches[line];
-	}
+//	if(patches.count(line)) {
+//		return patches[line];
+//	}
 	return patcher.getLine(line, file);
 }
 
@@ -51,24 +76,24 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
 bool Pobcpp::removeUnitDecl(SourceLoc loc) {
 	using std::string;
 	int iline = sourceLocManager->getLine(loc);
-//	int col = sourceLocManager->getCol(loc);
+	int col = sourceLocManager->getCol(loc);
 	string sline;
 	string::size_type found;
 
 	sline = getLine(loc, iline);
-//	std::cout << sline << std::endl;
 
 	found = sline.find("unit");
 
 	if(found != string::npos ) {
-		sline.erase(found, 5);
-		sline.insert(found, std::string("class "));
-		sline += " //";
-		patches[iline] = sline;
+		PobcppPatch* erase = new PobcppPatch(Erase, string(), col+5, 4);
+		PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);
+		(patchess[iline]).push_back(erase);
+		(patchess[iline]).push_back(insert);
 		return true;
 	}
-	else
+	else {
 		return false;
+	}
 }
 
 bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
@@ -84,7 +109,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 	using std::map;
   if(spec->keyword == TI_UNIT) { // unit?
 		removeUnitDecl(spec->loc);
-
+		//return true;
 		int iline = sourceLocManager->getLine(spec->loc);
 		int col = sourceLocManager->getCol(spec->loc);
 		string sline;
@@ -96,9 +121,12 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 			found = sline.find(':');
 
 			if(found != string::npos) {
-				sline.insert(found+1, string(" public Pobcpp::Unit, "));
-				sline += " //";
-				patches[iline] = sline; //FIXME
+				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+1);
+				(patchess[iline]).push_back(insert);
+
+				//sline.insert(found+1, string(" public Pobcpp::Unit, "));
+				//sline += " //";
+				//patches[iline] = sline; //FIXME
 //				std::cout << sline << std::endl;
 				break;
 			}
