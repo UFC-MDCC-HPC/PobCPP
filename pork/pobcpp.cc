@@ -37,11 +37,6 @@ Pobcpp::~Pobcpp() {
 				}
 			}
 
-				//char const *file = sourceLocManager->getFile(spec->loc);
-			//CPPSourceLoc csl;
-			//csl.overrideLoc(sourceLocManager->encodeLineCol(file, iter->first, 1));
-			// FIXME
-			//patcher.insertBefore(csl, iter->second, 0);
 			sline += " //";
 			patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first,1), sline);
 	}
@@ -49,21 +44,10 @@ Pobcpp::~Pobcpp() {
 }
 
 std::string Pobcpp::getLine(SourceLoc loc, int line) {
-	//char const *file = sourceLocManager->getFile(loc);
-	//	std::cout << "Getting line: " << line << std::endl;
-//	if(patches.count(line)) {
-//		return patches[line];
-//	}
 	return patcher.getLine(line, file);
 }
 
 bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
-	CPPSourceLoc csl(type->loc);
-//	if (!csl.hasExactPosition())
-//		return true;
-//	if (csl.macroExpansion)
-//		return true;
-
 	if (type->isTS_classSpec()) {
 		return subvisitTS_classSpec(type->asTS_classSpec());
 	}
@@ -82,7 +66,7 @@ bool Pobcpp::removeUnitDecl(SourceLoc loc) {
 
 	sline = getLine(loc, iline);
 
-	found = sline.find("unit");
+	found = sline.find("unit", col-1);
 
 	if(found != string::npos ) {
 		PobcppPatch* erase = new PobcppPatch(Erase, string(), col+5, 4);
@@ -109,7 +93,6 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 	using std::map;
   if(spec->keyword == TI_UNIT) { // unit?
 		removeUnitDecl(spec->loc);
-		//return true;
 		int iline = sourceLocManager->getLine(spec->loc);
 		int col = sourceLocManager->getCol(spec->loc);
 		string sline;
@@ -118,27 +101,21 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 		while(1) {
 			sline = getLine(spec->loc, iline);
 		// ':' case
-			found = sline.find(':');
+			found = sline.find(':', col-1);
 
 			if(found != string::npos) {
-				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+1);
+				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+2);
 				(patchess[iline]).push_back(insert);
-
-				//sline.insert(found+1, string(" public Pobcpp::Unit, "));
-				//sline += " //";
-				//patches[iline] = sline; //FIXME
-//				std::cout << sline << std::endl;
 				break;
 			}
 			// '{' case
-			found = sline.find('{');
+			found = sline.find('{', col-1);
 			if(found != string::npos) {
-				sline.insert(found-1, std::string(" : public Pobcpp::Unit "));
-				sline += " //";
-//				std::cout << sline << std::endl;
-				patches[iline] = sline;
+				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found+1);
+				(patchess[iline]).push_back(insert);
 				break;
 			}
+			col = 1;
 			++iline;
 		}
 	}
