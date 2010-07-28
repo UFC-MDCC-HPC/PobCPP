@@ -101,6 +101,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 		int enumCount = spec->enumerators->count();
 		std::cout << "enumCount" << enumCount << std::endl;
 		col--; // columns start by 1 and string's indexes by 0
+		bool inheritance = false;
 		while(1) {
 			sline = getLine(spec->loc, iline);
 			// ':' case
@@ -115,17 +116,18 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 				}
 				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+2);
 				(patchess[iline]).push_back(insert);
-				if(spec->enumerators->count())
-					createEnumerator(spec, iline, found);
-				break;
+				inheritance = true;
+				//break;
 			}
 
 			// '{' case
 
 			found = sline.find('{', col);
 			if(found != string::npos) {
-				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found+1);
-				(patchess[iline]).push_back(insert);
+				if(!inheritance) {
+					PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found+1);
+					(patchess[iline]).push_back(insert);
+				}
 				if(spec->enumerators->count())
 					createEnumerator(spec, iline, found);
 				break;
