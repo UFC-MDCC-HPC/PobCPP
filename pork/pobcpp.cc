@@ -2,6 +2,7 @@
 #include "piglet.h"
 
 #include <string>
+#include <sstream>
 #include <map>
 #include <algorithm>
 
@@ -24,15 +25,15 @@ Pobcpp::~Pobcpp() {
 				PobcppPatch* patch = *viter;
 				if(patch->kind == Insert) {
 					sline.insert(diff + patch->col-1, patch->str);
-					std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
-					std::cout << "Linha com patch: " << sline << std::endl;
+//					std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
+//					std::cout << "Linha com patch: " << sline << std::endl;
 					diff += patch->str.length();
 				}
 				else {
 					diff -= patch->erase;
 					sline.erase(diff+ patch->col-2, patch->erase);
-					std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
-					std::cout << "Linha com patch: " << sline << std::endl;
+//					std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
+//					std::cout << "Linha com patch: " << sline << std::endl;
 
 				}
 			}
@@ -90,32 +91,46 @@ bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
 
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
 	using std::string;
-	using std::map;
-  if(spec->keyword == TI_UNIT) { // unit?
+	if(spec->keyword == TI_UNIT) { // unit?
 		removeUnitDecl(spec->loc);
 		int iline = sourceLocManager->getLine(spec->loc);
 		int col = sourceLocManager->getCol(spec->loc);
 		string sline;
 		string::size_type found;
 		// Search for a ':' or a '{' and insert ' : public Pobcpp::Unit '
+		int enumCount = spec->enumerators->count();
+		std::cout << "enumCount" << enumCount << std::endl;
+		col--; // columns start by 1 and string's indexes by 0
 		while(1) {
 			sline = getLine(spec->loc, iline);
-		// ':' case
-			found = sline.find(':', col-1);
-
+			// ':' case
+			find:
+			found = sline.find(':', col);
 			if(found != string::npos) {
+				enumCount--;
+				if(enumCount > -1) {
+					col = found+1;
+					std::cout << "GOTO" << std::endl;
+					goto find;
+				}
 				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+2);
 				(patchess[iline]).push_back(insert);
+				if(spec->enumerators->count())
+					createEnumerator(spec, iline, found);
 				break;
 			}
+
 			// '{' case
-			found = sline.find('{', col-1);
+
+			found = sline.find('{', col);
 			if(found != string::npos) {
 				PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found+1);
 				(patchess[iline]).push_back(insert);
+				if(spec->enumerators->count())
+					createEnumerator(spec, iline, found);
 				break;
 			}
-			col = 1;
+			col = 0;
 			++iline;
 		}
 	}
@@ -124,8 +139,23 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
  
 
 
-void Pobcpp::createEnumerator() {
-	//TODO
+void Pobcpp::createEnumerator(TS_classSpec* spec, int line, std::string::size_type found) {
+	using std::string;
+	// unit Name [i:m] { }
+	// Insert two statements:
+	// const unsigned int i;
+	// const unsigned int m;
+	int iline = sourceLocManager->getLine(spec->loc);
+	int col = sourceLocManager->getCol(spec->loc);
+	FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
+		//spec->members->list.append(createEnumerator(pobcppEnumSpec->name));
+		//spec->members->list.append(createEnumerator(pobcppEnumSpec->size));
+		std::string name = string(" public: const unsigned int ") + string(pobcppEnumSpec->name);
+		std::string size = string("; const unsigned int ") + string(pobcppEnumSpec->size) + string("; private:");
+		PobcppPatch* insert = new PobcppPatch(Insert, name+size, found+2);
+		(patchess[iline]).push_back(insert);
+	}
+
 }
 
 void Pobcpp::appendPobTypeArrayFunc() {

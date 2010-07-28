@@ -43,7 +43,7 @@ public:
 
 private:
 	std::string getLine(SourceLoc loc, int line);
-	void createEnumerator();
+	void createEnumerator(TS_classSpec *spec, int line, std::string::size_type found);
 	void appendPobTypeArrayFunc();
 	void appendPobunitBaseClass();
 	bool removeUnitDecl(SourceLoc loc);
