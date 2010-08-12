@@ -7,6 +7,7 @@
 #include <vector>
 #include "patcher.h"
 #include "expr_visitor.h"
+#include "elsa/pobcpp.h"
 
 enum PatchKind {
 	Erase = 0,
@@ -41,12 +42,15 @@ public:
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
 
+  std::vector<ClassAndUnit> classes; // PObC++ modification.
+
 private:
 	std::string getLine(SourceLoc loc, int line);
 	void createEnumerator(TS_classSpec *spec, int line, std::string::size_type found);
-	void appendPobTypeArrayFunc();
+  void appendPobTypeArrayFunc(TS_classSpec *spec, int line, std::string::size_type found, unsigned int units);
 	void appendPobunitBaseClass();
 	bool removeUnitDecl(SourceLoc loc);
+  unsigned int countUnits(ASTList<Member> *memberList);
 
 	Patcher &patcher;
 	std::string file;

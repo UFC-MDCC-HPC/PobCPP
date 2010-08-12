@@ -1,4 +1,8 @@
 2010-27-07 Eduardo Gurgel <edgurgel@gmail.com>
+* __get_types function done.
+* PigletParser using Pobcpp visitor to change AST info.
+
+2010-27-07 Eduardo Gurgel <edgurgel@gmail.com>
 * Other Bugfix on enumerated units.
 
 2010-27-07 Eduardo Gurgel <edgurgel@gmail.com>

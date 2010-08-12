@@ -463,7 +463,7 @@ void doit(int argc, char **argv)
 
     //unit->debugPrint(cout, 0);
 
-//		classes = PObCppPre(unit); // PObC++ modification.
+		classes = PObCppPre(unit); // PObC++ modification.
     delete parseContext;
     delete tables;
   }

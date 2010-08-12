@@ -26,7 +26,7 @@
 #include "xml_reader.h"   // xmlDanglingPointersAllowed
 #include "xml_do_read.h"  // xmlDoRead()
 #include "xml_type_writer.h" // XmlTypeWriter
-
+#include "elsa/pobcpp.h"
 #include <functional>
 
 // C++ Parser
@@ -47,7 +47,7 @@ public:
   TranslationUnit *getAST(const char *filename);
   // Parse the file and return the AST. Die on errors.
   TranslationUnit *getASTNoExc(const char *filename);
-
+  std::vector<ClassAndUnit> classes; // PObC++ modification.
 private:
   CCLang lang;
   

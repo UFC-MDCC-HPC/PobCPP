@@ -110,8 +110,8 @@ PigletParser::parse(const char *inputFname)
     parseWarnings = lexer->warnings + parseContext->warnings;
 
     // treeTop is a TranslationUnit pointer
-    TranslationUnit *unit = (TranslationUnit*) treeTop;
-
+		TranslationUnit *unit = (TranslationUnit*) treeTop;
+		classes = PObCppPre(unit); // PObC++ modification.
     delete parseContext;
     delete tables;
 
