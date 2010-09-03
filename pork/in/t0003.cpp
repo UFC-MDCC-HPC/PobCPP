@@ -22,6 +22,10 @@ class Pob_Type_Array {
 class A { };
 
 class B {
+
+
+	int no_error;
+
 	unit Enumerated [i:n] { };
 
 	unit EnumeratedTwice [i:n] [j:m] { };
@@ -32,7 +36,10 @@ class B {
 
 	};
 
-	unit F;}; unit B::C d;
+	unit F;
+
+	unsigned int mazela;
+}; unit B::C d;
 
 int main() {
 
