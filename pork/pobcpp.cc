@@ -43,6 +43,7 @@ Pobcpp::~Pobcpp() {
       sline += " //";
       patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first,1), sline);
   }
+  // FIXME
   patches.clear();
 }
 
@@ -60,50 +61,12 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
   return true;
 }
 
-bool Pobcpp::removeUnitDecl(SourceLoc loc) {
-  using std::string;
-  int iline = sourceLocManager->getLine(loc);
-  int col = sourceLocManager->getCol(loc);
-  string sline;
-  string::size_type found;
-
-  sline = getLine(loc, iline);
-
-  found = sline.find("unit", col-1);
-
-  if(found != string::npos ) {
-    PobcppPatch* erase = new PobcppPatch(Erase, string(), col+5, 4);
-    PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);
-    (patchess[iline]).push_back(erase);
-    (patchess[iline]).push_back(insert);
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
 bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
   using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
     removeUnitDecl(spec->loc);
   }
   return true;
-}
-
-unsigned int Pobcpp::countUnits(ASTList<Member> *memberList) {
-  unsigned int units = 0;
-  FOREACH_ASTLIST_NC(Member, *memberList, iter) {
-    if(iter.data()->isMR_decl()) {
-      MR_decl* iter_decl = iter.data()->asMR_decl();
-      if(iter_decl->d->spec->isTS_classSpec()) {
-        if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
-          units++;
-        }
-      }
-    }
-  }
-  return units;
 }
 
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
@@ -121,18 +84,17 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     while(1) {
       sline = getLine(spec->loc, iline);
       // ':' case
+      // If we have Enumerators a number of enumCount of ':' must be skiped.
       find:
       found = sline.find(':', col);
       if(found != string::npos) {
         enumCount--;
-        if(enumCount > -1) {
+        if(enumCount >= 0) {
           col = found+1;
           goto find;
         }
-        PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found+2);
-        (patchess[iline]).push_back(insert);
+        appendPobunitBaseClass(false, iline, found+2);
         inheritance = true;
-        //break;
       }
 
       // '{' case
@@ -140,8 +102,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
       found = sline.find('{', col);
       if(found != string::npos) {
         if(!inheritance) {
-          PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found+1);
-          (patchess[iline]).push_back(insert);
+          appendPobunitBaseClass(true, iline, found+1);
         }
         if(spec->enumerators->count()) {
           createEnumerator(spec, iline, found);
@@ -193,7 +154,6 @@ void Pobcpp::createEnumerator(TS_classSpec* spec, int line, std::string::size_ty
     PobcppPatch* insert = new PobcppPatch(Insert, name+size, found+2);
     (patchess[iline]).push_back(insert);
   }
-
 }
 
 void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::size_type found, unsigned int units) {
@@ -223,6 +183,57 @@ void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::
   function += "return pobtypes; } private:";
   PobcppPatch* insert = new PobcppPatch(Insert, function, found+2);
   (patchess[iline]).push_back(insert);
+}
+
+void Pobcpp::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found) {
+  // FIXME
+  // maybe here we need to insert "virtual" public Pobcpp::Unit
+  if(firstBaseClass) {
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string(": public Pobcpp::Unit "), found);
+    (patchess[line]).push_back(insert);
+  }
+  else {
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" public Pobcpp::Unit, "), found);
+    (patchess[line]).push_back(insert);
+  }
+}
+
+bool Pobcpp::removeUnitDecl(SourceLoc loc) {
+  using std::string;
+  int iline = sourceLocManager->getLine(loc);
+  int col = sourceLocManager->getCol(loc);
+  string sline;
+  string::size_type found;
+
+  sline = getLine(loc, iline);
+
+  found = sline.find("unit", col-1);
+
+  if(found != string::npos ) {
+    PobcppPatch* erase = new PobcppPatch(Erase, string(), col+5, 4);
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);
+    (patchess[iline]).push_back(erase);
+    (patchess[iline]).push_back(insert);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+unsigned int Pobcpp::countUnits(ASTList<Member> *memberList) {
+  unsigned int units = 0;
+  FOREACH_ASTLIST_NC(Member, *memberList, iter) {
+    if(iter.data()->isMR_decl()) {
+      MR_decl* iter_decl = iter.data()->asMR_decl();
+      if(iter_decl->d->spec->isTS_classSpec()) {
+        if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
+          units++;
+        }
+      }
+    }
+  }
+  return units;
 }
 
 int main(int argc, char **argv) {
