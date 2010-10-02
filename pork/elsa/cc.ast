@@ -296,7 +296,6 @@ class TypeSpecifier(SourceLoc loc) {
   // class/struct/union definition
   -> TS_classSpec(                         // "class { ... }"
        TypeIntr keyword,                     // "class", "struct", "union"
-
        // 'name' is the user-provided name, if any.
        // Why is this a PQName instead of just a StringRef?
        //   - it could be a template specialization, and therefore
@@ -307,7 +306,8 @@ class TypeSpecifier(SourceLoc loc) {
        PQName /*nullable*/ name,
        FakeList<PobcppEnumeratorSpec> *enumerators,
        FakeList<BaseClassSpec> *bases,       // base classes
-       MemberList members                    // field and methods of the class
+       MemberList members,                   // field and methods of the class
+       SourceLoc endBracket                  // end bracket '};'
      );
 
   -> TS_enumSpec(                          // "enum { ... }"

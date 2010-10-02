@@ -21,6 +21,9 @@ class B {
 
 	};
 
+	unit K{ };
+	unit L:public A{};
+
 	unit F;}; unit B::C d;
 
 int main() {

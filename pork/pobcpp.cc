@@ -83,20 +83,30 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     bool inheritance = false;
     while(1) {
       sline = getLine(spec->loc, iline);
-      // ':' case
       // If we have Enumerators a number of enumCount of ':' must be skiped.
-      find:
-      found = sline.find(':', col);
-      if(found != string::npos) {
-        enumCount--;
-        if(enumCount >= 0) {
-          col = found+1;
-          goto find;
+      while(enumCount) {
+        found = sline.find(':', col);
+        if(found != string::npos) {
+          enumCount--;
+          if(enumCount >= 0) {
+            col = found+1;
+            continue;
+          }
         }
-        appendPobunitBaseClass(false, iline, found+2);
-        inheritance = true;
+        else {
+          col = found+1;
+          found = sline.find(':', col);
+          break;
+        }
       }
-
+      // ':' case
+      if(!inheritance) {
+        found = sline.find(':', col);
+        if(found != string::npos) {
+          appendPobunitBaseClass(false, iline, found+2);
+          inheritance = true;
+        }
+      }
       // '{' case
 
       found = sline.find('{', col);
@@ -105,7 +115,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
           appendPobunitBaseClass(true, iline, found+1);
         }
         if(spec->enumerators->count()) {
-          createEnumerator(spec, iline, found);
+          //de mucreateEnumerator(spec, iline, found);
         }
         break;
       }
@@ -120,19 +130,9 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     if(!units)
       return true;
     else {
-      int iline = sourceLocManager->getLine(spec->loc);
-      int col = sourceLocManager->getCol(spec->loc);
-      while(1) {
-        string sline = getLine(spec->loc, iline);
-        // Search for '{'
-        string::size_type found = sline.find('{', col);
-        if(found != string::npos) {
-          appendPobTypeArrayFunc(spec, iline, found, units);
-          break;
-        }
-        col = 0;
-        iline++;
-      }
+      int iline = sourceLocManager->getLine(spec->endBracket);
+      int col = sourceLocManager->getCol(spec->endBracket);
+      appendPobTypeArrayFunc(spec, iline, col-2, units);
     }
   }
   return true;

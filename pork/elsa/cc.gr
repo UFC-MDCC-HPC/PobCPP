@@ -1884,8 +1884,15 @@ nonterm(FakeList<MemberInit>*) CtorInitializerOpt {
 
 // ------ A.8 Classes ------
 nonterm(TS_classSpec*) ClassSpecifier {
-  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt "}"
-    { popClassName(); return new TS_classSpec(loc, k, n, e, b, memb); }
+//  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt "}"
+  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt end:endBracket
+    { popClassName(); return new TS_classSpec(loc, k, n, e, b, memb, end); }
+}
+
+//EndBracket to save '};' PObC++ needs this information
+
+nonterm(SourceLoc) endBracket {
+	-> "}" { return loc; }
 }
 
 // PObC++ Enumerator 

@@ -26,7 +26,12 @@ class B {
 
 	int no_error;
 
-	unit Enumerated [i:n] { };
+	unit Enumerated [i:n] [j:m]  [k:p] { };
+
+unit EnumeratedError [i:n]
+	[j:m] 
+	[k:p]
+	{ };
 
 	unit EnumeratedTwice [i:n] [j:m] { };
 
