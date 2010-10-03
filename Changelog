@@ -1,3 +1,13 @@
+2010-02-10 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix.
+
+2010-02-10 Eduardo Gurgel <edgurgel@gmail.com>
+* Grammar modified to save end bracket of a class specification.
+* PobTypeArray reflection function done.
+
+2010-08-09 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix.
+
 2010-04-09 Eduardo Gurgel <edgurgel@gmail.com>
 * Added some comments.
 * Better organization.

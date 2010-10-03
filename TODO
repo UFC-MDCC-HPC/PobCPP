@@ -4,7 +4,6 @@
   - Test with templates.
   - Remove enumerator indicator:
     ex: unit A [i:j] [n:m] -> unit A
-* __get_types() function included after units' definitions.
 * Insert create_unit<...>(...) at each unit constructor.
 * Create pobcpprun.
   - Give information of number of copies to each executable.

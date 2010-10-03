@@ -96,8 +96,9 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
         else {
           col = found+1;
           found = sline.find(':', col);
-          break;
-        }
+        }        
+        iline++;
+        col = 0;
       }
       // ':' case
       if(!inheritance) {
