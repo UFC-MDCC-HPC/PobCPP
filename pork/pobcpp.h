@@ -16,7 +16,7 @@ enum PatchKind {
 };
 
 struct PobcppPatch {
-	PobcppPatch(PatchKind _kind, std::string _str, int _col = 1, int _erase = 0) : kind(_kind), str(_str) , col(_col), erase(_erase) { }
+  PobcppPatch(PatchKind _kind, std::string _str = std::string(), int _col = 1, int _erase = 0) : kind(_kind), str(_str) , col(_col), erase(_erase) { }
 	~PobcppPatch();
 	PatchKind kind;
 	std::string str;
@@ -45,6 +45,7 @@ public:
 
 private:
 	std::string getLine(SourceLoc loc, int line);
+  void removeEnumeratorDecls(int enumCount, SourceLoc loc);
   /**
    * Modify line to include enumerator information.
    * @param spec Current unit.

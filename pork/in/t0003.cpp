@@ -26,9 +26,17 @@ class B {
 
 	int no_error;
 
-	unit Enumerated [i:n] [j:m]  [k:p] { };
+	unit Normal{};
 
-unit EnumeratedError [i:n]
+	unit Enumerated1 [i:n] { };
+
+	unit Enumerated15 [i:n]{ };
+
+	unit   Enumerated2       [i:n] [j:m]  [k:p] { };
+
+	unit        Enumerated    [i : n ] [j:m]  [k:p] { };
+
+/*unit EnumeratedError [i:n]
 	[j:m] 
 	[k:p]
 	{ };
@@ -43,12 +51,12 @@ unit EnumeratedError [i:n]
 
 	unit F;
 
-	unsigned int mazela;
-}; unit B::C d;
+	unsigned int mazela;*/
+}; //unit B::C d;
 
 int main() {
 
-	unit B::C a;
+	//unit B::C a;
 
 }
 

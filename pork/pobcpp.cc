@@ -22,20 +22,20 @@ Pobcpp::~Pobcpp() {
       int iline = iter->first;
       std::string sline  = patcher.getLine(iline, file);
       std::string line = sline;
-      unsigned int diff = 0;
+      int diff = 0;
       for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
         PobcppPatch* patch = *viter;
         if(patch->kind == Insert) {
           sline.insert(diff + patch->col-1, patch->str);
-  //					std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
-  //					std::cout << "Linha com patch: " << sline << std::endl;
+//            std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
+//            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
           diff += patch->str.length();
         }
         else {
           diff -= patch->erase;
-          sline.erase(diff+ patch->col-2, patch->erase);
-  //					std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
-  //					std::cout << "Linha com patch: " << sline << std::endl;
+          sline.erase(diff+ patch->col-1, patch->erase);
+//            std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
+//            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
 
         }
       }
@@ -72,13 +72,14 @@ bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
-    removeUnitDecl(spec->loc);
     int iline = sourceLocManager->getLine(spec->loc);
     int col = sourceLocManager->getCol(spec->loc);
+    int enumCount = spec->enumerators->count();
+    removeUnitDecl(spec->loc);
+    removeEnumeratorDecls(enumCount, spec->loc);
     string sline;
     string::size_type found;
     // Search for a ':' or a '{' and insert ' : public Pobcpp::Unit '
-    int enumCount = spec->enumerators->count();
     col--; // columns start by 1 and string's indexes by 0
     bool inheritance = false;
     while(1) {
@@ -116,7 +117,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
           appendPobunitBaseClass(true, iline, found+1);
         }
         if(spec->enumerators->count()) {
-          //de mucreateEnumerator(spec, iline, found);
+          createEnumerator(spec, iline, found);
         }
         break;
       }
@@ -139,7 +140,49 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   return true;
 }
  
+void Pobcpp::removeEnumeratorDecls(int enumCount, SourceLoc loc) {
+  using std::string;
+  int iline = sourceLocManager->getLine(loc);
+  int col = sourceLocManager->getCol(loc);
+  string sline;
+  string::size_type foundFirstBracket = 0;
+  int lineFirstBracket = -1;
+  string::size_type foundSecondBracket = 0;
+  int lineSecondBracket = -1;
 
+  sline = getLine(loc, iline);
+
+  while(enumCount) {
+    while(true) {
+      if(lineFirstBracket == -1) {
+        foundFirstBracket = sline.find("[", col);
+        if(foundFirstBracket != string::npos) {
+          lineFirstBracket = iline;
+          col = foundFirstBracket;
+          continue;
+        }
+        continue;
+      }
+      else if(lineSecondBracket == -1) {
+        foundSecondBracket = sline.find("]", col);
+        if(foundSecondBracket != string::npos ) {
+          lineSecondBracket = iline;
+          if(lineFirstBracket == lineSecondBracket) {
+            int stringSize = foundSecondBracket-foundFirstBracket+1;
+            PobcppPatch* erase = new PobcppPatch(Erase, string(), foundSecondBracket+2 , stringSize);
+            (patchess[lineFirstBracket]).push_back(erase);
+          }
+          col = foundSecondBracket;
+          break;
+        }
+      }
+      iline++;
+      col = 0;
+    }
+    --enumCount;
+    lineFirstBracket = lineSecondBracket = -1;
+  }
+}
 
 void Pobcpp::createEnumerator(TS_classSpec* spec, int line, std::string::size_type found) {
   using std::string;
@@ -190,7 +233,7 @@ void Pobcpp::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::
   // FIXME
   // maybe here we need to insert "virtual" public Pobcpp::Unit
   if(firstBaseClass) {
-    PobcppPatch* insert = new PobcppPatch(Insert, std::string(": public Pobcpp::Unit "), found);
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found);
     (patchess[line]).push_back(insert);
   }
   else {
@@ -211,7 +254,7 @@ bool Pobcpp::removeUnitDecl(SourceLoc loc) {
   found = sline.find("unit", col-1);
 
   if(found != string::npos ) {
-    PobcppPatch* erase = new PobcppPatch(Erase, string(), col+5, 4);
+    PobcppPatch* erase = new PobcppPatch(Erase, string(), col+4, 4);
     PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);
     (patchess[iline]).push_back(erase);
     (patchess[iline]).push_back(insert);
