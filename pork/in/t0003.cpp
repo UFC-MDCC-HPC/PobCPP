@@ -28,19 +28,17 @@ class B {
 
 	unit Normal{};
 
-	unit Enumerated1 [i:n] { };
+	unit Enumerated1 [i:n] { }; //aaaaaaa
 
-	unit Enumerated15 [i:n]{ };
+	unit Enumerated15 [i:n]{ }; //aaaaaaaa
 
-	unit   Enumerated2       [i:n] [j:m]  [k:p] { };
+	unit   Enumerated2       [i:n] [j:m]  [k:p] { }; //aaaaaaa
 
-	unit        Enumerated    [i : n ] [j:m]  [k:p] { };
+	unit        Enumerated    [i : n ] [j:m]  [k:p] { }; //aaaaaa
 
-/*unit EnumeratedError [i:n]
-	[j:m] 
-	[k:p]
+	unit EnumeratedError [i:n]
 	{ };
-
+/*
 	unit EnumeratedTwice [i:n] [j:m] { };
 
 	unit EnumeratedNumberTwo [i:n] : public A { };

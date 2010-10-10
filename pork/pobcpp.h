@@ -45,14 +45,19 @@ public:
 
 private:
 	std::string getLine(SourceLoc loc, int line);
-  void removeEnumeratorDecls(int enumCount, SourceLoc loc);
+  /**
+   * Modify lines to exclude enumerators declarations.
+   * @param enumCount Quantity of enumerators to be excluded.
+   * @param loc Initial localization.
+   */
+  void removeEnumeratorDecls(TS_classSpec *spec, SourceLoc loc);
   /**
    * Modify line to include enumerator information.
    * @param spec Current unit.
    * @param line Line with first '{'
    * @param found Column to insert
    */
-	void createEnumerator(TS_classSpec *spec, int line, std::string::size_type found);
+  void createEnumerator(TS_classSpec *spec);
   /**
    * Modify line to include the reflective function '__get_types()'.
    * @param spec Current unit

@@ -605,10 +605,10 @@ nonterm(TypeSpecifier*) ElaboratedTypeSpecifier {
 }
 
 nonterm(TS_classSpec*) ClassSpecifier {
-  -> k:ClassKey as:AttributeSpecifierList n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt end:endBracket
+  -> k:ClassKey as:AttributeSpecifierList n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt beg:beginBracket memb:MemberDeclarationSeqOpt end:endBracket
     { 
       popClassName();
-      TS_classSpec *ts = new TS_classSpec(loc, k, n, e, b, memb, end);
+      TS_classSpec *ts = new TS_classSpec(loc, k, n, e, b, memb, beg, end);
       ts->alist = as;
       return ts;
     }

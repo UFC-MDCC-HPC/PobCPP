@@ -1885,14 +1885,26 @@ nonterm(FakeList<MemberInit>*) CtorInitializerOpt {
 // ------ A.8 Classes ------
 nonterm(TS_classSpec*) ClassSpecifier {
 //  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt "}"
-  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt "{" memb:MemberDeclarationSeqOpt end:endBracket
-    { popClassName(); return new TS_classSpec(loc, k, n, e, b, memb, end); }
+  -> k:ClassKey n:ClassHeadNameOpt e:PobcppEnumeratorClauseOpt b:BaseClauseOpt beg:beginBracket memb:MemberDeclarationSeqOpt end:endBracket
+    { popClassName(); return new TS_classSpec(loc, k, n, e, b, memb, beg, end); }
 }
 
-//EndBracket to save '};' PObC++ needs this information
+//Brackets to save '{' '[' ']' '};' PObC++ needs this information
+
+nonterm(SourceLoc) beginBracket {
+	-> "{" { return loc; }
+}
 
 nonterm(SourceLoc) endBracket {
 	-> "}" { return loc; }
+}
+
+nonterm(SourceLoc) beginSquareBracket {
+	-> "[" { return loc; }
+}
+
+nonterm(SourceLoc) endSquareBracket {
+	-> "]" { return loc; }
 }
 
 // PObC++ Enumerator 
@@ -1904,10 +1916,12 @@ nonterm(FakeList<PobcppEnumeratorSpec>*) PobcppEnumeratorClauseOpt {
 }
 
 nonterm(FakeList<PobcppEnumeratorSpec>*) PobcppEnumeratorSpecifierList {
-  -> "[" e:PobcppEnumeratorSpecifier "]"
-       { return FakeList<PobcppEnumeratorSpec>::makeList(e); }
-  -> "[" e:PobcppEnumeratorSpecifier "]" list:PobcppEnumeratorSpecifierList
-       { return list->prepend(e); }
+  -> beg:beginSquareBracket e:PobcppEnumeratorSpecifier end:endSquareBracket
+       { e->beginSquareBracket = beg; e->endSquareBracket = end;
+         return FakeList<PobcppEnumeratorSpec>::makeList(e); }
+  -> beg:beginSquareBracket e:PobcppEnumeratorSpecifier end:endSquareBracket list:PobcppEnumeratorSpecifierList
+       { e->beginSquareBracket = beg; e->endSquareBracket = end;
+         return list->prepend(e); }
 
 }
 nonterm(PobcppEnumeratorSpec*) PobcppEnumeratorSpecifier {

@@ -307,7 +307,8 @@ class TypeSpecifier(SourceLoc loc) {
        FakeList<PobcppEnumeratorSpec> *enumerators,
        FakeList<BaseClassSpec> *bases,       // base classes
        MemberList members,                   // field and methods of the class
-       SourceLoc endBracket                  // end bracket '};'
+       SourceLoc beginBracket,               // begin bracket '{'
+       SourceLoc endBracket                  // end bracket '}'
      );
 
   -> TS_enumSpec(                          // "enum { ... }"
@@ -321,6 +322,8 @@ class PobcppEnumeratorSpec (
   StringRef size
 ) {
   public PobcppEnumeratorSpec *next=NULL;     // FakeList link
+	public SourceLoc beginSquareBracket;
+	public SourceLoc endSquareBracket;
 }
 
 // base class specification
