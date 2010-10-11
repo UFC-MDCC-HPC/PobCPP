@@ -1,3 +1,13 @@
+2010-11-10 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix and removing old code.
+
+2010-10-10 Eduardo Gurgel <edgurgel@gmail.com>
+* Modified grammar to save begin bracket and end bracket of each class and
+enumerator definition.
+
+2010-02-10 Eduardo Gurgel <edgurgel@gmail.com>
+* Initial development to remove enumerator declaration.
+
 2010-02-10 Eduardo Gurgel <edgurgel@gmail.com>
 * Bugfix.
 

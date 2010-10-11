@@ -28,6 +28,8 @@ class B {
 
 	unit Normal{};
 
+	unit Normal2 : public A{};
+
 	unit Enumerated1 [i:n] { }; //aaaaaaa
 
 	unit Enumerated15 [i:n]{ }; //aaaaaaaa

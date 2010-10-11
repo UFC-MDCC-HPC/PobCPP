@@ -50,7 +50,7 @@ private:
    * @param enumCount Quantity of enumerators to be excluded.
    * @param loc Initial localization.
    */
-  void removeEnumeratorDecls(TS_classSpec *spec, SourceLoc loc);
+  void removeEnumeratorDecls(TS_classSpec *spec);
   /**
    * Modify line to include enumerator information.
    * @param spec Current unit.
