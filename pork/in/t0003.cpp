@@ -38,8 +38,13 @@ class B {
 
 	unit        Enumerated    [i : n ] [j:m]  [k:p] { }; //aaaaaa
 
-	unit EnumeratedError [i:n]
-	{ };
+	unit EnumeratedError [i
+		:
+		n
+/* Testing*/		]
+		[ j :
+/*Just a test*/k] 	
+{ };
 /*
 	unit EnumeratedTwice [i:n] [j:m] { };
 

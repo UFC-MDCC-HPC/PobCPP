@@ -32,8 +32,13 @@ Pobcpp::~Pobcpp() {
           diff += patch->str.length();
         }
         else {
-          diff -= patch->erase;
-          sline.erase(diff+ patch->col-1, patch->erase);
+          if(patch->erase == 0) {
+            sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
+          }
+          else {
+            diff -= patch->erase;
+            sline.erase(diff+ patch->col-1, patch->erase);
+          }
 //            std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
 //            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
 
@@ -117,6 +122,22 @@ void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
       PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1 , stringSize);
       (patchess[iline]).push_back(erase);
     }
+    else {
+      int col = sourceLocManager->getCol(pobcppEnumSpec->beginSquareBracket);
+      PobcppPatch* erase1 = new PobcppPatch(Erase, string(), col , 0);
+      (patchess[iline]).push_back(erase1);
+      iline++;
+      while(iline < line) {
+        PobcppPatch* erase = new PobcppPatch(Erase, string(), 1 , 0);
+        (patchess[iline]).push_back(erase);
+        iline++;
+      }
+      col = sourceLocManager->getCol(pobcppEnumSpec->endSquareBracket);
+      PobcppPatch* erase2 = new PobcppPatch(Erase, string(), col-1 , 0);
+      (patchess[line]).push_back(erase2);
+      //FIXME
+      // Here we are not removing correctly!
+    }
   }
 }
 
@@ -148,7 +169,7 @@ void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::
   //   ...
   //   return pobtypes;
   // }
-  string function = "public: Pob_Type_Array __get_types() { Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
+  string function = "public: Pobcpp::Pob_Type_Array __get_types() { Pobcpp::Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
 
   unsigned int j = 0; // Unit order
   for(unsigned int i = 0; i < classes.size(); i++) { // FIXME Better search algorithm.
