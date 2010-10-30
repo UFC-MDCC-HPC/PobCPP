@@ -125,6 +125,7 @@ PigletParser::typeCheck(TranslationUnit *unit)
 
     try {
       env.tcheckTranslationUnit(unit);
+      PObCppPos(unit); // PObC++ modification.
     }
     catch (XUnimp &x) {
       HANDLER();

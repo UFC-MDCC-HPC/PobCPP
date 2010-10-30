@@ -1,6 +1,8 @@
 #include "pobcpp.h"
 #include "piglet.h"
 
+#include "elsa/cc_type.h"
+
 #include <string>
 #include <sstream>
 #include <map>
@@ -66,14 +68,6 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
   return true;
 }
 
-bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
-  using std::string;
-  if(spec->keyword == TI_UNIT) { // unit?
-    removeUnitDecl(spec->loc);
-  }
-  return true;
-}
-
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
@@ -108,6 +102,17 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
   return true;
+}
+
+bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
+  using std::string;
+  if(spec->keyword == TI_UNIT) { // unit?
+    removeUnitDecl(spec->loc);
+  }
+  return true;
+}
+
+bool Pobcpp::visitMember(Member *member) {
 }
 
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {

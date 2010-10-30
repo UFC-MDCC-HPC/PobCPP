@@ -184,12 +184,6 @@ void PObCppPreTypedASTVisitor::checkStrings() {
     addTypeStr = "add_type";
   }
 }
-bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
-  if (type->isTS_classSpec()) {
-    return subvisitTS_classSpec(type->asTS_classSpec());
-  }
-  return true;
-}
 
 
 bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
@@ -202,8 +196,24 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   return true;
 }
 
-bool PObCppVisitor::visitFunction(Function* func) {
-	return true;
+bool PObCppVisitor::visitMember(Member *member) {
+  if(member->isMR_func()) {
+    if(member->asMR_func()->f->retspec->isTS_simple()) {
+      if(member->asMR_func()->f->retspec->asTS_simple()->id & ST_CDTOR) {
+        std::cout << "Eh um construtor" << std::endl;
+        std::cout << member->asMR_func()->f->receiver->type->toString() << std::endl;
+        //std::cout << member->asMR_func()->f->receiver->type-> << std::endl;
+        if(member->asMR_func()->f->receiver->type->isPseudoInstantiation()) {
+          std::cout << "Eh um tipo composto" << std::endl;
+          if (member->asMR_func()->f->receiver->type->asCVAtomicType()->atomic->isCompoundType())
+          //if(member->asMR_func()->f->receiver->type->asCompoundType()->keyword == TI_UNIT)
+          //if(member->asMR_func()->f->receiver->type->isCompoundTypeOf(CompoundType::K_UNIT))
+            std::cout << "Pitomba3" << std::endl;
+        }
+      }
+    }
+  }
+  return true;
 }
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
@@ -215,11 +225,7 @@ std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   unit->traverse(fp);
 	return fp.classes; // FIXME create a get_classesAndUnits() function.
 }
-void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt, std::vector<ClassAndUnit>& _classes) {
+void PObCppPos(TranslationUnit *unit) {
   PObCppVisitor fp;
-  fp.bt = &bt;
-	fp.classes = _classes; //FIXME create a constructor. 
-
   unit->traverse(fp);
 }
-

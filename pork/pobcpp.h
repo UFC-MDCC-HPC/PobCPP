@@ -40,6 +40,7 @@ public:
 	virtual bool visitTypeSpecifier(TypeSpecifier *type);
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
+  virtual bool visitMember(Member *member);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 

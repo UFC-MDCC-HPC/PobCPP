@@ -16,7 +16,7 @@ class Pob_Type_Array {
 class A { };
 unit KK { }; unit KKK { };
 class B {
-
+	B() { }
 	unit C : public A { };	unit D { };	unit E {
 
 	};

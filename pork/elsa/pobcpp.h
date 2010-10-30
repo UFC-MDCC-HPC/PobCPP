@@ -34,17 +34,15 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
 
 class PObCppVisitor : public ASTVisitor {
   public:
-  BasicTypeFactory* bt;
-  std::vector<ClassAndUnit> classes;
-  virtual bool visitTypeSpecifier(TypeSpecifier *type);
+  virtual bool visitMember(Member *member);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
-  virtual bool visitFunction(Function* func);
   private:
   SourceLoc loc;
   CompoundType* ctype;
 };
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit);
+void PObCppPos(TranslationUnit *unit);
 
 void PObCppPrint(TranslationUnit *unit, BasicTypeFactory& bt, std::vector<ClassAndUnit>& _classes);
 
