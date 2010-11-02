@@ -6,7 +6,12 @@ if [ -e $src ]; then
 	echo "#include \"pobcpp.h\"" > $temp
 	cat "$src" >> $temp
 	g++-4.1.2 -E -Wp,-K $temp > $temp".ii"
-	./pobcpp $temp $temp".ii"
+  echo ./pobcpp "$temp"".ii" "$temp"
+  ./pobcpp "$temp"".ii" "$temp" > "$temp"".patch"
+  rm "$temp"".ii" "$temp"
+  cp "$src" "$src"".patched.cpp"
+  patch --quiet "$src"".patched.cpp" "$temp"".patch"
+  rm "$temp"".patch"
 else
 	echo "File not found"
 fi

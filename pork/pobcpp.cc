@@ -17,6 +17,8 @@ Pobcpp::~Pobcpp() {
   using std::map;
   using std::pair;
   using std::vector;
+  string original_file = file;
+  original_file.resize(file.size()-9);
   map<int, vector<PobcppPatch*> >::iterator iter;
     for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
       std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
@@ -48,7 +50,9 @@ Pobcpp::~Pobcpp() {
       }
 
       sline += " //";
-      patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first,1), sline);
+
+      //patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first, 1), sline);
+      patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first-1, 1), sline);
   }
   // FIXME
   patches.clear();

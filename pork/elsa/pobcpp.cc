@@ -200,15 +200,15 @@ bool PObCppVisitor::visitMember(Member *member) {
   if(member->isMR_func()) {
     if(member->asMR_func()->f->retspec->isTS_simple()) {
       if(member->asMR_func()->f->retspec->asTS_simple()->id & ST_CDTOR) {
-        std::cout << "Eh um construtor" << std::endl;
-        std::cout << member->asMR_func()->f->receiver->type->toString() << std::endl;
+//        std::cout << "Eh um construtor" << std::endl;
+//        std::cout << member->asMR_func()->f->receiver->type->toString() << std::endl;
         //std::cout << member->asMR_func()->f->receiver->type-> << std::endl;
         if(member->asMR_func()->f->receiver->type->isPseudoInstantiation()) {
-          std::cout << "Eh um tipo composto" << std::endl;
-          if (member->asMR_func()->f->receiver->type->asCVAtomicType()->atomic->isCompoundType())
+//          std::cout << "Eh um tipo composto" << std::endl;
+          //if (member->asMR_func()->f->receiver->type->asCVAtomicType()->atomic->isCompoundType()) { }
           //if(member->asMR_func()->f->receiver->type->asCompoundType()->keyword == TI_UNIT)
           //if(member->asMR_func()->f->receiver->type->isCompoundTypeOf(CompoundType::K_UNIT))
-            std::cout << "Pitomba3" << std::endl;
+//            std::cout << "Pitomba3" << std::endl;
         }
       }
     }
