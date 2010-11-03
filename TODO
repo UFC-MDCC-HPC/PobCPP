@@ -6,3 +6,4 @@
 * Create pobcpprun.
   - Give information of number of copies to each executable.
 * Find a way to simplify libpocpp includes and generate a single file pobcpp.h
+* Resolve "comm" problem! How to insert it?
