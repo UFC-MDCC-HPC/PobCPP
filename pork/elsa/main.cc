@@ -398,7 +398,7 @@ void doit(int argc, char **argv)
   // out here.  Feel free to refactor.
   ArrayStack<Variable*> madeUpVariables;
   ArrayStack<Variable*> builtinVars;
-	std::vector<ClassAndUnit> classes; // PObC++ modification.
+//	std::vector<ClassAndUnit> classes; // PObC++ modification.
 
   int parseWarnings = 0;
   long parseTime = 0;
@@ -463,7 +463,7 @@ void doit(int argc, char **argv)
 
     //unit->debugPrint(cout, 0);
 
-		classes = PObCppPre(unit); // PObC++ modification.
+//		classes = PObCppPre(unit); // PObC++ modification.
     delete parseContext;
     delete tables;
   }

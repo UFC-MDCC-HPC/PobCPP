@@ -128,7 +128,8 @@ enum DeclFlags {
   // VML-based verifier.  In a pinch, one of these values could be
   // re-used for something that only occurs in C++ code, since the old
   // verifier only works with C code.
-  DF_ADDRTAKEN   = 0x00008000,    // true if it's address has been (or can be) taken
+//  DF_ADDRTAKEN   = 0x00008000,    // true if it's address has been (or can be) taken
+  DF_PARALLEL   = 0x00008000,    // PObC++ modification
   DF_UNIVERSAL   = 0x00020000,    // universally-quantified variable
   DF_EXISTENTIAL = 0x00040000,    // existentially-quantified
 
@@ -541,11 +542,12 @@ enum UberModifiers {
   UM_CHAR         = 0x01000000,    // large value b/c got bumped by UM_RESTRICT
   UM_COMPLEX      = 0x02000000,    // C99/GNU
   UM_IMAGINARY    = 0x04000000,    // C99
+	UM_PARALLEL     = 0x08000000,
 
   UM_TYPEKEYS     = 0x07FFE000,
 
-  UM_ALL_FLAGS    = 0x07FFFFFF,
-  UM_NUM_FLAGS    = 27             // # bits set in UM_ALL_FLAGS
+  UM_ALL_FLAGS    = 0x0FFFFFFF,
+  UM_NUM_FLAGS    = 28             // # bits set in UM_ALL_FLAGS
 };
 
 // string repr.

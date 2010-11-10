@@ -197,14 +197,13 @@ char const * const declFlagNames[NUM_DECLFLAGS] = {
   "explicit",
   "friend",
   "typedef",        // 9
-  "parallel",
 
   "(enumerator)",
   "(global)",
   "(initialized)",
   "(builtin)",
   "(bound tparam)", // 14
- // "(addrtaken)",
+  "(parallel)",
   "(parameter)",
   "(universal)",
   "(existential)",
@@ -742,7 +741,8 @@ char const * const uberModifierNames[UM_NUM_FLAGS] = {
   "long long",
   "char",            // 0x01000000
   "complex",
-  "imaginary"
+  "imaginary",
+	"parallel"
 };
 
 string toString(UberModifiers m)
