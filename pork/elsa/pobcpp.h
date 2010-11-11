@@ -16,6 +16,7 @@ struct ClassAndUnit {
 
 class PObCppPreTypedASTVisitor : public ASTVisitor {
   public:
+  PObCppPreTypedASTVisitor() { locBool = false; }
   StringRef pobCppNamespaceStr;
   StringRef pobTypeArrayStr;
   StringRef addTypeStr;
@@ -30,14 +31,17 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   private:
   void checkStrings();
   SourceLoc loc;
+  bool locBool;
 };
 
 class PObCppVisitor : public ASTVisitor {
   public:
+  PObCppVisitor() { locBool = false; }
   virtual bool visitMember(Member *member);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   private:
   SourceLoc loc;
+  bool locBool;
   CompoundType* ctype;
 };
 

@@ -5,8 +5,8 @@ temp=$src$suffix
 if [ -e $src ]; then
 	echo "#include \"pobcpp.h\"" > $temp
 	cat "$src" >> $temp
-	g++-4.1.2 -E -Wp,-K $temp > $temp".ii"
-#	mcpp -K $temp > $temp".ii"
+#	g++-4.1.2 -E -Wp,-K $temp > $temp".ii"
+	mcpp -K $temp > $temp".ii"
   echo ./pobcpp "$temp"".ii" "$temp"
   ./pobcpp "$temp"".ii" "$temp" > "$temp"".patch"
   rm "$temp"".ii" "$temp"

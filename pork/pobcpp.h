@@ -41,6 +41,7 @@ public:
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
   virtual bool visitMember(Member *member);
+  virtual bool visitFunction(Function* func);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 

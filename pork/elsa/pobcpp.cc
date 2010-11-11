@@ -17,9 +17,12 @@ char* itoa(int value) {
 }
 bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
 	if(tf->isTF_namespaceDefn()) {
-		if(std::string(tf->asTF_namespaceDefn()->name) == "Pobcpp") {
-			pobCppNamespaceStr = tf->asTF_namespaceDefn()->name;
-		}
+    if(tf->isTF_namespaceDefn()) {
+      if(tf->asTF_namespaceDefn()->name != NULL)
+        if(std::string(tf->asTF_namespaceDefn()->name) == "Pobcpp") {
+          pobCppNamespaceStr = tf->asTF_namespaceDefn()->name;
+        }
+    }
 	}
 	return true;
 }
@@ -84,7 +87,9 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       	  pobTypeArrayStr = spec->name->asPQ_name()->name;
 		 	  } else if(spec->name->asPQ_name()->toString() == "Unit") { //FIXME Check if it is defined inside Pobcpp namespace.
             unitTypeStr = spec->name->asPQ_name()->name;
-          }
+        } else {
+            locBool = false;
+        }
       }
     }
     unsigned short units = 0;  // How many units exist inside this class?
@@ -113,7 +118,8 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     // }
     DeclFlags dflag = DF_STATIC;
     DeclFlags dflag_decl = DF_NONE;
-
+    if(locBool == false)
+      return true;
     checkStrings();
 
 		TS_name* tsname = new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)), false);

@@ -2,6 +2,7 @@
 #include "piglet.h"
 
 #include "elsa/cc_type.h"
+#include "elsa/cc_flags.h"
 
 #include <string>
 #include <sstream>
@@ -31,7 +32,7 @@ Pobcpp::~Pobcpp() {
         PobcppPatch* patch = *viter;
         if(patch->kind == Insert) {
           sline.insert(diff + patch->col-1, patch->str);
-//            std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
+          //std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
 //            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
           diff += patch->str.length();
         }
@@ -117,6 +118,17 @@ bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
 }
 
 bool Pobcpp::visitMember(Member *member) {
+  return true;
+}
+
+bool Pobcpp::visitFunction(Function* func) {
+  std::cout << toString(func->dflags) << std::endl;
+  if((func->dflags & DF_STATIC) != 0)
+    std::cout << "Static" << std::endl;
+  if((func->dflags & DF_VIRTUAL) != 0)
+    std::cout << "Virtual" << std::endl;
+  std::cout << func->dflags << std::endl;
+  return true;
 }
 
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
