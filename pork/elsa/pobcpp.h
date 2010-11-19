@@ -24,7 +24,6 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   std::vector<ClassAndUnit> classes;
   
   virtual bool visitTopForm(TopForm* tf);
-  virtual bool visitFunction(Function* func);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 
@@ -39,6 +38,7 @@ class PObCppVisitor : public ASTVisitor {
   PObCppVisitor() { locBool = false; }
   virtual bool visitMember(Member *member);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+  virtual bool visitFunction(Function* func);
   private:
   SourceLoc loc;
   bool locBool;

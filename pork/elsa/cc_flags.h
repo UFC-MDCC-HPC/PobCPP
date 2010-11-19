@@ -555,8 +555,16 @@ extern char const * const uberModifierNames[UM_NUM_FLAGS];
 sm::string toString(UberModifiers m);
 
 // select particular subsets
-inline DeclFlags uberDeclFlags(UberModifiers m)
-  { return (DeclFlags)(m & UM_DECLFLAGS); }
+inline DeclFlags uberDeclFlags(UberModifiers m)  { 
+//  if(m & UM_STATIC != 0) {
+//    printf("STATICCC\n");
+//    return ((DeclFlags)(m & UM_DECLFLAGS) | DF_PARALLEL);
+//	}
+//  else {
+//    printf("NON-STATICCC\n");
+  return ((DeclFlags)(m & UM_DECLFLAGS));
+//  }
+}
 inline CVFlags uberCVFlags(UberModifiers m)
   { return (CVFlags)(m & UM_CVFLAGS); }
 

@@ -1,6 +1,14 @@
+2010-19-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Scatter implemented on libpobcpp.
+* example/sort added.
+
+2010-11-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix on PobcppVisitor.
+* elsa/chop_out readded.
+
 2010-09-11 Eduardo Gurgel <edgurgel@gmail.com>
-* parallel function modifier working on parsing
-* TODO updated
+* parallel function modifier working on parsing.
+* TODO updated.
 
 2010-02-11 Eduardo Gurgel <edgurgel@gmail.com>
 * TODO updated again!

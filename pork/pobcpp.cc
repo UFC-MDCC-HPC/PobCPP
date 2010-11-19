@@ -122,12 +122,21 @@ bool Pobcpp::visitMember(Member *member) {
 }
 
 bool Pobcpp::visitFunction(Function* func) {
-  std::cout << toString(func->dflags) << std::endl;
-  if((func->dflags & DF_STATIC) != 0)
-    std::cout << "Static" << std::endl;
-  if((func->dflags & DF_VIRTUAL) != 0)
-    std::cout << "Virtual" << std::endl;
-  std::cout << func->dflags << std::endl;
+//  if((func->dflags & DF_STATIC) != 0)
+//    std::cout << "Static" << std::endl;
+//  if((func->dflags & DF_VIRTUAL) != 0)
+//    std::cout << "Virtual" << std::endl;
+//  if(func->nameAndParams)
+//    if(func->nameAndParams->decl)
+//      if(func->nameAndParams->decl->isD_func())
+//        if(func->nameAndParams->decl->asD_func()->base)
+//          if(func->nameAndParams->decl->asD_func()->base->isD_name())
+//            if(func->nameAndParams->decl->asD_func()->base->asD_name()->name)
+//              if(func->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
+//                std::cout<< func->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name()->toString() << std::endl;
+//                std::cout << toString(func->dflags) << std::endl;
+//              }
+//  //std::cout << func->dflags << std::endl;
   return true;
 }
 

@@ -71,6 +71,15 @@ public:
 	template<typename Type, typename Data>
 	void gather(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);
 
+  template<typename Type, typename Data>
+  void scatter(const Data* in_value, Data& out_values);
+  template<typename Type, typename Data>
+  void scatter(const unsigned int _enumi, const Data* in_value, Data& out_values);
+  template<typename Type, typename Data>
+  void scatter(const Data* in_values, Data* out_values, int n);
+  template<typename Type, typename Data>
+  void scatter(const unsigned int _enumi, const Data* in_values, Data* out_values, int n);
+
 	template<typename Type, typename Data>
 	void reduce(const Data* in_values, int n);	
 	template<typename Type, typename Data>
@@ -181,6 +190,26 @@ private:
 	void gather(const Unit_Type& _unit_type, const std::pair<int, int>* in_values, int n, std::pair<int, int>* out_values);
 	void gather(const Unit_Type& _unit_type, const std::pair<float, int>* in_values, int n, std::pair<float, int>* out_values);
 	void gather(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, int n, std::pair<double, int>* out_values);
+
+  void scatter(const Unit_Type& _unit_type, const int* in_value, int& out_values);
+  void scatter(const Unit_Type& _unit_type, const unsigned int* in_value, unsigned int& out_values);
+  void scatter(const Unit_Type& _unit_type, const float* in_value, float& out_values);
+  void scatter(const Unit_Type& _unit_type, const double* in_value, double& out_values);
+  void scatter(const Unit_Type& _unit_type, const char* in_value, char& out_values);
+  void scatter(const Unit_Type& _unit_type, const std::string* in_value, std::string& out_values);
+  void scatter(const Unit_Type& _unit_type, const std::pair<int, int>* in_value, std::pair<int, int>& out_values);
+  void scatter(const Unit_Type& _unit_type, const std::pair<float, int>* in_value, std::pair<float, int>& out_values);
+  void scatter(const Unit_Type& _unit_type, const std::pair<double, int>* in_value, std::pair<double, int>& out_values);
+
+  void scatter(const Unit_Type& _unit_type, const int* in_values, int* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const unsigned int* in_values, unsigned int* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const float* in_values, float* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const double* in_values, double* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const char* in_values, char* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const std::string* in_values, std::string* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const std::pair<int, int>* in_values, std::pair<int, int>* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const std::pair<float, int>* in_values, std::pair<float, int>* out_values, int n);
+  void scatter(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, std::pair<double, int>* out_values, int n);
 
 	void reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
 	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);
@@ -320,6 +349,32 @@ void Basic_Communicator::gather(const unsigned int _enumi, const Data* in_values
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
 	return gather(unit_type, in_values, n, out_values);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::scatter(const Data* in_values, Data& out_value) {
+  return scatter<Type>(0, in_values, out_value);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::scatter(const unsigned int _enumi, const Data* in_values, Data& out_value) {
+  Type* un;
+  Unit_Type unit_type(un);
+  unit_type.set_enums(std::make_pair(_enumi,0));
+  return scatter(unit_type, in_values, out_value);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::scatter(const Data* in_values, Data* out_values, int n) {
+  return scatter<Type>(0, in_values, out_values, n);
+}
+
+template<typename Type, typename Data>
+void Basic_Communicator::scatter(const unsigned int _enumi, const Data* in_values, Data* out_values, int n) {
+  Type* un;
+  Unit_Type unit_type(un);
+  unit_type.set_enums(std::make_pair(_enumi,0));
+  return scatter(unit_type, in_values,out_values, n);
 }
 
 template<typename Type, typename Data>

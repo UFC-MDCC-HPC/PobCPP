@@ -27,19 +27,30 @@ bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
 	return true;
 }
 
-bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
-  if(function->nameAndParams != NULL) {
-    if(function->nameAndParams->decl->isD_func()) {
-      if(function->nameAndParams->decl->asD_func()->base->isD_name()) {
-        if(function->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
-          PQ_name* funcName = function->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name();
-          if(funcName->toString() == "add_type")
-            addTypeStr =funcName->name;
-        }
-      }
-		}
-  }
-	return true;
+//bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
+//  if(function->nameAndParams != NULL) {
+//    if(function->nameAndParams->decl->isD_func()) {
+//      if(function->nameAndParams->decl->asD_func()->base->isD_name()) {
+//        if(function->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
+//          PQ_name* funcName = function->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name();
+//          if(funcName->toString() == "add_type")
+//            addTypeStr =funcName->name;
+//        }
+//      }
+//		}
+//  }
+//	return true;
+//}
+bool PObCppVisitor::visitFunction(Function* func) {
+//  std::cout << toString(func->dflags) << std::endl;
+//  if((func->dflags & DF_STATIC) != 0)
+//    std::cout << "Static" << std::endl;
+//  if((func->dflags & DF_VIRTUAL) != 0)
+//    std::cout << "Virtual" << std::endl;
+//  if((func->dflags & DF_PARALLEL) != 0)
+//    std::cout << "Parallel" << std::endl;
+//  //std::cout << func->dflags << std::endl;
+//  return true;
 }
 
 bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
@@ -203,23 +214,6 @@ bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 }
 
 bool PObCppVisitor::visitMember(Member *member) {
-  if(member->isMR_func()) {
-    if(member->asMR_func()->f->retspec->isTS_simple()) {
-      if(member->asMR_func()->f->retspec->asTS_simple()->id & ST_CDTOR) {
-//        std::cout << "Eh um construtor" << std::endl;
-//        std::cout << member->asMR_func()->f->receiver->type->toString() << std::endl;
-        //std::cout << member->asMR_func()->f->receiver->type-> << std::endl;
-        if(member->asMR_func()->f->receiver->type->isPseudoInstantiation()) {
-//          std::cout << "Eh um tipo composto" << std::endl;
-          //if (member->asMR_func()->f->receiver->type->asCVAtomicType()->atomic->isCompoundType()) { }
-          //if(member->asMR_func()->f->receiver->type->asCompoundType()->keyword == TI_UNIT)
-          //if(member->asMR_func()->f->receiver->type->isCompoundTypeOf(CompoundType::K_UNIT))
-//            std::cout << "Pitomba3" << std::endl;
-        }
-      }
-    }
-  }
-  return true;
 }
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {

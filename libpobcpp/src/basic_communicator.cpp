@@ -141,6 +141,28 @@ void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype* in_
 	} \
 }
 
+#define Basic_Communicator_scatter_impl(datatype) \
+void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in_values, datatype& out_value) { \
+  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+  if(env && world) { \
+    if(env->isComplete()) { \
+      unsigned int unit_rank = env->get_rank(_unit_type); \
+      boost::mpi::scatter(world, in_values, out_value, unit_rank); \
+    } \
+  } \
+}
+
+#define Basic_Communicator_scatter_array_impl(datatype) \
+void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in_values, datatype* out_values, int n) { \
+  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+  if(env && world) { \
+    if(env->isComplete()) { \
+      unsigned int unit_rank = env->get_rank(_unit_type); \
+      boost::mpi::scatter(world, in_values, out_values, n, unit_rank); \
+    } \
+  } \
+}
+
 #define Basic_Communicator_send_and_isend_impl(datatype) \
 	Basic_Communicator_send_impl(datatype) \
 	Basic_Communicator_send_array_impl(datatype) \
@@ -233,6 +255,26 @@ Basic_Communicator_gather_array_impl(std::string);
 Basic_Communicator_gather_array_impl(pair_int_int);
 Basic_Communicator_gather_array_impl(pair_float_int);
 Basic_Communicator_gather_array_impl(pair_double_int);
+
+//Basic_Communicator_scatter_impl(int); // FIXME
+Basic_Communicator_scatter_impl(unsigned int);
+Basic_Communicator_scatter_impl(float);
+Basic_Communicator_scatter_impl(double);
+Basic_Communicator_scatter_impl(char);
+Basic_Communicator_scatter_impl(std::string);
+Basic_Communicator_scatter_impl(pair_int_int);
+Basic_Communicator_scatter_impl(pair_float_int);
+Basic_Communicator_scatter_impl(pair_double_int);
+
+Basic_Communicator_scatter_array_impl(int);
+Basic_Communicator_scatter_array_impl(unsigned int);
+Basic_Communicator_scatter_array_impl(float);
+Basic_Communicator_scatter_array_impl(double);
+Basic_Communicator_scatter_array_impl(char);
+Basic_Communicator_scatter_array_impl(std::string);
+Basic_Communicator_scatter_array_impl(pair_int_int);
+Basic_Communicator_scatter_array_impl(pair_float_int);
+Basic_Communicator_scatter_array_impl(pair_double_int);
 
 void Basic_Communicator::reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values) {
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
