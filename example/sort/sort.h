@@ -6,12 +6,12 @@ public:
 	void parallel sort();
 	unit Worker [i:n] {
 		public:
-			void parallel virtual sort() = 0;
+			void /*parallel*/virtual sort() = 0;
       void set(int* nums, int size);
-		protected
+		protected:
 			int* nums;
 			int size;
-	}
+	};
 
 };
 

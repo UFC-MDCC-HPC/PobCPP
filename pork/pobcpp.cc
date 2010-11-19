@@ -11,7 +11,9 @@
 
 extern char* itoa(int value); // elsa/pobcpp.cc FIXME
 
-Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) {  }
+Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) {
+
+}
 
 Pobcpp::~Pobcpp() {
   using std::string;
@@ -19,7 +21,7 @@ Pobcpp::~Pobcpp() {
   using std::pair;
   using std::vector;
   string original_file = file;
-  original_file.resize(file.size()-9);
+  //original_file.resize(file.size()-9);
   map<int, vector<PobcppPatch*> >::iterator iter;
     for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
       std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
@@ -53,7 +55,7 @@ Pobcpp::~Pobcpp() {
       sline += " //";
 
       //patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first, 1), sline);
-      patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first-1, 1), sline);
+      patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
   }
   // FIXME
   patches.clear();
@@ -199,7 +201,7 @@ void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::
   //   ...
   //   return pobtypes;
   // }
-  string function = "public: Pobcpp::Pob_Type_Array __get_types() { Pobcpp::Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
+  string function = "public: Pobcpp::Pob_Type_Array static __get_types() { Pobcpp::Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
 
   unsigned int j = 0; // Unit order
   for(unsigned int i = 0; i < classes.size(); i++) { // FIXME Better search algorithm.

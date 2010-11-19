@@ -1,18 +1,24 @@
 #!/bin/bash
 src=$1
+pobcpp=$2
 suffix=".temp.cpp"
 temp=$src$suffix
+temp2=$src".pob"
 if [ -e $src ]; then
 	echo "#include \"pobcpp.h\"" > $temp
 	cat "$src" >> $temp
 #	g++-4.1.2 -E -Wp,-K $temp > $temp".ii"
-	mcpp -K $temp > $temp".ii"
+	mcpp -I $pobcpp -K $temp > $temp".ii"
   echo ./pobcpp "$temp"".ii" "$temp"
   ./pobcpp "$temp"".ii" "$temp" > "$temp"".patch"
-  rm "$temp"".ii" "$temp"
-  cp "$src" "$src"".patched.cpp"
+  cp "$temp" "$src"".patched.cpp"
+	rm "$temp"".ii" "$temp"
+#  cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
   rm "$temp"".patch"
+	echo "#include \"basic_communicator.h\"" > $temp2
+	cat "$src"".patched.cpp" >> $temp2
+	rm "$src"".patched.cpp"
 else
 	echo "File not found"
 fi

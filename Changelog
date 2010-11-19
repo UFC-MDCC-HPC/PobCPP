@@ -1,4 +1,9 @@
 2010-19-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix on pobexample
+* Create pobexample.cpp
+* Bugfix on pobcppc script
+
+2010-19-11 Eduardo Gurgel <edgurgel@gmail.com>
 * Scatter implemented on libpobcpp.
 * example/sort added.
 

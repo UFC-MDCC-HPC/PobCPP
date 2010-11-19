@@ -1,10 +1,10 @@
 #ifndef __UNIT__
 #define __UNIT__
 
-#include "basic_communicator.h"
+//#include "basic_communicator.h"
 
 namespace Pobcpp {
-
+class Basic_Communicator;
 class Unit {
 protected:
 
@@ -21,6 +21,7 @@ public: //FIXME
 	Basic_Communicator* comm;
 private:
 	Unit(const Unit&);
+	//operator=(const Unit&);
 };
 
 }
