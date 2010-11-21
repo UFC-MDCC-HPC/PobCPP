@@ -5,7 +5,12 @@ class HelloWorld {
 	unit Hello {
 		public:
 		Hello();
-		void sendHello();
+	//	void sendHello();
+		void sendHello() {
+			comm->send<HelloWorld::World>(42, 1);
+			int data = 45;
+			comm->broadcast<Hello>(data);
+		}
 
 	};
 

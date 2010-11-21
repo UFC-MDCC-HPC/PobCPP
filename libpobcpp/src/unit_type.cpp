@@ -44,7 +44,7 @@ bool Unit_Type::operator<(const Unit_Type& _unit_type) const {
 }
 
 std::ostream& operator<<(std::ostream& ostream, const Unit_Type& _unit_type) {
-	ostream << _unit_type.unit_type << " (" << _unit_type.enums.first << "," << _unit_type.enums.second << ")";
+	//ostream << _unit_type.unit_type << " (" << _unit_type.enums.first << "," << _unit_type.enums.second << ")";
 	return ostream;
 }
 

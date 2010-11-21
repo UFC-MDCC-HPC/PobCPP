@@ -10,6 +10,7 @@
 #include "unit.h"
 #include "unit_type.h"
 #include "environment.h"
+#include "unit_type_serialization.h"
 
 bool is_no_unit(const Pobcpp::Unit_Type& unit_type);
 namespace Pobcpp {

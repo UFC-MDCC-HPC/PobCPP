@@ -1,3 +1,6 @@
+2010-21-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Great bugfix. Now only create_unit is forbidden to the parser.
+
 2010-20-11 Eduardo Gurgel <edgurgel@gmail.com>
 * example/ - Track libpobcpp changes.
 

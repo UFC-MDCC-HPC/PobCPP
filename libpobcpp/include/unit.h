@@ -1,7 +1,7 @@
 #ifndef __UNIT__
 #define __UNIT__
 
-//#include "basic_communicator.h"
+#include "basic_communicator.h"
 
 namespace Pobcpp {
 class Basic_Communicator;
