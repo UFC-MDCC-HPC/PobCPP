@@ -1,3 +1,6 @@
+2010-20-11 Eduardo Gurgel <edgurgel@gmail.com>
+* example/ - Track libpobcpp changes.
+
 2010-19-11 Eduardo Gurgel <edgurgel@gmail.com>
 * Bugfix on pobexample
 * Create pobexample.cpp

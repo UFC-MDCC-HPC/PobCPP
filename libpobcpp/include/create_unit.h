@@ -9,6 +9,7 @@
 #include <boost/serialization/map.hpp> //std::pair serialize
 #include "unit.h"
 #include "unit_type.h"
+#include "environment.h"
 
 bool is_no_unit(const Pobcpp::Unit_Type& unit_type);
 namespace Pobcpp {

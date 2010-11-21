@@ -1,4 +1,5 @@
 #!/bin/bash
+pobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/pobcpp
 src=$1
 pobcpp=$2
 suffix=".temp.cpp"
@@ -10,13 +11,14 @@ if [ -e $src ]; then
 #	g++-4.1.2 -E -Wp,-K $temp > $temp".ii"
 	mcpp -I $pobcpp -K $temp > $temp".ii"
   echo ./pobcpp "$temp"".ii" "$temp"
-  ./pobcpp "$temp"".ii" "$temp" > "$temp"".patch"
+  $pobcppexecutable "$temp"".ii" "$temp" > "$temp"".patch"
   cp "$temp" "$src"".patched.cpp"
 	rm "$temp"".ii" "$temp"
 #  cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
   rm "$temp"".patch"
 	echo "#include \"basic_communicator.h\"" > $temp2
+	echo "#include \"create_unit.h\"" >> $temp2
 	cat "$src"".patched.cpp" >> $temp2
 	rm "$src"".patched.cpp"
 else

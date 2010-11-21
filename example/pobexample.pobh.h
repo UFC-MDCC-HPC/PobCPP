@@ -4,18 +4,20 @@ class HelloWorld {
 	unit Nothing;
 	unit Hello {
 		public:
+		Hello();
 		void sendHello();
 
 	};
 
 	unit World {
 		public:
+		World();
 		int recvHello();
 
 	};
 	unit Nothing [i:n] {
 		public:
-		Nothing(unsigned int i, unsigned int n) : i(i), n(n) { }
+		Nothing(unsigned int i, unsigned int n);
 		void doNothing();
 	};
 	
