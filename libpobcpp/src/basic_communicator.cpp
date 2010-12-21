@@ -182,6 +182,11 @@ void Basic_Communicator::set_environment(Environment* _env) {
 void Basic_Communicator::set_intracomm(MPI_Comm _comm) {
 	comm = _comm;
 }
+
+MPI_Comm Basic_Communicator::getMPIComm() {
+	return comm;
+}
+
 typedef std::pair<int, int> pair_int_int;
 typedef std::pair<float, int> pair_float_int;
 typedef std::pair<double, int> pair_double_int;

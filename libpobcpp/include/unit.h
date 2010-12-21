@@ -17,9 +17,9 @@ protected:
 	 * Destructor
 	 */
 	virtual ~Unit();
-public: //FIXME 
 	Basic_Communicator* comm;
 private:
+	// No copy allowed.
 	Unit(const Unit&);
 	//operator=(const Unit&);
 };

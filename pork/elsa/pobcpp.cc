@@ -96,6 +96,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 	      if(spec->name->asPQ_name()->toString() == "Pob_Type_Array") { //FIXME Check if it is defined inside Pobcpp namespace.
   	      loc = spec->loc;
       	  pobTypeArrayStr = spec->name->asPQ_name()->name;
+          locBool = true;
 		 	  } else if(spec->name->asPQ_name()->toString() == "Unit") { //FIXME Check if it is defined inside Pobcpp namespace.
             unitTypeStr = spec->name->asPQ_name()->name;
         } else {
@@ -120,7 +121,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		if(!units)
 			return true;
     // Append this definition:
-    // Pob_Type_Array __get_types() {
+    // static Pob_Type_Array __get_types() {
     //   Pob_Type_Array pobtypes(units);
     //   pobtypes.add_type<unit A>(0);
 		//   pobtypes.add_type<unit B>(1);
@@ -129,8 +130,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     // }
     DeclFlags dflag = DF_STATIC;
     DeclFlags dflag_decl = DF_NONE;
-    if(locBool == false)
-      return true;
+
     checkStrings();
 
 		TS_name* tsname = new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)), false);
@@ -178,7 +178,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
                                                new PQ_template(loc, addTypeStr,
                                                                new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs))); //   pobtypes.add_type<unit A>(0);
 
-      stms->append(sexpr);
+//      stms->append(sexpr);
 			j++;
     }
 		S_return* sreturn = new S_return(loc, SourceLoc(), new FullExpression(new E_variable(loc, SourceLoc(), new PQ_name(SourceLoc(), "pobtypes")))); //   return pobtypes;

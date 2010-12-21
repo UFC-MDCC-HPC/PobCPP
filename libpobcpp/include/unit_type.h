@@ -87,8 +87,8 @@ public:
 	}
 
 private:
-const unsigned int sizearray;
-Unit_Type* types;
+	const unsigned int sizearray;
+	Unit_Type* types;
 
 };
 

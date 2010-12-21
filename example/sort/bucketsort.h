@@ -1,6 +1,6 @@
 #ifndef __BUCKETSORT_H_
 #define __BUCKETSORT_H_
-
+#include "pob_sort.h"
 class BucketSort : public Sorter {
 public:
 	void parallel sort();

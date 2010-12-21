@@ -1,3 +1,9 @@
+2010-21-12 Eduardo Gurgel <edgurgel@gmail.com>
+* Libpobcpp better defined.
+ - Basic_Communicator has now getMPIComm().
+ - Basic_Communicator::set_env and set_intracomm are private now.
+* Pobcppc fixed.
+
 2010-21-11 Eduardo Gurgel <edgurgel@gmail.com>
 * Great bugfix. Now only create_unit is forbidden to the parser.
 

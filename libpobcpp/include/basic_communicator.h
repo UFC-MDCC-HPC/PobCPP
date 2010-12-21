@@ -16,10 +16,11 @@ class Basic_Communicator {
 public:
 	Basic_Communicator(); 
 	~Basic_Communicator();
-
+	MPI_Comm getMPIComm(); // Internal data
+private:
 	void set_environment(Environment* _env);
-	void set_intracomm(MPI_Comm _comm);
-
+	void set_intracomm(MPI_Comm _comm); 
+	friend class Unit;
 // Point-to-Point
 public:
 	//FIXME implement array send and receive
@@ -213,6 +214,7 @@ private:
 
 	void reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
 	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);
+
 private:
 
 	Environment* env;

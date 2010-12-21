@@ -201,7 +201,7 @@ void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::
   //   ...
   //   return pobtypes;
   // }
-  string function = "public: Pobcpp::Pob_Type_Array static __get_types() { Pobcpp::Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
+  string function = "public: static Pobcpp::Pob_Type_Array __get_types() { Pobcpp::Pob_Type_Array pobtypes(" + string(itoa(units)) + "); ";
 
   unsigned int j = 0; // Unit order
   for(unsigned int i = 0; i < classes.size(); i++) { // FIXME Better search algorithm.
