@@ -17,13 +17,12 @@ public:
 	Basic_Communicator(); 
 	~Basic_Communicator();
 	MPI_Comm getMPIComm(); // Internal data
+	void set_environment(Environment* _env); // FIXME
+	void set_intracomm(MPI_Comm _comm); // FIXME
 private:
-	void set_environment(Environment* _env);
-	void set_intracomm(MPI_Comm _comm); 
 	friend class Unit;
 // Point-to-Point
 public:
-	//FIXME implement array send and receive
 	template<typename Type, typename Data>
 	void send(const Data& data, const int tag);
 	template<typename Type, typename Data>

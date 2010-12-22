@@ -1,3 +1,7 @@
+2010-22-12 Eduardo Gurgel <edgurgel@gmail.com>
+* create_unit_impl.h removed.
+* Unrolling some modifications on libpobcpp.
+
 2010-21-12 Eduardo Gurgel <edgurgel@gmail.com>
 * Libpobcpp better defined.
  - Basic_Communicator has now getMPIComm().

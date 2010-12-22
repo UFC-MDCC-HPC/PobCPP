@@ -1,3 +1,6 @@
+#ifndef __UNIT_TYPE_SERIALIZATION__
+#define __UNIT_TYPE_SERIALIZATION__
+
 #include "unit_type.h"
 #include <boost/serialization/serialization.hpp>
 namespace boost {
@@ -5,9 +8,9 @@ namespace boost {
 
 		template<class Archive>
 		void serialize(Archive & ar, Pobcpp::Unit_Type & g, const unsigned int version) {
-			ar & unit_type;
-			ar & enumerators;
-			ar & enums;
+			ar & g.unit_type;
+			ar & g.enumerators;
+			ar & g.enums;
 		}
 
 	} // namespace serialization
@@ -32,4 +35,6 @@ struct Unit_Type_Pack {
 	}
 
 };
+
+#endif
 
