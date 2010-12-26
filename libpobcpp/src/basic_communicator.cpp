@@ -183,7 +183,7 @@ void Basic_Communicator::set_intracomm(MPI_Comm _comm) {
 	comm = _comm;
 }
 
-MPI_Comm Basic_Communicator::getMPIComm() {
+MPI_Comm Basic_Communicator::get_mpi_comm() {
 	return comm;
 }
 

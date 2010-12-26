@@ -16,7 +16,7 @@ class Basic_Communicator {
 public:
 	Basic_Communicator(); 
 	~Basic_Communicator();
-	MPI_Comm getMPIComm(); // Internal data
+	MPI_Comm get_mpi_comm(); // Internal data
 	void set_environment(Environment* _env); // FIXME
 	void set_intracomm(MPI_Comm _comm); // FIXME
 private:

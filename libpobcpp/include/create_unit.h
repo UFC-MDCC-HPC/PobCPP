@@ -23,7 +23,6 @@ public:
 	bool check(const Pobcpp::Unit_Type& _unit_type, unsigned int _enum_n) {
 		//unsigned int _enum_i = _unit_type.get_enums().first;
 		if(types.count(_unit_type) == 0) {
-//			std::cout << "lascou pq não tem ninguem" << std::endl;
 			return false;
 		}
 		std::pair<unsigned int, int> current_pair = types[_unit_type];
@@ -65,7 +64,7 @@ void create_unit() {
 
 template<typename TypePObject, typename TypeUnit>
 void create_unit(TypeUnit* _created_unit, unsigned int i, unsigned int n) {
-	create_unit<TypePObject>(_created_unit, std::make_pair(i,n));
+	create_unit<TypePObject>(_created_unit, std::make_pair(i,n-1));
 }
 
 template<typename TypePObject, typename TypeUnit>

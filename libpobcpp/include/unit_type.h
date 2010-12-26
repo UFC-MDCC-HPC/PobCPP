@@ -4,14 +4,15 @@
 #include <string>
 #include <typeinfo>
 #include <map>
+#include <iostream> //FIXME
 
 namespace Pobcpp {
 
 class Unit_Type {
 public:
 	Unit_Type();
-	template<typename Unit>
-	Unit_Type(Unit* _unit, unsigned int _enumerators = 0);
+	template<typename TUnit>
+	Unit_Type(TUnit* _unit, unsigned int _enumerators = 0);
 	~Unit_Type();
 
 	void set_enums(std::pair<unsigned int, unsigned int> _enums) {
@@ -45,9 +46,9 @@ public: // non intrusive serialize()
 
 };
 
-template<typename Unit>
-Unit_Type::Unit_Type(Unit* _unit, unsigned int _enumerators) {
-	unit_type = typeid(_unit).name();
+template<typename TUnit>
+Unit_Type::Unit_Type(TUnit* _unit, unsigned int _enumerators) {
+	unit_type = std::string(typeid(_unit).name());
 	enumerators = _enumerators;
 }
 
