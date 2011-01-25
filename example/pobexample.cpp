@@ -2,16 +2,12 @@
 #include "basic_communicator.h"
 
 HelloWorld::Hello::Hello() {
-	create_unit<class HelloWorld, class HelloWorld::Hello>(this);
+	create_unit<class HelloWorld>(this);
 }
 
 
 HelloWorld::World::World() {
 	create_unit<HelloWorld>(this);
-}
-
-HelloWorld::Nothing::Nothing(unsigned int i, unsigned int n) : i(i), n(n) {
-	create_unit<HelloWorld>(this, std::make_pair(i,n));
 }
 
 
@@ -23,7 +19,3 @@ int HelloWorld::World::recvHello() {
 	return data;
 }
 
-void HelloWorld::Nothing::doNothing() {
-	int data = 0;
-	comm->broadcast<Hello>(data);
-}

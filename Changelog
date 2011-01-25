@@ -1,3 +1,6 @@
+2010-25-01 Eduardo Gurgel <edgurgel@gmail.com>
+* PETSc example. 90%
+
 2010-25-12 Eduardo Gurgel <edgurgel@gmail.com>
 * pobcppc bugfixed. > instead of >>
 * Bugfix on create_unit function.

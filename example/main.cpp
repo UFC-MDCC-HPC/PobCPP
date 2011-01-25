@@ -15,12 +15,7 @@ int main(int argc, char** argv) {
 //	create_unit<HelloWorld>(&h);
 	h.sendHello();
 	std::cout << "End Hello program" << std::endl;
-	std::cout << "Hello program" << std::endl;
-	//return 1;
-	HelloWorld::Hello h2;
-//	create_unit<HelloWorld>(&h2);
-	h2.sendHello();
-	std::cout << "End Hello program" << std::endl;
 	MPI_Finalize();
+	std::cout << "Hello returning 0" << std::endl;
 	return 0;
 }

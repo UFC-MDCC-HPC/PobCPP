@@ -54,17 +54,12 @@ void create_unit_impl(Pobcpp::Unit* _created_unit, std::pair<unsigned int, unsig
 		}
 	}
 	check += enum_checker.check();
-/*	int* ranks = new int[temp_ranks.size()];
-	for(unsigned int i = 0; i < temp_ranks.size(); i++) {
-		ranks[i] = temp_ranks[i];
-	}*/
-//	std::cout << "==" << unit_type <<"== My check value is: " << check << " and typearray.size is " << typearray.size() << std::endl;
 	if(check == typearray.size()) {
 		// Creating new intracommunicator
 		MPI_Group orig_group, new_group;
 		MPI_Comm comm;
 		MPI_Comm_group(MPI_COMM_WORLD, &orig_group);
-		std::cout << "Creating a group with " << temp_ranks.size() << " members." << std::endl;
+//		std::cout << "Creating a group with " << temp_ranks.size() << " members." << std::endl;
 //		MPI_Group_incl(orig_group, temp_ranks.size(), ranks, &new_group);
 		MPI_Group_incl(orig_group, temp_ranks.size(), &(temp_ranks.front()), &new_group);
 		MPI_Comm_create(MPI_COMM_WORLD, new_group, &comm);
@@ -76,7 +71,7 @@ void create_unit_impl(Pobcpp::Unit* _created_unit, std::pair<unsigned int, unsig
 			MPI_Group_rank (new_group, &inew_rank); 
 			unsigned int new_rank = bcomm.rank();
 			unit_type.set_enums(_enums);
-			std::cout << "==" << unit_type << " == novo rank: " << new_rank << std::endl;
+//			std::cout << "==" << unit_type << " == novo rank: " << new_rank << std::endl;
 			all_gather(bcomm, Unit_Type_Pack(unit_type, _enums, new_rank), types); // send the pair<unit_type,world.rank()>
 			for(unsigned int i = 0; i < types.size(); i++)
 				env->add(types.at(i).unit_type, types.at(i).rank);

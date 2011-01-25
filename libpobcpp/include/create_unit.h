@@ -64,7 +64,7 @@ void create_unit() {
 
 template<typename TypePObject, typename TypeUnit>
 void create_unit(TypeUnit* _created_unit, unsigned int i, unsigned int n) {
-	create_unit<TypePObject>(_created_unit, std::make_pair(i,n-1));
+	create_unit<TypePObject>(_created_unit, std::make_pair(i,n));
 }
 
 template<typename TypePObject, typename TypeUnit>

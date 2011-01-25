@@ -12,3 +12,5 @@ exe example3 : main3.cpp pobexample.cpp ../libpobcpp : <include>.
 exe example4 : main4.cpp pobexample.cpp ../libpobcpp : <include>.
 <include>../libpobcpp/include <include>/usr/include/openmpi ;
 
+exe example5 : main5.cpp pobexample.cpp ../libpobcpp : <include>.
+<include>../libpobcpp/include <include>/usr/include/openmpi ;

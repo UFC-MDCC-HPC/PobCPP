@@ -14,7 +14,6 @@ class Etc {
 class HelloWorld {
 	public:
 	unit World;
-	unit Nothing;
 	unit Hello {
 		public:
 		Hello();
@@ -33,14 +32,9 @@ class HelloWorld {
 		int recvHello();
 
 	};
-	unit Nothing [i:n] {
-		public:
-		Nothing(unsigned int i, unsigned int n);
-		void doNothing();
-	};
 	static int func() { }	
 
-//public: static Pobcpp::Pob_Type_Array __get_types() { Pobcpp::Pob_Type_Array pobtypes(3); pobtypes.add_type<Hello>(0);pobtypes.add_type<World>(1);pobtypes.add_type<Nothing>(2, 1);return pobtypes; } private:}; //};
+	public: static Pobcpp::Pob_Type_Array __get_types() { Pobcpp::Pob_Type_Array pobtypes(2); pobtypes.add_type<Hello>(0);pobtypes.add_type<World>(1);;return pobtypes; } private:}; //	};
 	};
 
 #endif
