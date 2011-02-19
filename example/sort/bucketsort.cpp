@@ -1,4 +1,4 @@
-#include "pob_bucketsort.h"
+#include "bucketsort.h.pob"
 
 #include <cstdio>
 #include <cstdlib> /* for random function */
