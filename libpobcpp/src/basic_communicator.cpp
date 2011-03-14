@@ -49,25 +49,25 @@ void Basic_Communicator::isend(const Unit_Type& _unit_type, const datatype* _dat
 } 
 
 #define Basic_Communicator_receive_impl(datatype) \
-datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag) { \
+datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag, MPI_Status* status) { \
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
 	datatype data; \
 	if(env && world) { \
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.recv(unit_rank , _tag, data); \
+			*status = (world.recv(unit_rank , _tag, data)); \
 		} \
 	} \
 	return data; \
 } 
 
 #define Basic_Communicator_receive_array_impl(datatype) \
-void Basic_Communicator::receive(const Unit_Type& _unit_type, datatype* data, int n, const int _tag) { \
+void Basic_Communicator::receive(const Unit_Type& _unit_type, datatype* data, int n, const int _tag, MPI_Status* status) { \
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
 	if(env && world) { \
 		if(env->isComplete()) { \
 			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.recv(unit_rank , _tag, data, n); \
+			*status = world.recv(unit_rank , _tag, data, n); \
 		} \
 	} \
 } 

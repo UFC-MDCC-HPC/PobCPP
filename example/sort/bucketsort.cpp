@@ -4,7 +4,7 @@
 #include <cstdlib> /* for random function */
 #include <iostream>
 
-void BucketSort::Worker::make_numbers(long int big_array[], int n, int n_bar, int p) {
+void make_numbers(long int big_array[], int n, int n_bar, int p) {
 	/* Puts numbers in "buckets" but we can treat it otherwise */
 	int i, q;
 

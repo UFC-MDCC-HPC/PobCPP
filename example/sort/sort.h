@@ -3,12 +3,13 @@
 
 class Sorter {
 public:
-	void parallel sort();
+	void /*parallel*/ sort();
 	unit Worker [i:n] {
 		public:
 			void /*parallel*/virtual sort() = 0;
       void set(int* nums, int size);
 		protected:
+			Worker(unsigned int i, unsigned int n) : i(i), n(n) { }
 			int* nums;
 			int size;
 	};

@@ -14,7 +14,9 @@ public:
 		PetscErrorCode AssemblyEnd();
 		PetscErrorCode Copy(Vec y);
 		PetscErrorCode Create(); 
+		PetscErrorCode CreateSeq(PetscInt);
 		PetscErrorCode Destroy();
+		PetscErrorCode Duplicate(PVec *newv);
 		PetscErrorCode Exp();
 		PetscErrorCode GetArray(PetscScalar *a[]);
 		PetscErrorCode GetLocalSize(PetscInt *size);

@@ -35,8 +35,26 @@ PetscErrorCode ParallelVec::PVec::Create() {
 	return VecCreate(petscomm, &vec); //FIXME	
 }
 
+PetscErrorCode ParallelVec::PVec::CreateSeq(PetscInt n) {
+	int data = 1000;
+	std::cout << "Testing Broadcast before: " << data << std::endl;
+	if(i == 0)
+		data = 250;
+
+	comm->broadcast<PVec>(0, data);
+	std::cout << "Broadcast: " << data << std::endl;
+
+//	return VecCreate(comm->get_mpi_comm(), &vec);
+	PetscCommDuplicate(comm->get_mpi_comm(), &petscomm, PETSC_NULL);
+	return VecCreateSeq(petscomm, n, &vec); //FIXME	
+}
+
 PetscErrorCode ParallelVec::PVec::Destroy() {
 	return VecDestroy(vec); //FIXME	
+}
+
+PetscErrorCode ParallelVec::PVec::Duplicate(PVec* newv) {
+	return VecDuplicate(vec, &newv->vec);
 }
 
 PetscErrorCode ParallelVec::PVec::GetArray(PetscScalar *a[]) {

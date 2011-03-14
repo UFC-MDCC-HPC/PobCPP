@@ -48,23 +48,22 @@ int main(int argc,char **argv)
   ierr = C.SetFromOptions();CHKERRQ(ierr);
   ierr = C.AssemblyBegin(MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
   ierr = C.AssemblyEnd(MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+
+  ierr = u.CreateSeq(N);CHKERRQ(ierr); 
+  ierr = u.Duplicate(&b);CHKERRQ(ierr);
+  ierr = u.Duplicate(&x);CHKERRQ(ierr);
+  ierr = u.Set(0.0);CHKERRQ(ierr);
+  ierr = b.Set(0.0);CHKERRQ(ierr);
+
+  ierr = b.AssemblyBegin();CHKERRQ(ierr);
+  ierr = b.AssemblyEnd();CHKERRQ(ierr);
   
 	std::cout << "Finalize" << std::endl;
   ierr = PetscFinalize();CHKERRQ(ierr);
 	MPI_Finalize();	
   return 0;
 
-
-  /* create right hand side and solution 
-
-  ierr = VecCreateSeq(PETSC_COMM_SELF,N,&u);CHKERRQ(ierr); 
-  ierr = VecDuplicate(u,&b);CHKERRQ(ierr);
-  ierr = VecDuplicate(u,&x);CHKERRQ(ierr);
-  ierr = VecSet(u,0.0);CHKERRQ(ierr);
-  ierr = VecSet(b,0.0);CHKERRQ(ierr);
-
-  ierr = VecAssemblyBegin(b);CHKERRQ(ierr);
-  ierr = VecAssemblyEnd(b);CHKERRQ(ierr);
+/*
 
   ierr = KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
   ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);

@@ -1,7 +1,9 @@
 #include "odd-even.h.pob"
 #include <cstdlib>
 
-int OddEven::Worker::IncOrder(const void *e1, const void *e2)  { 
+OddEven::Worker::Worker(unsigned int _i, unsigned int _n) : Sorter::Worker(_i, _n), i(_i), n(_n) {
+}
+int IncOrder(const void *e1, const void *e2)  { 
   return (*((int *)e1) - *((int *)e2)); 
 }
 /* This is the CompareSplit function */ 
@@ -29,7 +31,7 @@ void OddEven::Worker::CompareSplit(int nlocal, int *elmnts, int *relmnts, int *w
   } 
 }
 
-void OddEven::worker::sort() {
+void OddEven::Worker::sort() {
 	int nn;         /* The total number of elements to be sorted */ 
 	int npes;      /* The total number of processes */ 
 	int myrank;    /* The rank of the calling process */ 
@@ -40,10 +42,8 @@ void OddEven::worker::sort() {
 	int evenrank;  /* The rank of the process during even-phase communication */ 
 	int *wspace;   /* Working space during the compare-split operation */ 
 	int j; 
-//  MPI_Status status; 
+  MPI_Status status; 
   
-//  MPI_Comm_size(MPI_COMM_WORLD, &npes); 
-//  MPI_Comm_rank(MPI_COMM_WORLD, &myrank); 
   
 	nn = size;
 	nlocal = nn/npes; /* Compute the number of elements to be stored locally. */ 
@@ -59,7 +59,7 @@ void OddEven::worker::sort() {
     elmnts[j] = random(); 
   
   /* Sort the local elements using the built-in quicksort routine */ 
-  qsort(elmnts, nlocal, sizeof(int), IncOrder); 
+	std::qsort(elmnts, nlocal, sizeof(int), IncOrder); 
   
   /* Determine the rank of the processors that myrank needs to communicate during */ 
   /* the odd and even phases of the algorithm */ 
@@ -80,20 +80,20 @@ void OddEven::worker::sort() {
 
   /* Get into the main loop of the odd-even sorting algorithm */ 
   for (j=0; j<npes-1; j++) { 
-    if (j%2 == 1) /* Odd phase */ 
+    if (j%2 == 1) { /* Odd phase */ 
 			if(oddrank != -1) {
 //				MPI_Isend(elmnts, nlocal, MPI_INT, oddrank, 1, MPI_COMM_WORLD, &request);
 //				MPI_Recv( elmnts, nlocal, MPI_INT, oddrank, 1, MPI_COMM_WORLD, &status);
 				comm->isend<Worker>(oddrank, elmnts, nlocal, 1);
-				comm->receive<Worker>(oddrank, elmnts, nlocal, 1);
+				comm->receive<Worker>(oddrank, elmnts, nlocal, 1, &status);
 			}
 		}
     else /* Even phase */ {
 			if(evenrank != -1) {
-				MPI_Isend(elmnts, nlocal, MPI_INT, evenrank, 1, MPI_COMM_WORLD, &request);
-				MPI_Recv( elmnts, nlocal, MPI_INT, evenrank, 1, MPI_COMM_WORLD, &status);
+//				MPI_Isend(elmnts, nlocal, MPI_INT, evenrank, 1, MPI_COMM_WORLD, &request);
+//				MPI_Recv( elmnts, nlocal, MPI_INT, evenrank, 1, MPI_COMM_WORLD, &status);
 				comm->isend<Worker>(evenrank, elmnts, nlocal, 1);
-				comm->receive<Worker>(evenrank, elmnts, nlocal, 1);
+				comm->receive<Worker>(evenrank, elmnts, nlocal, 1, &status);
 			}
 		}
     CompareSplit(nlocal, elmnts, relmnts, wspace,myrank < status.MPI_SOURCE); 

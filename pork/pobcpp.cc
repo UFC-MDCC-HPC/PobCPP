@@ -223,11 +223,11 @@ void Pobcpp::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::
   // FIXME
   // maybe here we need to insert "virtual" public Pobcpp::Unit in case of multiple inheritance
   if(firstBaseClass) {
-    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : public Pobcpp::Unit "), found);
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : virtual public Pobcpp::Unit "), found);
     (patchess[line]).push_back(insert);
   }
   else {
-    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" ,public Pobcpp::Unit "), found);
+    PobcppPatch* insert = new PobcppPatch(Insert, std::string(" ,virtual public Pobcpp::Unit "), found);
     (patchess[line]).push_back(insert);
   }
 }

@@ -44,13 +44,14 @@ public:
 	void isend(const unsigned int _enumi, const Data* data, int n, const int tag);
 
 	template<typename Type, typename Data>
-	Data receive(const unsigned int _enumi, const int _tag);
+	Data receive(const int _tag, MPI_Status* status);
 	template<typename Type, typename Data>
-	Data receive(const int _tag);
+	Data receive(const unsigned int _enumi, const int _tag, MPI_Status* status);
+
 	template<typename Type, typename Data>
-	void receive(const unsigned int _enumi, Data* data, int n, const int _tag);
+	void receive(Data* data, int n, const int _tag, MPI_Status* status);
 	template<typename Type, typename Data>
-	void receive(Data* data, int n, const int _tag);
+	void receive(const unsigned int _enumi, Data* data, int n, const int _tag, MPI_Status* status);
 
 // Collective
 	template<typename Type, typename Data>
@@ -131,25 +132,25 @@ private:
 	void isend(const Unit_Type& _unit_type, const std::pair<float, int> * _data, int n, const int _tag);
 	void isend(const Unit_Type& _unit_type, const std::pair<double, int> * _data, int n, const int _tag);
 	
-	int receive(const Unit_Type& _unit_type, const int& _data_type, const int _tag);
-	unsigned int receive(const Unit_Type& _unit_type, const unsigned int& _data_type, const int _tag);
-	float receive(const Unit_Type& _unit_type, const float& _data_type, const int _tag);
-	double receive(const Unit_Type& _unit_type, const double& _data_type, const int _tag);
-	char receive(const Unit_Type& _unit_type, const char& _data_type, const int _tag);
-	std::string receive(const Unit_Type& _unit_type, const std::string& _data_type, const int _tag);
-	std::pair<int, int> receive(const Unit_Type& _unit_type, const std::pair<int, int>& _data_type, const int _tag);
-	std::pair<float, int> receive(const Unit_Type& _unit_type, const std::pair<float, int>& _data_type, const int _tag);
-	std::pair<double, int> receive(const Unit_Type& _unit_type, const std::pair<double, int>& _data_type, const int _tag);
+	int receive(const Unit_Type& _unit_type, const int& _data_type, const int _tag, MPI_Status* status);
+	unsigned int receive(const Unit_Type& _unit_type, const unsigned int& _data_type, const int _tag, MPI_Status* status);
+	float receive(const Unit_Type& _unit_type, const float& _data_type, const int _tag, MPI_Status* status);
+	double receive(const Unit_Type& _unit_type, const double& _data_type, const int _tag, MPI_Status* status);
+	char receive(const Unit_Type& _unit_type, const char& _data_type, const int _tag, MPI_Status* status);
+	std::string receive(const Unit_Type& _unit_type, const std::string& _data_type, const int _tag, MPI_Status* status);
+	std::pair<int, int> receive(const Unit_Type& _unit_type, const std::pair<int, int>& _data_type, const int _tag, MPI_Status* status);
+	std::pair<float, int> receive(const Unit_Type& _unit_type, const std::pair<float, int>& _data_type, const int _tag, MPI_Status* status);
+	std::pair<double, int> receive(const Unit_Type& _unit_type, const std::pair<double, int>& _data_type, const int _tag, MPI_Status* status);
 
-	void receive(const Unit_Type& _unit_type, int* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, unsigned int* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, float* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, double* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, char* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, std::string* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, std::pair<int, int>* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, std::pair<float, int>* _data_type, int n, const int _tag);
-	void receive(const Unit_Type& _unit_type, std::pair<double, int>* _data_type, int n, const int _tag);
+	void receive(const Unit_Type& _unit_type, int* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, unsigned int* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, float* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, double* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, char* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, std::string* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, std::pair<int, int>* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, std::pair<float, int>* _data_type, int n, const int _tag, MPI_Status* status);
+	void receive(const Unit_Type& _unit_type, std::pair<double, int>* _data_type, int n, const int _tag, MPI_Status* status);
 
 	void broadcast(const Unit_Type& _unit_type, int& value);
 	void broadcast(const Unit_Type& _unit_type, unsigned int& value);
@@ -274,30 +275,30 @@ void Basic_Communicator::isend(const unsigned int _enumi, const Data* _data, int
 
 
 template<typename Type, typename Data>
-Data Basic_Communicator::receive(const int _tag) {
-	return receive<Type, Data>(0, _tag);
+Data Basic_Communicator::receive(const int _tag, MPI_Status* status) {
+	return receive<Type, Data>(0, _tag, status);
 }
 
 template<typename Type, typename Data>
-Data Basic_Communicator::receive(const unsigned int _enumi, const int _tag) {
+Data Basic_Communicator::receive(const unsigned int _enumi, const int _tag, MPI_Status* status) {
 	Data data;
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
-	return receive(unit_type, data, _tag);
+	return receive(unit_type, data, _tag, status);
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::receive(Data* data, int n, const int _tag) {
-	receive<Type, Data>(0, data, n, _tag);
+void Basic_Communicator::receive(Data* data, int n, const int _tag, MPI_Status* status) {
+	receive<Type, Data>(0, data, n, _tag, status);
 }
 
 template<typename Type, typename Data>
-void Basic_Communicator::receive(const unsigned int _enumi, Data* data, int n, const int _tag) {
+void Basic_Communicator::receive(const unsigned int _enumi, Data* data, int n, const int _tag, MPI_Status* status) {
 	Type* un;
 	Unit_Type unit_type(un);	
 	unit_type.set_enums(std::make_pair(_enumi,0));
-	receive(unit_type, data, n, _tag);
+	receive(unit_type, data, n, _tag, status);
 }
 
 template<typename Type, typename Data>
