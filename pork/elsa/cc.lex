@@ -135,6 +135,7 @@ PPCHAR        ([^\\\n]|{BACKSL}{NOTNL})
 "cdecl"            return tok(TOK_CDECL);
 "char"             return tok(TOK_CHAR);
 "class"            return tok(TOK_CLASS);
+"Communicator"     return tok(TOK_COMMUNICATOR);
 "const"            return tok(TOK_CONST);
 "const_cast"       return tok(TOK_CONST_CAST);
 "continue"         return tok(TOK_CONTINUE);

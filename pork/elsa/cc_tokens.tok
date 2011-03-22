@@ -37,6 +37,7 @@ TOK_CATCH,               "catch",                     :    n  p
 TOK_CDECL,               "cdecl",                     :    n
 TOK_CHAR,                "char",                      :    n
 TOK_CLASS,               "class",                     :    n  p
+TOK_COMMUNICATOR,        "Communicator",              :    n  p
 TOK_CONST,               "const",                     :    n
 TOK_CONST_CAST,          "const_cast",                :    n  p
 TOK_CONTINUE,            "continue",                  :    n

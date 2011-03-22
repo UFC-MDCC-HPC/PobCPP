@@ -1719,6 +1719,18 @@ nonterm(Declarator*) ParameterDeclarator {
        { return new Declarator(d, new IN_expr(loc, e)); }
 }
 
+nonterm(SourceLoc) PobCommunicator {
+  -> "Communicator" { return loc; }
+}
+
+// PObC++ Enumerator 
+nonterm(SourceLoc) PobcppCommClauseOpt {
+  -> empty                               
+     { return SourceLoc(); }
+ 	-> beg:beginSquareBracket com:PobCommunicator i:Identifier	end:endSquareBracket
+     { return com; }
+}
+
 
 // -- function definition --
 nonterm(Function*) FunctionDefinition {
@@ -1768,7 +1780,9 @@ nonterm(Function*) FunctionDefinition {
 
   // ordinary function:
   // return type      name/params   body
-  -> r:DeclSpecifier  d:FDDeclarator  b:FunctionBody
+	// +Communicator PObC++
+//  -> r:DeclSpecifier  d:FDDeclarator  beg:beginSquareBracket com:Communicator end:endSquareBracket b:FunctionBody
+  -> r:DeclSpecifier  d:FDDeclarator c:PobcppCommClauseOpt b:FunctionBody
        {
          Function *ret = new Function(
            r->dflags,                // decl flags (static, extern, etc.)
