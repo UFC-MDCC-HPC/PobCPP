@@ -118,6 +118,15 @@ class TopForm (SourceLoc loc) {
   -> TF_namespaceDecl(NamespaceDecl decl);
 }
 
+// PObC++ communicator specification
+class PobcppCommunicatorSpec (
+  StringRef name,
+  bool defined = false
+) {
+	public SourceLoc beginSquareBracket;
+	public SourceLoc endSquareBracket;
+	public PobcppCommunicatorSpec();
+}
 
 // ----------------------- function -------------------------
 // a function definition (toplevel or class member)
@@ -134,8 +143,10 @@ class Function (
 
   S_compound body,              // body of function
 
-  FakeList<Handler> *handlers   // handlers for ctor "try" block
+  FakeList<Handler> *handlers   // handlers for ctor "try" block,
+
 ) {
+	public PobcppCommunicatorSpec comm;
   public SourceLoc getLoc() const;
 }
 
@@ -325,6 +336,7 @@ class PobcppEnumeratorSpec (
 	public SourceLoc beginSquareBracket;
 	public SourceLoc endSquareBracket;
 }
+
 
 // base class specification
 class BaseClassSpec (

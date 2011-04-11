@@ -1,3 +1,6 @@
+void func(int a, int b)  [Communicator comm] 
+{
+}
 class A { };
 unit KK { }; unit KKK { };
 class B {
@@ -7,7 +10,6 @@ class B {
 	};
 
 	unit K{ };
-	unit L:public A{};
 
 	unit F;}; unit B::C d;
 

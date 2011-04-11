@@ -1724,11 +1724,16 @@ nonterm(SourceLoc) PobCommunicator {
 }
 
 // PObC++ Enumerator 
-nonterm(SourceLoc) PobcppCommClauseOpt {
+nonterm(PobcppCommunicatorSpec*) PobcppCommClauseOpt {
   -> empty                               
-     { return SourceLoc(); }
+     { return NULL; }
  	-> beg:beginSquareBracket com:PobCommunicator i:Identifier	end:endSquareBracket
-     { return com; }
+     { PobcppCommunicatorSpec* p = new PobcppCommunicatorSpec(i);
+       p->beginSquareBracket = beg;
+       p->endSquareBracket = end;
+			 p->defined = true;
+       return p;
+		 }
 }
 
 
@@ -1781,8 +1786,7 @@ nonterm(Function*) FunctionDefinition {
   // ordinary function:
   // return type      name/params   body
 	// +Communicator PObC++
-//  -> r:DeclSpecifier  d:FDDeclarator  beg:beginSquareBracket com:Communicator end:endSquareBracket b:FunctionBody
-  -> r:DeclSpecifier  d:FDDeclarator c:PobcppCommClauseOpt b:FunctionBody
+  -> r:DeclSpecifier  d:FDDeclarator c:PobcppCommClauseOpt  b:FunctionBody
        {
          Function *ret = new Function(
            r->dflags,                // decl flags (static, extern, etc.)
@@ -1794,6 +1798,12 @@ nonterm(Function*) FunctionDefinition {
          );
          r->spec = NULL;    // stole it above (ownership transfer)
          delete r;          // was just a carrier of dflags/spec
+				 if(c != NULL) {
+           ret->comm.defined = true;
+           ret->comm.beginSquareBracket = c->beginSquareBracket;
+           ret->comm.endSquareBracket = c->endSquareBracket;
+         }
+//				 ret->comm.name = c;
          return ret;
        }
 

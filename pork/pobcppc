@@ -16,7 +16,7 @@ if [ -e $src ]; then
   $pobcppexecutable "$temp"".ii" "$temp" > "$temp"".patch"
   cp "$temp" "$src"".patched.cpp"
 	rm "$temp"".ii" "$temp"
-#  cp "$src" "$src"".patched.cpp"
+  cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
 #  rm "$temp"".patch"
 #	echo "#include \"create_unit_impl.h\"" > $temp2

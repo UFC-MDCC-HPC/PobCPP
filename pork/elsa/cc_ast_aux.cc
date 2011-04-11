@@ -5,6 +5,8 @@
 #include "generic_aux.h"    // C++ AST, and genericPrintAmbiguities, etc.
 #include "cc_ast_aux.h"     // class LoweredASTVisitor
 
+//Pobcpp Workaround
+PobcppCommunicatorSpec::PobcppCommunicatorSpec() : defined(false)  {} 
 using namespace sm;
 
 // ---------------------- LoweredASTVisitorHelper ----------------------

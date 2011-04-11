@@ -9,6 +9,9 @@
 #include <map>
 #include <algorithm>
 
+//#define POBCPPDEBUG
+
+
 extern char* itoa(int value); // elsa/pobcpp.cc FIXME
 
 Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) {
@@ -76,6 +79,9 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
 }
 
 bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
+  #ifdef POBCPPDEBUG
+  std::cout << "subvisitTS_classSpec() call" << std::endl;
+  #endif
   using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
     int enumCount = spec->enumerators->count();
@@ -108,6 +114,9 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
       appendPobTypeArrayFunc(spec, iline, col-2, units);
     }
   }
+  #ifdef POBCPPDEBUG
+  std::cout << "subvisitTS_classSpec() end" << std::endl;
+  #endif
   return true;
 }
 
@@ -124,6 +133,11 @@ bool Pobcpp::visitMember(Member *member) {
 }
 
 bool Pobcpp::visitFunction(Function* func) {
+  #ifdef POBCPPDEBUG
+  std::cout << "visitFuncion() call" << std::endl;
+  #endif
+	if(func->comm.defined)
+		removeCommunicatorDecl(func);
 //  if((func->dflags & DF_STATIC) != 0)
 //    std::cout << "Static" << std::endl;
 //  if((func->dflags & DF_VIRTUAL) != 0)
@@ -139,6 +153,9 @@ bool Pobcpp::visitFunction(Function* func) {
 //                std::cout << toString(func->dflags) << std::endl;
 //              }
 //  //std::cout << func->dflags << std::endl;
+  #ifdef POBCPPDEBUG
+  std::cout << "visitFunction() end" << std::endl;
+  #endif
   return true;
 }
 
@@ -171,6 +188,27 @@ void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
       // Here we are not removing correctly!
     }
   }
+}
+void Pobcpp::removeCommunicatorDecl(Function* func) {
+  using std::string;
+  #ifdef POBCPPDEBUG
+  std::cout << "removeCommunicator() call" << std::endl;
+  #endif
+	PobcppCommunicatorSpec* spec = &(func->comm);
+  int iline = sourceLocManager->getLine(spec->endSquareBracket);
+  int col = sourceLocManager->getCol(spec->endSquareBracket);
+  int colbeg = sourceLocManager->getCol(spec->beginSquareBracket);
+  PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1, 1);
+  (patchess[iline]).push_back(erase);
+  PobcppPatch* insert = new PobcppPatch(Insert, string(" = 0)"), col+1);
+  (patchess[iline]).push_back(insert);
+
+  PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);
+  (patchess[iline]).push_back(erase2);
+
+  #ifdef POBCPPDEBUG
+  std::cout << "removeCommunicator() end" << std::endl;
+  #endif
 }
 
 void Pobcpp::createEnumerator(TS_classSpec* spec) {

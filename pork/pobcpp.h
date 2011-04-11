@@ -53,6 +53,9 @@ private:
    * @param loc Initial localization.
    */
   void removeEnumeratorDecls(TS_classSpec *spec);
+
+  void removeCommunicatorDecl(Function* func);
+
   /**
    * Modify line to include enumerator information.
    * @param spec Current unit.
