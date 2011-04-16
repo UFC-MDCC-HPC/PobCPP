@@ -3,8 +3,7 @@
 * Unit definition
   - Test with templates.
 	- parallel function modifier treatment (patching and typecheck)
-* Insert create_unit<...>(...) at each unit constructor.
 * Create pobcpprun.
   - Give information of number of copies to each executable.
-* Find a way to simplify libpocpp includes and generate a single file pobcpp.h
 * Resolve "comm" problem! How to insert it?
+* Remove enumerators and patches.

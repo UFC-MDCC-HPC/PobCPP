@@ -1505,10 +1505,14 @@ nonterm(IDeclarator*) DirectDeclarator {
   // function declarator; the return type comes from the type
   // specifier that precedes this
   -> d:DirectDeclarator                        // name of function
-     "(" params:ParameterDeclarationClause ")" // parameters
+     "(" params:ParameterDeclarationClause end:endParenthesis // parameters
      cv:CVQualifierSeqOpt                      // optional "const"
      e:ExceptionSpecificationOpt               // optional "throw" clause
-       { return new_D_func(loc, d, params, cv, e); }
+       { IDeclarator* a =  new_D_func(loc, d, params, cv, e); 
+				 if(a != NULL)
+	         a->endParenthesis = end;
+				 return a;
+       }
 
   // array with optional size
   -> d:DirectDeclarator "[" sz:ConstantExpressionOpt "]"
@@ -1929,6 +1933,10 @@ nonterm(SourceLoc) beginSquareBracket {
 
 nonterm(SourceLoc) endSquareBracket {
 	-> "]" { return loc; }
+}
+
+nonterm(SourceLoc) endParenthesis {
+	-> ")" { return loc; }
 }
 
 // PObC++ Enumerator 

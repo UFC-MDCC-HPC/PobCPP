@@ -2,7 +2,6 @@
 #define __BASIC_COMMUNICATOR_H__
 
 #include "unit_type.h"
-#include "communicator.h"
 #include "environment.h"
 #include <mpi.h>
 #include <map> // std::pair

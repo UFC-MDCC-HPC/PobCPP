@@ -1,3 +1,13 @@
+2010-16-04 Eduardo Gurgel <edgurgel@gmail.com>
+* Communicator patch done (implementation definition).
+* TODO updated.
+
+2010-11-04 Eduardo Gurgel <edgurgel@gmail.com>
+* Communicator patches, first pass.
+
+2010-22-03 Eduardo Gurgel <edgurgel@gmail.com>
+* Initial modification to new PobC++ spec.
+
 2010-25-01 Eduardo Gurgel <edgurgel@gmail.com>
 * PETSc example. 90%
 

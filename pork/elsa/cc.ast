@@ -379,7 +379,7 @@ class Declarator (
   IDeclarator decl,                    // syntax of type designation
   Initializer init                     // (nullable) optional data initializer
 ) {
-  // FakeList link; use 'setNext' to set 'next'
+	// FakeList link; use 'setNext' to set 'next'
   public Declarator *next = NULL;
   public void setNext(Declarator *newNext);
 
@@ -411,6 +411,9 @@ class Declarator (
 // cannot have initializers; the internal structure can be ignored
 // once typechecking determines what type is denoted
 class IDeclarator(SourceLoc loc) {
+  //PObC++ info
+  public SourceLoc endParenthesis;
+
   // dig down and find the name being declared; may return NULL
   pure_virtual PQName const *getDeclaratorIdC() const;
   public PQName *getDeclaratorId()
@@ -465,6 +468,7 @@ class IDeclarator(SourceLoc loc) {
   // (i.e. equivalent to just 'base' alone), but plays a role in
   // disambiguation
   -> D_grouping(IDeclarator base);
+
 }
 
 // specification of what a function can throw; if an ExceptionSpec

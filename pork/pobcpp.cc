@@ -194,6 +194,8 @@ void Pobcpp::removeCommunicatorDecl(Function* func) {
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() call" << std::endl;
   #endif
+	int endParenthesisCol = sourceLocManager->getCol(func->nameAndParams->decl->endParenthesis);
+	int endParenthesisLine = sourceLocManager->getLine(func->nameAndParams->decl->endParenthesis);
 	PobcppCommunicatorSpec* spec = &(func->comm);
   int iline = sourceLocManager->getLine(spec->endSquareBracket);
   int col = sourceLocManager->getCol(spec->endSquareBracket);
@@ -206,6 +208,10 @@ void Pobcpp::removeCommunicatorDecl(Function* func) {
   PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);
   (patchess[iline]).push_back(erase2);
 
+  PobcppPatch* erase3 = new PobcppPatch(Erase, string(), endParenthesisCol+1, 1);
+  (patchess[endParenthesisLine]).push_back(erase3);
+  PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+1);
+  (patchess[endParenthesisLine]).push_back(insert3);
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() end" << std::endl;
   #endif
