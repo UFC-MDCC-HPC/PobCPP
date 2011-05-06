@@ -1,3 +1,6 @@
+2010-06-05 Eduardo Gurgel <edgurgel@gmail.com>
+* Now definition and declaration are working. Patching still unfixed.
+
 2010-16-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Communicator patch done (implementation definition).
 * TODO updated.

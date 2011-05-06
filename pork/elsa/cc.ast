@@ -146,7 +146,6 @@ class Function (
   FakeList<Handler> *handlers   // handlers for ctor "try" block,
 
 ) {
-	public PobcppCommunicatorSpec comm;
   public SourceLoc getLoc() const;
 }
 
@@ -449,7 +448,9 @@ class IDeclarator(SourceLoc loc) {
   -> D_func(IDeclarator base,                       // D_name of function, typically
             FakeList<ASTTypeId> *params,            // params with optional default values
             CVFlags cv,                             // optional "const" for member functions
-            ExceptionSpec /*nullable*/ exnSpec);    // throwable exceptions
+            ExceptionSpec /*nullable*/ exnSpec) {     // throwable exceptions
+	            public PobcppCommunicatorSpec comm;
+         	  }
 
   // "a[5]" or "b[]"
   -> D_array(IDeclarator base, Expression /*nullable*/ size);

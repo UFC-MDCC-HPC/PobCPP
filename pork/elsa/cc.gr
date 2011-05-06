@@ -1505,12 +1505,20 @@ nonterm(IDeclarator*) DirectDeclarator {
   // function declarator; the return type comes from the type
   // specifier that precedes this
   -> d:DirectDeclarator                        // name of function
-     "(" params:ParameterDeclarationClause end:endParenthesis // parameters
+     "(" params:ParameterDeclarationClause end:endParenthesis c:PobcppCommClauseOpt // parameters
      cv:CVQualifierSeqOpt                      // optional "const"
      e:ExceptionSpecificationOpt               // optional "throw" clause
        { IDeclarator* a =  new_D_func(loc, d, params, cv, e); 
 				 if(a != NULL)
 	         a->endParenthesis = end;
+				 D_func* ret = (D_func*) a;
+         if(c != NULL) {
+           ret->comm.defined = true;
+           ret->comm.beginSquareBracket =
+           c->beginSquareBracket;
+           ret->comm.endSquareBracket = c->endSquareBracket;
+         }
+
 				 return a;
        }
 
@@ -1790,7 +1798,7 @@ nonterm(Function*) FunctionDefinition {
   // ordinary function:
   // return type      name/params   body
 	// +Communicator PObC++
-  -> r:DeclSpecifier  d:FDDeclarator c:PobcppCommClauseOpt  b:FunctionBody
+  -> r:DeclSpecifier  d:FDDeclarator /*c:PobcppCommClauseOpt*/  b:FunctionBody
        {
          Function *ret = new Function(
            r->dflags,                // decl flags (static, extern, etc.)
@@ -1802,11 +1810,11 @@ nonterm(Function*) FunctionDefinition {
          );
          r->spec = NULL;    // stole it above (ownership transfer)
          delete r;          // was just a carrier of dflags/spec
-				 if(c != NULL) {
+/*				 if(c != NULL) {
            ret->comm.defined = true;
            ret->comm.beginSquareBracket = c->beginSquareBracket;
            ret->comm.endSquareBracket = c->endSquareBracket;
-         }
+         }*/
 //				 ret->comm.name = c;
          return ret;
        }
