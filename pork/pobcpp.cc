@@ -132,31 +132,10 @@ bool Pobcpp::visitMember(Member *member) {
   return true;
 }
 
-bool Pobcpp::visitFunction(Function* func) {
-  #ifdef POBCPPDEBUG
-  std::cout << "visitFuncion() call" << std::endl;
-  #endif
-	if(func->comm.defined)
-		removeCommunicatorDecl(func);
-//  if((func->dflags & DF_STATIC) != 0)
-//    std::cout << "Static" << std::endl;
-//  if((func->dflags & DF_VIRTUAL) != 0)
-//    std::cout << "Virtual" << std::endl;
-//  if(func->nameAndParams)
-//    if(func->nameAndParams->decl)
-//      if(func->nameAndParams->decl->isD_func())
-//        if(func->nameAndParams->decl->asD_func()->base)
-//          if(func->nameAndParams->decl->asD_func()->base->isD_name())
-//            if(func->nameAndParams->decl->asD_func()->base->asD_name()->name)
-//              if(func->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
-//                std::cout<< func->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name()->toString() << std::endl;
-//                std::cout << toString(func->dflags) << std::endl;
-//              }
-//  //std::cout << func->dflags << std::endl;
-  #ifdef POBCPPDEBUG
-  std::cout << "visitFunction() end" << std::endl;
-  #endif
-  return true;
+bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
+	if (idecl->isD_func())
+		removeCommunicatorDecl(idecl->asD_func(), false);
+	return true;
 }
 
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
@@ -189,13 +168,21 @@ void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
     }
   }
 }
-void Pobcpp::removeCommunicatorDecl(Function* func) {
+void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   using std::string;
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() call" << std::endl;
   #endif
-	int endParenthesisCol = sourceLocManager->getCol(func->nameAndParams->decl->endParenthesis);
-	int endParenthesisLine = sourceLocManager->getLine(func->nameAndParams->decl->endParenthesis);
+/*  if(!func->nameAndParams->decl->isD_func()) {
+    #ifdef POBCPPDEBUG
+    std::cout << "removeCommunicator() unexpected error" << std::endl;
+    #endif
+    return;
+	} else */
+	if(!func->comm.defined)
+		return;
+	int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);
+	int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
 	PobcppCommunicatorSpec* spec = &(func->comm);
   int iline = sourceLocManager->getLine(spec->endSquareBracket);
   int col = sourceLocManager->getCol(spec->endSquareBracket);

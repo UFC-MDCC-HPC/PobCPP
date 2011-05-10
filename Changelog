@@ -1,3 +1,6 @@
+2010-10-05 Eduardo Gurgel <edgurgel@gmail.com>
+* Declaration and definition working. Patching ok.
+
 2010-06-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Now definition and declaration are working. Patching still unfixed.
 
