@@ -134,7 +134,7 @@ bool Pobcpp::visitMember(Member *member) {
 
 bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
 	if (idecl->isD_func())
-		removeCommunicatorDecl(idecl->asD_func(), false);
+		removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count());
 	return true;
 }
 
@@ -197,8 +197,10 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
 
   PobcppPatch* erase3 = new PobcppPatch(Erase, string(), endParenthesisCol+1, 1);
   (patchess[endParenthesisLine]).push_back(erase3);
-  PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+1);
-  (patchess[endParenthesisLine]).push_back(insert3);
+	if(noparams) {
+	  PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+1);
+  	(patchess[endParenthesisLine]).push_back(insert3);
+	}
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() end" << std::endl;
   #endif
