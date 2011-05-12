@@ -1739,7 +1739,7 @@ nonterm(SourceLoc) PobCommunicator {
 nonterm(PobcppCommunicatorSpec*) PobcppCommClauseOpt {
   -> empty                               
      { return NULL; }
- 	-> beg:beginSquareBracket com:PobCommunicator i:Identifier	end:endSquareBracket
+ 	-> beg:beginSquareBracket com:Identifier i:Identifier	end:endSquareBracket
      { PobcppCommunicatorSpec* p = new PobcppCommunicatorSpec(i);
        p->beginSquareBracket = beg;
        p->endSquareBracket = end;
