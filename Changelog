@@ -1,3 +1,6 @@
+2010-14-06 Eduardo Gurgel <edgurgel@gmail.com>
+* Finally ranksof() implementation on grammar and type checking :)
+
 2010-13-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Easier definition at grammar bout CommunicatorSpec.
 

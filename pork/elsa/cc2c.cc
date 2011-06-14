@@ -643,6 +643,8 @@ Expression *E_deref::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_cast::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_cond::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_sizeofType::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
+//PObC++
+Expression *E_ranksof::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_assign::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_new::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }
 Expression *E_delete::cc2c(CC2CEnv &env) const { xunimp(""); return NULL; }

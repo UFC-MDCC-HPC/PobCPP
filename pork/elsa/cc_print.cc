@@ -1934,6 +1934,13 @@ void E_sizeofType::iprint(PrintEnv &env)
   atype->print(env);
 }
 
+void E_ranksof::iprint(PrintEnv &env)
+{
+  TreeWalkDebug treeDebug("E_ranksof::iprint");
+  PairDelim pair(*env.out, "ranksof", "(", ")"); // NOTE yes, you do want the parens because argument is a type.
+  atype->print(env);
+}
+
 void E_assign::iprint(PrintEnv &env)
 {
   TreeWalkDebug treeDebug("E_assign::iprint");

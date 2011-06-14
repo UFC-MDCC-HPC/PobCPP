@@ -1392,6 +1392,15 @@ void E_sizeofType::iprint(BPEnv &bp) const
   }
 }
 
+void E_ranksof::iprint(BPEnv &bp) const
+{
+  SEQ {
+    bp << "ranksof(";
+    atype->print(bp);
+    bp << ")";
+  }
+}
+
 void E_assign::iprint(BPEnv &bp) const
 {
   SEQ {

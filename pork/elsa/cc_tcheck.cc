@@ -5048,7 +5048,6 @@ void Expression::tcheck(Env &env, Expression *&replacement)
   // the receiver object of the 'tcheck' call; consequently,
   // Expressions can leave it as-is and no replacement will happen
   xassert(replacement == this);
-
   if (!ambiguity) {
     mid_tcheck(env, replacement);
     return;
@@ -8795,6 +8794,12 @@ Type *E_sizeofType::itcheck_x(Env &env, Expression *&replacement)
   return env.sizeofType(atype->getType(), size, NULL /*expr*/);
 }
 
+Type *E_ranksof::itcheck_x(Env &env, Expression *&replacement)
+{
+  ASTTypeId::Tcheck tc(DF_NONE, DC_E_SIZEOFTYPE);
+  atype = atype->tcheck(env, tc);
+  return env.ranksof(atype->getType(), NULL /*expr*/);
+}
 
 // Type check 'expr', given that it is being used to set the value of
 // something with type 'target', and so we can use that as the basis

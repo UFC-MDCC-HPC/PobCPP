@@ -167,6 +167,7 @@ PPCHAR        ([^\\\n]|{BACKSL}{NOTNL})
 "private"          return tok(TOK_PRIVATE);
 "protected"        return tok(TOK_PROTECTED);
 "public"           return tok(TOK_PUBLIC);
+"ranksof"          return tok(TOK_RANKSOF); 
 "register"         return tok(TOK_REGISTER);
 "reinterpret_cast" return tok(TOK_REINTERPRET_CAST);
 "return"           return tok(TOK_RETURN);

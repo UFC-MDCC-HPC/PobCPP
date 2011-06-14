@@ -542,7 +542,8 @@ nonterm(Expression*) UnaryExpression {
 
   // size of type
   -> "sizeof" "(" t:TypeId ")"   { return new E_sizeofType(EXPR_LOC(loc ENDLOCARG(endloc)) t); }
-
+  // ranksof() PObC++
+	-> "ranksof" "(" t:TypeId ")"  { return new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); }
   -> e:NewExpression             { return e; }
 }
 

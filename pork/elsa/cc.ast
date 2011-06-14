@@ -686,6 +686,9 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
 
   // retained explicitly for possible operator overloading
   -> E_arrow(Expression obj, PQName fieldName);         // e.g. p->f
+
+  // PObC++
+  -> E_ranksof(ASTTypeId atype);
 }
 
 

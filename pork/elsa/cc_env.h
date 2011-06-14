@@ -744,6 +744,7 @@ public:      // funcs
   // 'size', and return the type of the 'sizeof' expression itself.
   // If 't' was derived from an expression, it is passed as 'expr'.
   Type *sizeofType(Type *t, int &size, Expression * /*nullable*/ expr);
+  Type *ranksof(Type *t, Expression * /*nullable*/ expr);
 
   Expression *makeConvertedArg(Expression * const arg,
                                ImplicitConversion const &ic);
