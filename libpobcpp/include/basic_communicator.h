@@ -20,8 +20,13 @@ public:
 	void set_intracomm(MPI_Comm _comm); // FIXME
 private:
 	friend class Unit;
-// Point-to-Point
 public:
+// Communicator handling	
+//Split
+//Create
+//etc
+
+// Point-to-Point
 	template<typename Type, typename Data>
 	void send(const Data& data, const int tag);
 	template<typename Type, typename Data>

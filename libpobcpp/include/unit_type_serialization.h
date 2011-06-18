@@ -18,20 +18,16 @@ namespace boost {
 
 struct Unit_Type_Pack {
 	Unit_Type_Pack(Pobcpp::Unit_Type unit_type,
-	               std::pair<unsigned int, unsigned int> enums,
 								 unsigned int rank) :
 	               unit_type(unit_type),
-								 enums(enums),
 								 rank(rank) { }
 	Unit_Type_Pack() { }
 	Pobcpp::Unit_Type unit_type;
-	std::pair<unsigned int, unsigned int> enums;
 	unsigned int rank;
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int version) {
 		ar & unit_type;
 		ar & rank;
-		ar & enums;
 	}
 
 };

@@ -13,7 +13,7 @@ bool is_no_unit(const Pobcpp::Unit_Type& unit_type) {
 }
 
 void create_unit_impl(Pobcpp::Unit* _created_unit, std::pair<unsigned int, unsigned int> _enums, Pobcpp::Pob_Type_Array& typearray, Pobcpp::Unit_Type& unit_type) {
-	boost::mpi::communicator world;
+	/*boost::mpi::communicator world;
 	boost::mpi::group wgroup = world.group();
 	boost::mpi::group group;
 	unsigned int rank = world.rank();
@@ -82,7 +82,7 @@ void create_unit_impl(Pobcpp::Unit* _created_unit, std::pair<unsigned int, unsig
 		}
 	} else {
 		std::cerr << "Error while instantiting Parallel Object named: " << unit_type << " (Debugging information: Check: " << check << " and typesize: " << typearray.size() << ")" <<  std::endl;
-	}
+	}*/
 }
 
 
