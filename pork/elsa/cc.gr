@@ -543,7 +543,13 @@ nonterm(Expression*) UnaryExpression {
   // size of type
   -> "sizeof" "(" t:TypeId ")"   { return new E_sizeofType(EXPR_LOC(loc ENDLOCARG(endloc)) t); }
   // ranksof() PObC++
-	-> "ranksof" "(" t:TypeId ")"  { return new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); }
+  -> "ranksof" beg:beginParenthesis t:TypeId end:endParenthesis
+                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+                  e->beginParenthesis = beg;
+                  e->endParenthesis = end;
+									e->is_ranksof = true;
+                  return e;
+                }
   -> e:NewExpression             { return e; }
 }
 
@@ -1942,6 +1948,10 @@ nonterm(SourceLoc) beginSquareBracket {
 
 nonterm(SourceLoc) endSquareBracket {
 	-> "]" { return loc; }
+}
+
+nonterm(SourceLoc) beginParenthesis {
+	-> "(" { return loc; }
 }
 
 nonterm(SourceLoc) endParenthesis {

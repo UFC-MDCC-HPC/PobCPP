@@ -42,6 +42,7 @@ public:
 	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
   virtual bool visitMember(Member *member);
 	virtual bool visitIDeclarator(IDeclarator* idecl);
+	virtual bool visitExpression(Expression* exp);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 

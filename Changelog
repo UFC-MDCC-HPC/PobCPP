@@ -1,5 +1,9 @@
+2010-22-06 Eduardo Gurgel <edgurgel@gmail.com>
+* visitExpression done, but pork needs a remake on expression visitor(TODO).
+
 2010-18-06 Eduardo Gurgel <edgurgel@gmail.com>
 * ranksof() implementation on libpobcpp (not tested).
+
 2010-14-06 Eduardo Gurgel <edgurgel@gmail.com>
 * Finally ranksof() implementation on grammar and type checking :)
 

@@ -207,6 +207,9 @@ void ExpressionVisitor::postvisitExpression(Expression *e) {
   switch(e->kind()){
   default:
     xassert(false);
+	case Expression::E_RANKSOF:
+		//FIXME
+		break;
   case Expression::E_BOOLLIT:
     postvisitE_boolLit(e->asE_boolLit());
     break;

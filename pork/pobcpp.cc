@@ -133,8 +133,24 @@ bool Pobcpp::visitMember(Member *member) {
 }
 
 bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
-	if (idecl->isD_func())
-		removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count());
+  if (idecl->isD_func())
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count());
+  return true;
+}
+bool Pobcpp::visitExpression(Expression* exp) {
+  using std::string;
+	if(exp->is_ranksof == false)
+    return false;
+  E_ranksof* e_ranksof = dynamic_cast<E_ranksof*>(exp);
+	std::cerr << " WTF" << std::endl;
+	//return true;
+	int beginParentCol = sourceLocManager->getCol(e_ranksof->beginParenthesis);
+	int beginParentLine = sourceLocManager->getLine(e_ranksof->beginParenthesis);
+	int endParentCol = sourceLocManager->getCol(e_ranksof->endParenthesis);
+	int endParentLine = sourceLocManager->getLine(e_ranksof->endParenthesis);
+
+  PobcppPatch* erase = new PobcppPatch(Erase, string(), beginParentCol+1, 1);
+  (patchess[beginParentLine]).push_back(erase);
 	return true;
 }
 

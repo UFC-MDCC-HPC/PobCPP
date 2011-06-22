@@ -587,6 +587,7 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
   // same as we do for statements
   public Expression *ambiguity = NULL;
   public void addAmbiguity(Expression *alternative);
+	public bool is_ranksof = false;
   custom traverse { if (ambiguity) ambiguity->traverse(vis); }
   custom clone {
     // don't clone something that is still ambiguous (usually means
@@ -688,7 +689,11 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
   -> E_arrow(Expression obj, PQName fieldName);         // e.g. p->f
 
   // PObC++
-  -> E_ranksof(ASTTypeId atype);
+  -> E_ranksof(ASTTypeId atype) {
+		//PObC++ info
+		public SourceLoc endParenthesis;
+		public SourceLoc beginParenthesis;
+	}
 }
 
 
