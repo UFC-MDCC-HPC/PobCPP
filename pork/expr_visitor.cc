@@ -55,6 +55,9 @@ bool ExpressionVisitor::visitExpression(Expression *e) {
   switch(e->kind()){
   default:
     xassert(false);
+	case Expression::E_RANKSOF:
+		//FIXME
+		return visitE_ranksof(e->asE_ranksof());
   case Expression::E_BOOLLIT:
     return visitE_boolLit(e->asE_boolLit());
   case Expression::E_INTLIT:
@@ -209,6 +212,7 @@ void ExpressionVisitor::postvisitExpression(Expression *e) {
     xassert(false);
 	case Expression::E_RANKSOF:
 		//FIXME
+		postvisitE_ranksof(e->asE_ranksof());
 		break;
   case Expression::E_BOOLLIT:
     postvisitE_boolLit(e->asE_boolLit());

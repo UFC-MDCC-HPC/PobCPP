@@ -67,6 +67,7 @@ public:
   virtual bool visitE_cast(E_cast *e) {return true;}
   virtual bool visitE_cond(E_cond *e) {return true;}
   virtual bool visitE_sizeofType(E_sizeofType *e) {return true;}
+  virtual bool visitE_ranksof(E_ranksof *e) {return true;}
   virtual bool visitE_assign(E_assign *e) {return true;}
   virtual bool visitE_new(E_new *e) {return true;}
   virtual bool visitE_delete(E_delete *e) {return true;}
@@ -134,6 +135,7 @@ public:
   virtual void postvisitE_cast(E_cast *e) {}
   virtual void postvisitE_cond(E_cond *e) {}
   virtual void postvisitE_sizeofType(E_sizeofType *e) {}
+  virtual void postvisitE_ranksof(E_ranksof *e) {}
   virtual void postvisitE_assign(E_assign *e) {}
   virtual void postvisitE_new(E_new *e) {}
   virtual void postvisitE_delete(E_delete *e) {}

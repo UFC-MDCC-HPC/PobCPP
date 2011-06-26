@@ -17,7 +17,7 @@ protected:
 	 * Destructor
 	 */
 	virtual ~Unit();
-	template<typename UnitType>
+	template<typename AskedType>
 	unsigned int* ranksof_(Basic_Communicator comm, Unit_Type& unit_type);
 	unsigned int* ranksof_impl(Basic_Communicator comm, Unit_Type& asked_type, Unit_Type& unit_type);
 public:
@@ -28,9 +28,9 @@ private:
 	//operator=(const Unit&);
 };
 
-template<typename UnitType>
+template<typename AskedType>
 unsigned int* Unit::ranksof_(Basic_Communicator comm, Unit_Type& unit_type) {
-	UnitType* asked;
+	AskedType* asked;
 	Unit_Type asked_type(asked);
 	return ranksof_impl(comm, asked_type, unit_type);
 }

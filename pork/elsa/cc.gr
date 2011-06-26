@@ -547,7 +547,6 @@ nonterm(Expression*) UnaryExpression {
                 { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
                   e->beginParenthesis = beg;
                   e->endParenthesis = end;
-									e->is_ranksof = true;
                   return e;
                 }
   -> e:NewExpression             { return e; }

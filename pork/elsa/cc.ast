@@ -587,7 +587,6 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
   // same as we do for statements
   public Expression *ambiguity = NULL;
   public void addAmbiguity(Expression *alternative);
-	public bool is_ranksof = false;
   custom traverse { if (ambiguity) ambiguity->traverse(vis); }
   custom clone {
     // don't clone something that is still ambiguous (usually means
