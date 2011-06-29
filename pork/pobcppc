@@ -18,7 +18,7 @@ if [ -e $src ]; then
 	rm "$temp"".ii" "$temp"
   cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
-  rm "$temp"".patch"
+#  rm "$temp"".patch"
 #	echo "#include \"create_unit_impl.h\"" > $temp2
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"

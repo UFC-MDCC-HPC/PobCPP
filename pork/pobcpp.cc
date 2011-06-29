@@ -194,12 +194,6 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() call" << std::endl;
   #endif
-/*  if(!func->nameAndParams->decl->isD_func()) {
-    #ifdef POBCPPDEBUG
-    std::cout << "removeCommunicator() unexpected error" << std::endl;
-    #endif
-    return;
-	} else */
 	if(!func->comm.defined)
 		return;
 	int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);

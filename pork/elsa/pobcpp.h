@@ -26,8 +26,10 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   virtual bool visitTopForm(TopForm* tf);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+	virtual bool visitIDeclarator(IDeclarator* idecl);
 
   private:
+	void removeCommunicatorDecl(D_func* func, bool noparams);
   void checkStrings();
   SourceLoc loc;
   bool locBool;

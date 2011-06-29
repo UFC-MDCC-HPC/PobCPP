@@ -4,7 +4,7 @@ class A {
 	};
 
 	unit C {
-
+		void func() [Commd comm] { }
 	};
 };
 

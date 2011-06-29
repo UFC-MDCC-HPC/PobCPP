@@ -1523,6 +1523,7 @@ nonterm(IDeclarator*) DirectDeclarator {
            ret->comm.beginSquareBracket =
            c->beginSquareBracket;
            ret->comm.endSquareBracket = c->endSquareBracket;
+					 ret->comm.typeId = c->typeId;
          }
 
 				 return a;
@@ -1737,19 +1738,14 @@ nonterm(Declarator*) ParameterDeclarator {
        { return new Declarator(d, new IN_expr(loc, e)); }
 }
 
-nonterm(SourceLoc) PobCommunicator {
-  -> "Communicator" { return loc; }
-}
-
 // PObC++ Enumerator 
 nonterm(PobcppCommunicatorSpec*) PobcppCommClauseOpt {
   -> empty                               
      { return NULL; }
- 	-> beg:beginSquareBracket com:Identifier i:Identifier	end:endSquareBracket
-     { PobcppCommunicatorSpec* p = new PobcppCommunicatorSpec(i);
-       p->beginSquareBracket = beg;
-       p->endSquareBracket = end;
-			 p->defined = true;
+ 	-> beg:beginSquareBracket com:TypeId i:Identifier	end:endSquareBracket
+     { PobcppCommunicatorSpec* p = new PobcppCommunicatorSpec(i, beg, end, true);
+       p->pqname = new PQ_name(loc, i);
+       p->typeId = com;
        return p;
 		 }
 }

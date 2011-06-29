@@ -118,16 +118,6 @@ class TopForm (SourceLoc loc) {
   -> TF_namespaceDecl(NamespaceDecl decl);
 }
 
-// PObC++ communicator specification
-class PobcppCommunicatorSpec (
-  StringRef name,
-  bool defined = false
-) {
-	public SourceLoc beginSquareBracket;
-	public SourceLoc endSquareBracket;
-	public PobcppCommunicatorSpec();
-}
-
 // ----------------------- function -------------------------
 // a function definition (toplevel or class member)
 class Function (
@@ -405,6 +395,19 @@ class Declarator (
   public SourceLoc getLoc() const;
 }
 
+// PObC++ communicator specification
+class PobcppCommunicatorSpec (
+  StringRef name,
+	SourceLoc beginSquareBracket,
+	SourceLoc endSquareBracket,
+  bool defined = false
+) {
+//	public SourceLoc beginSquareBracket;
+//	public SourceLoc endSquareBracket;
+	public ASTTypeId* typeId;
+	public PQ_name* pqname;
+	public PobcppCommunicatorSpec();
+}
 
 // inner declarator; things *recursively* buried inside declarators;
 // cannot have initializers; the internal structure can be ignored
@@ -887,6 +890,7 @@ class NamespaceDecl {
   // complicated)
   -> ND_usingDir(PQName name);
 }
+
 
 
 // EOF
