@@ -1519,11 +1519,7 @@ nonterm(IDeclarator*) DirectDeclarator {
 	         a->endParenthesis = end;
 				 D_func* ret = (D_func*) a;
          if(c != NULL) {
-           ret->comm.defined = true;
-           ret->comm.beginSquareBracket =
-           c->beginSquareBracket;
-           ret->comm.endSquareBracket = c->endSquareBracket;
-					 ret->comm.typeId = c->typeId;
+					 ret->comm = c;
          }
 
 				 return a;
@@ -1812,12 +1808,6 @@ nonterm(Function*) FunctionDefinition {
          );
          r->spec = NULL;    // stole it above (ownership transfer)
          delete r;          // was just a carrier of dflags/spec
-/*				 if(c != NULL) {
-           ret->comm.defined = true;
-           ret->comm.beginSquareBracket = c->beginSquareBracket;
-           ret->comm.endSquareBracket = c->endSquareBracket;
-         }*/
-//				 ret->comm.name = c;
          return ret;
        }
 

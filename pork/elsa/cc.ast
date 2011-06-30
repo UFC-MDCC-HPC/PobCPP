@@ -452,7 +452,7 @@ class IDeclarator(SourceLoc loc) {
             FakeList<ASTTypeId> *params,            // params with optional default values
             CVFlags cv,                             // optional "const" for member functions
             ExceptionSpec /*nullable*/ exnSpec) {     // throwable exceptions
-	            public PobcppCommunicatorSpec comm;
+	            public PobcppCommunicatorSpec* comm;
          	  }
 
   // "a[5]" or "b[]"

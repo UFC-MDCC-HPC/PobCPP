@@ -220,21 +220,21 @@ bool PObCppPreTypedASTVisitor::visitIDeclarator(IDeclarator* idecl) {
 }
 
 void PObCppPreTypedASTVisitor::removeCommunicatorDecl(D_func* func, bool noparams) {
-	if(!func->comm.defined)
+	if(!func->comm->defined)
 		return;
   if(func->params != NULL) {
 //    FakeList<ASTTypeId>* l = FakeList<ASTTypeId>::makeList(func->comm.typeId);
 //    PQName* name = new PQ_name(func->comm.beginSquareBracket, func->comm.name);
-    if(func->comm.typeId->decl->decl->isD_name()) {
-      if(func->comm.pqname != 0) {
-        if(((PQ_name*)(func->comm.pqname))->name != 0) {
-          std::cout << "Func: " << ((PQ_name*)(func->comm.pqname))->name << std::endl;
+    if(func->comm->typeId->decl->decl->isD_name()) {
+      if(func->comm->pqname != 0) {
+        if(((PQ_name*)(func->comm->pqname))->name != 0) {
+          std::cout << "Func: " << ((PQ_name*)(func->comm->pqname))->name << std::endl;
         } else
         std::cout << "If 2 null" << std::endl;
       } else
         std::cout << "If 1 null" << std::endl;
-      func->comm.typeId->decl->decl->asD_name()->name = func->comm.pqname;
-      func->params->nth(func->params->count()-1)->next = func->comm.typeId;
+      func->comm->typeId->decl->decl->asD_name()->name = func->comm->pqname;
+      func->params->nth(func->params->count()-1)->next = func->comm->typeId;
     }
   }
 	std::cerr << "Params:" << func->params->count() << std::endl;
