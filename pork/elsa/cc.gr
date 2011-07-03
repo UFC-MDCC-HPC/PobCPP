@@ -1518,10 +1518,10 @@ nonterm(IDeclarator*) DirectDeclarator {
 				 if(a != NULL)
 	         a->endParenthesis = end;
 				 D_func* ret = (D_func*) a;
-         if(c != NULL) {
+         if(c != NULL)
 					 ret->comm = c;
-         }
-
+         else
+           ret->comm = 0;
 				 return a;
        }
 

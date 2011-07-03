@@ -220,24 +220,20 @@ bool PObCppPreTypedASTVisitor::visitIDeclarator(IDeclarator* idecl) {
 }
 
 void PObCppPreTypedASTVisitor::removeCommunicatorDecl(D_func* func, bool noparams) {
+  if(func->comm == 0)
+    return;
 	if(!func->comm->defined)
 		return;
-  if(func->params != NULL) {
-//    FakeList<ASTTypeId>* l = FakeList<ASTTypeId>::makeList(func->comm.typeId);
-//    PQName* name = new PQ_name(func->comm.beginSquareBracket, func->comm.name);
-    if(func->comm->typeId->decl->decl->isD_name()) {
-      if(func->comm->pqname != 0) {
-        if(((PQ_name*)(func->comm->pqname))->name != 0) {
-          std::cout << "Func: " << ((PQ_name*)(func->comm->pqname))->name << std::endl;
-        } else
-        std::cout << "If 2 null" << std::endl;
-      } else
-        std::cout << "If 1 null" << std::endl;
-      func->comm->typeId->decl->decl->asD_name()->name = func->comm->pqname;
+  if(func->comm->typeId->decl->decl->isD_name()) {
+    func->comm->typeId->decl->decl->asD_name()->name = func->comm->pqname;
+		SourceLoc loc = func->comm->pqname->loc;
+    IN_expr* expr = new IN_expr(loc, new E_constructor(loc, loc, func->comm->typeId->spec->clone(), NULL));
+		func->comm->typeId->decl->init = expr;
+    if(func->params != NULL)
       func->params->nth(func->params->count()-1)->next = func->comm->typeId;
-    }
+    else
+     func->params = FakeList<ASTTypeId>::makeList(func->comm->typeId);
   }
-	std::cerr << "Params:" << func->params->count() << std::endl;
 }
 
 bool PObCppVisitor::visitMember(Member *member) { }
