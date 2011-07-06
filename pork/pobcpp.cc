@@ -134,7 +134,7 @@ bool Pobcpp::visitMember(Member *member) {
 
 bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count());
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1);
   return true;
 }
 bool Pobcpp::visitExpression(Expression* exp) {
@@ -194,17 +194,20 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() call" << std::endl;
   #endif
-	if(!func->comm.defined)
+	if(func->comm == 0)
 		return;
+	if(!func->comm->defined)
+		return;
+	string typeName = func->comm->typeId->spec->asTS_name()->name->asPQ_name()->name;
 	int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);
 	int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
-	PobcppCommunicatorSpec* spec = &(func->comm);
+	PobcppCommunicatorSpec* spec = (func->comm);
   int iline = sourceLocManager->getLine(spec->endSquareBracket);
   int col = sourceLocManager->getCol(spec->endSquareBracket);
   int colbeg = sourceLocManager->getCol(spec->beginSquareBracket);
   PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1, 1);
   (patchess[iline]).push_back(erase);
-  PobcppPatch* insert = new PobcppPatch(Insert, string(" = 0)"), col+1);
+  PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("()"), col+1);
   (patchess[iline]).push_back(insert);
 
   PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);

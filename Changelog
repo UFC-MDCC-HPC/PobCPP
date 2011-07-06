@@ -1,3 +1,7 @@
+2010-06-07 Eduardo Gurgel <edgurge@gmail.com>
+* Bugfix on cc.ast at PobcppCommunicatorSpec definition
+* Bugfix on pobcpp patcher. 
+
 2010-03-07 Eduardo Gurgel <edgurge@gmail.com>
 * Default paramter done on CommunicatorClauseOpt statement.
 

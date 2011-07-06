@@ -8,8 +8,32 @@
 
 #include <string>
 
+typedef std::pair<int, int> pair_int_int;
+typedef std::pair<float, int> pair_float_int;
+typedef std::pair<double, int> pair_double_int;
+
+#define send_decl(datatype) \
+void send(int dest, int tag, const datatype& value) const;
+#define send_array_decl(datatype) \
+void send(int dest, int tag, const datatype* values, int n) const;
+
+#define isend_decl(datatype) \
+MPI_Request isend(int dest, int tag, const datatype& value) const;
+#define isend_array_decl(datatype) \
+MPI_Request isend(int dest, int tag, const datatype* values, int n) const;
+
+#define recv_decl(datatype) \
+MPI_Status recv(int source, int tag, datatype& value) const;
+#define recv_array_decl(datatype) \
+MPI_Status recv(int source, int tag, datatype* values, int n) const;
+
+#define irecv_decl(datatype) \
+MPI_Request irecv(int source, int tag, datatype& value) const;
+#define irecv_array_decl(datatype) \
+MPI_Request irecv(int source, int tag, datatype* values, int n) const;
 namespace Pobcpp {
 //Move to a new file
+
 
 class Basic_Communicator {
 public:
@@ -25,9 +49,93 @@ public:
 //Split
 //Create
 //etc
+	int rank() const;
+	int size() const;
+
+// Send
+	send_decl(int)
+	send_decl(unsigned int);
+	send_decl(float);
+	send_decl(double);
+	send_decl(char);
+	send_decl(std::string);
+	send_decl(pair_int_int);
+	send_decl(pair_float_int);
+	send_decl(pair_double_int);
+
+	send_array_decl(int)
+	send_array_decl(unsigned int);
+	send_array_decl(float);
+	send_array_decl(double);
+	send_array_decl(char);
+	send_array_decl(std::string);
+	send_array_decl(pair_int_int);
+	send_array_decl(pair_float_int);
+	send_array_decl(pair_double_int);
+
+	isend_decl(int)
+	isend_decl(unsigned int);
+	isend_decl(float);
+	isend_decl(double);
+	isend_decl(char);
+	isend_decl(std::string);
+	isend_decl(pair_int_int);
+	isend_decl(pair_float_int);
+	isend_decl(pair_double_int);
+
+	isend_array_decl(int)
+	isend_array_decl(unsigned int);
+	isend_array_decl(float);
+	isend_array_decl(double);
+	isend_array_decl(char);
+	isend_array_decl(std::string);
+	isend_array_decl(pair_int_int);
+	isend_array_decl(pair_float_int);
+	isend_array_decl(pair_double_int);
+
+// Receive
+	recv_decl(int)
+	recv_decl(unsigned int);
+	recv_decl(float);
+	recv_decl(double);
+	recv_decl(char);
+	recv_decl(std::string);
+	recv_decl(pair_int_int);
+	recv_decl(pair_float_int);
+	recv_decl(pair_double_int);
+
+	recv_array_decl(int)
+	recv_array_decl(unsigned int);
+	recv_array_decl(float);
+	recv_array_decl(double);
+	recv_array_decl(char);
+	recv_array_decl(std::string);
+	recv_array_decl(pair_int_int);
+	recv_array_decl(pair_float_int);
+	recv_array_decl(pair_double_int);
+
+	irecv_decl(int)
+	irecv_decl(unsigned int);
+	irecv_decl(float);
+	irecv_decl(double);
+	irecv_decl(char);
+	irecv_decl(std::string);
+	irecv_decl(pair_int_int);
+	irecv_decl(pair_float_int);
+	irecv_decl(pair_double_int);
+
+	irecv_array_decl(int)
+	irecv_array_decl(unsigned int);
+	irecv_array_decl(float);
+	irecv_array_decl(double);
+	irecv_array_decl(char);
+	irecv_array_decl(std::string);
+	irecv_array_decl(pair_int_int);
+	irecv_array_decl(pair_float_int);
+	irecv_array_decl(pair_double_int);
 
 // Point-to-Point
-	template<typename Type, typename Data>
+/*	template<typename Type, typename Data>
 	void send(const Data& data, const int tag);
 	template<typename Type, typename Data>
 	void send(const unsigned int _enumi, const Data& data, const int tag);
@@ -217,14 +325,14 @@ private:
   void scatter(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, std::pair<double, int>* out_values, int n);
 
 	void reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
-	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);
+	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);*/
 
 private:
 
 	Environment* env;
 	MPI_Comm comm;
 };
-
+/*
 template<typename Type, typename Data>
 void Basic_Communicator::send(const Data& _data, const int _tag) {
 	send<Type>(0, _data, _tag);
@@ -408,6 +516,8 @@ void Basic_Communicator::reduce(const unsigned int _enumi, const Data* in_values
 	unit_type.set_enums(std::make_pair(_enumi,0));
 	return reduce(unit_type, in_values, n, out_values);
 }
+*/
+typedef Basic_Communicator Communicator;
 
 }
 

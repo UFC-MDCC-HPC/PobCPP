@@ -451,9 +451,10 @@ class IDeclarator(SourceLoc loc) {
   -> D_func(IDeclarator base,                       // D_name of function, typically
             FakeList<ASTTypeId> *params,            // params with optional default values
             CVFlags cv,                             // optional "const" for member functions
-            ExceptionSpec /*nullable*/ exnSpec) {     // throwable exceptions
-	            public PobcppCommunicatorSpec* comm;
-         	  }
+            ExceptionSpec /*nullable*/ exnSpec)    // throwable exceptions
+	          {
+		          public PobcppCommunicatorSpec* comm = 0;
+						}
 
   // "a[5]" or "b[]"
   -> D_array(IDeclarator base, Expression /*nullable*/ size);

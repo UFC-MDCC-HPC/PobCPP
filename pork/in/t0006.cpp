@@ -1,16 +1,17 @@
+class Commd { };
 class A {
 
-	unit B {
-	};
+	//unit B {
+	//};
 
-	unit C {
+//	unit C {
 		void func() [Commd comm] { }
-	};
+//	};
 };
 
 int main() {
 
-	ranksof(A::B);
+//	ranksof(A::B);
 }
 
 
