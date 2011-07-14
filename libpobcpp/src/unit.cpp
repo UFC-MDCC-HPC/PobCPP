@@ -19,7 +19,7 @@ Unit::~Unit (void) { }
 
 //FIXME Include possible Communicator argument on the grammar ranksof() function.
 
-unsigned int* Unit::ranksof_impl(Basic_Communicator comm, Unit_Type& asked_type, Unit_Type& unit_type) {
+unsigned int* Unit::ranksof_impl(Basic_Communicator& comm, Unit_Type& asked_type, Unit_Type& unit_type) {
 // Constructing the array.
 	boost::mpi::communicator world(comm.get_mpi_comm(), boost::mpi::comm_attach);
 	unsigned int rank = world.rank();

@@ -1,4 +1,8 @@
 2010-14-07 Eduardo Gurgel <edgurge@gmail.com>
+* Now the same example using a simple example of ranksof.
+* TODO: fix old casestudies
+
+2010-14-07 Eduardo Gurgel <edgurge@gmail.com>
 * A working helloworld with the new function system
 * Bugfix on patcher
 

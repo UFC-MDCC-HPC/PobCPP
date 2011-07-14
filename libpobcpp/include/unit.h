@@ -18,8 +18,8 @@ protected:
 	 */
 	virtual ~Unit();
 	template<typename AskedType>
-	unsigned int* ranksof_(Basic_Communicator comm, Unit_Type& unit_type);
-	unsigned int* ranksof_impl(Basic_Communicator comm, Unit_Type& asked_type, Unit_Type& unit_type);
+	unsigned int* ranksof_(Basic_Communicator& comm, Unit_Type unit_type);
+	unsigned int* ranksof_impl(Basic_Communicator& comm, Unit_Type& asked_type, Unit_Type& unit_type);
 public:
 	Basic_Communicator* comm; //FIXME
 private:
@@ -29,8 +29,8 @@ private:
 };
 
 template<typename AskedType>
-unsigned int* Unit::ranksof_(Basic_Communicator comm, Unit_Type& unit_type) {
-	AskedType* asked;
+unsigned int* Unit::ranksof_(Basic_Communicator& comm, Unit_Type unit_type) {
+	AskedType* asked = 0;
 	Unit_Type asked_type(asked);
 	return ranksof_impl(comm, asked_type, unit_type);
 }
