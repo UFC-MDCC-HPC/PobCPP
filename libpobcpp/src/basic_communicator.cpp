@@ -221,7 +221,7 @@ void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in
 	Basic_Communicator_irecv_array_impl(datatype)
 namespace Pobcpp {
 
-Basic_Communicator::Basic_Communicator() : env(0)  { }
+Basic_Communicator::Basic_Communicator() : env(0), comm(MPI_COMM_WORLD)  { }
 
 Basic_Communicator::~Basic_Communicator() { }
 

@@ -207,7 +207,7 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   int colbeg = sourceLocManager->getCol(spec->beginSquareBracket);
   PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1, 1);
   (patchess[iline]).push_back(erase);
-  PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("()"), col+1);
+  PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("())"), col+1);
   (patchess[iline]).push_back(insert);
 
   PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);

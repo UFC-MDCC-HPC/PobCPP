@@ -1,3 +1,7 @@
+2010-14-07 Eduardo Gurgel <edgurge@gmail.com>
+* A working helloworld with the new function system
+* Bugfix on patcher
+
 2010-06-07 Eduardo Gurgel <edgurge@gmail.com>
 * Bugfix on cc.ast at PobcppCommunicatorSpec definition
 * Bugfix on pobcpp patcher. 
