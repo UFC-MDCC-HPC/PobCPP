@@ -139,24 +139,36 @@ bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
 }
 bool Pobcpp::visitExpression(Expression* exp) {
   using std::string;
-	if(!(exp->kind() == Expression::E_RANKSOF))
+  if(!(exp->kind() == Expression::E_RANKSOF))
     return false;
   E_ranksof* e_ranksof = dynamic_cast<E_ranksof*>(exp);
-	int beginParentCol = sourceLocManager->getCol(e_ranksof->beginParenthesis);
-	int beginParentLine = sourceLocManager->getLine(e_ranksof->beginParenthesis);
-	int endParentCol = sourceLocManager->getCol(e_ranksof->endParenthesis);
-	int endParentLine = sourceLocManager->getLine(e_ranksof->endParenthesis);
+  int beginParentCol = sourceLocManager->getCol(e_ranksof->beginParenthesis);
+  int beginParentLine = sourceLocManager->getLine(e_ranksof->beginParenthesis);
+  int endParentCol = sourceLocManager->getCol(e_ranksof->endParenthesis);
+  int endParentLine = sourceLocManager->getLine(e_ranksof->endParenthesis);
+  int commaCol = sourceLocManager->getCol(e_ranksof->comma);
+  int commaLine = sourceLocManager->getLine(e_ranksof->comma);
 
   PobcppPatch* erase1 = new PobcppPatch(Erase, string(), beginParentCol+1, 1);
   (patchess[beginParentLine]).push_back(erase1);
   PobcppPatch* insert1 = new PobcppPatch(Insert, string("_<"), beginParentCol+1);
   (patchess[beginParentLine]).push_back(insert1);
-
   PobcppPatch* erase2 = new PobcppPatch(Erase, string(), endParentCol+1, 1);
   (patchess[endParentLine]).push_back(erase2);
-  PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, Unit_Type(this))"), endParentCol+1);
-  (patchess[endParentLine]).push_back(insert2);
-	return true;
+  
+  if(e_ranksof->implicit) {	
+    PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, Unit_Type(this))"), endParentCol+1);
+    (patchess[endParentLine]).push_back(insert2);
+  }
+  else {
+    PobcppPatch* erase2 = new PobcppPatch(Erase, string(), commaCol+1, 1);
+    (patchess[commaLine]).push_back(erase2);
+    PobcppPatch* insert2 = new PobcppPatch(Insert, string(">("), commaCol+1);
+    (patchess[commaLine]).push_back(insert2);
+    PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
+    (patchess[endParentLine]).push_back(insert3);
+  }
+  return true;
 }
 
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {

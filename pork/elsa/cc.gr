@@ -547,6 +547,16 @@ nonterm(Expression*) UnaryExpression {
                 { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
                   e->beginParenthesis = beg;
                   e->endParenthesis = end;
+									e->implicit = true;
+                  return e;
+                }
+  -> "ranksof" beg:beginParenthesis t:TypeId c:Comma id:Identifier end:endParenthesis
+                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+                  e->beginParenthesis = beg;
+                  e->endParenthesis = end;
+									e->comma = c;
+                  e->idComm = id;
+									e->implicit= false;
                   return e;
                 }
   -> e:NewExpression             { return e; }
@@ -1918,6 +1928,10 @@ nonterm(TS_classSpec*) ClassSpecifier {
 }
 
 //Brackets to save '{' '[' ']' '};' PObC++ needs this information
+
+nonterm(SourceLoc) Comma {
+	-> "," { return loc; }
+}
 
 nonterm(SourceLoc) beginBracket {
 	-> "{" { return loc; }

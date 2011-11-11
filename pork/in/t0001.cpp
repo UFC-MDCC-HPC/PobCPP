@@ -1,6 +1,3 @@
-void func(int a, int b)  [Communicator comm] 
-{
-}
 class A { };
 unit KK { }; unit KKK { };
 class B {
@@ -19,3 +16,9 @@ int main() {
 
 }
 
+void func(int a, int b)  [Communicator comma] 
+{
+	sizeof(comma);
+	ranksof(B, commun);
+	ranksof(B);
+}

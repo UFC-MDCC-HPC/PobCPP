@@ -696,6 +696,9 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
 		//PObC++ info
 		public SourceLoc endParenthesis;
 		public SourceLoc beginParenthesis;
+		public SourceLoc comma;
+		public StringRef idComm;
+		public bool implicit;
 	}
 }
 
