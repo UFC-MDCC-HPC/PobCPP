@@ -171,6 +171,13 @@ bool Pobcpp::visitExpression(Expression* exp) {
   return true;
 }
 
+bool Pobcpp::visitFunction(Function* func) {
+  if(((func->dflags) & DF_PARALLEL) != 0) {
+    // TODO
+  }
+  return true;
+}
+
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
   using std::string;
 

@@ -27,7 +27,7 @@ bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
 	return true;
 }
 
-//bool PObCppPreTypedASTVisitor::visitFunction(Function* function) {
+bool PObCppPreTypedASTVisitor::visitFunction(Function* func) {
 //  if(function->nameAndParams != NULL) {
 //    if(function->nameAndParams->decl->isD_func()) {
 //      if(function->nameAndParams->decl->asD_func()->base->isD_name()) {
@@ -39,8 +39,13 @@ bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
 //      }
 //		}
 //  }
-//	return true;
-//}
+/*  if((func->dflags & DF_PARALLEL) != 0)
+    std::cout << "Parallel" << std::endl;
+	else
+		std::cout << "Non-Parallel" << std::endl;
+	std::cout << "Tostring: " << toString(func->dflags) << std::endl;*/
+	return true;
+}
 bool PObCppVisitor::visitFunction(Function* func) {
 //  std::cout << toString(func->dflags) << std::endl;
 //  if((func->dflags & DF_STATIC) != 0)
@@ -49,6 +54,9 @@ bool PObCppVisitor::visitFunction(Function* func) {
 //    std::cout << "Virtual" << std::endl;
 //  if((func->dflags & DF_PARALLEL) != 0)
 //    std::cout << "Parallel" << std::endl;
+//	else
+//		std::cout << "Non-Parallel" << std::endl;
+//	std::cout << toString(func->dflags);
 //  //std::cout << func->dflags << std::endl;
 //  return true;
 }

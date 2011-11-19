@@ -1,67 +1,74 @@
-2010-14-07 Eduardo Gurgel <edgurge@gmail.com>
+2011-19-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Changelog fixed.
+* parallel modifier on functions working finally.
+
+2011-14-11 Eduardo Gurgel <edgurge@gmail.com>
+* Now implicit and explicit ranksof rule is avaiable.
+
+2011-14-07 Eduardo Gurgel <edgurge@gmail.com>
 * Now the same example using a simple example of ranksof.
 * TODO: fix old casestudies
 
-2010-14-07 Eduardo Gurgel <edgurge@gmail.com>
+2011-14-07 Eduardo Gurgel <edgurge@gmail.com>
 * A working helloworld with the new function system
 * Bugfix on patcher
 
-2010-06-07 Eduardo Gurgel <edgurge@gmail.com>
+2011-06-07 Eduardo Gurgel <edgurge@gmail.com>
 * Bugfix on cc.ast at PobcppCommunicatorSpec definition
 * Bugfix on pobcpp patcher. 
 
-2010-03-07 Eduardo Gurgel <edgurge@gmail.com>
+2011-03-07 Eduardo Gurgel <edgurge@gmail.com>
 * Default paramter done on CommunicatorClauseOpt statement.
 
-2010-30-06 Eduardo Gurgel <edgurge@gmail.com>
+2011-30-06 Eduardo Gurgel <edgurge@gmail.com>
 * CommunicationClauseOpt bugfixed. 
 * TODO: insert default parameter when a CommnicatorClauseOpt appears.
 
-2010-28-06 Eduardo Gurgel <edgurge@gmail.com>
+2011-28-06 Eduardo Gurgel <edgurge@gmail.com>
 * Modification on pre-typed AST almost done for CommunicatorClauseOpt.
 
-2010-27-06 Eduardo Gurgel <edgurge@gmail.com>
+2011-27-06 Eduardo Gurgel <edgurge@gmail.com>
 * Better definition to CommunicatorClauseOpt. Communicator will be a normal type
 and not part of grammar.
 
-2010-26-06 Eduardo Gurgel <edgurgel@gmail.com>
+2011-26-06 Eduardo Gurgel <edgurgel@gmail.com>
 * New input example.
 
-2010-25-06 Eduardo Gurgel <edgurgel@gmail.com>
+2011-25-06 Eduardo Gurgel <edgurgel@gmail.com>
 * Ranksof patch done.
 
-2010-22-06 Eduardo Gurgel <edgurgel@gmail.com>
+2011-22-06 Eduardo Gurgel <edgurgel@gmail.com>
 * visitExpression done, but pork needs a remake on expression visitor(TODO).
 
-2010-18-06 Eduardo Gurgel <edgurgel@gmail.com>
+2011-18-06 Eduardo Gurgel <edgurgel@gmail.com>
 * ranksof() implementation on libpobcpp (not tested).
 
-2010-14-06 Eduardo Gurgel <edgurgel@gmail.com>
+2011-14-06 Eduardo Gurgel <edgurgel@gmail.com>
 * Finally ranksof() implementation on grammar and type checking :)
 
-2010-13-05 Eduardo Gurgel <edgurgel@gmail.com>
+2011-13-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Easier definition at grammar bout CommunicatorSpec.
 
-2010-12-05 Eduardo Gurgel <edgurgel@gmail.com>
+2011-12-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Bugfix.
 
-2010-10-05 Eduardo Gurgel <edgurgel@gmail.com>
+2011-10-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Declaration and definition working. Patching ok.
 
-2010-06-05 Eduardo Gurgel <edgurgel@gmail.com>
+2011-06-05 Eduardo Gurgel <edgurgel@gmail.com>
 * Now definition and declaration are working. Patching still unfixed.
 
-2010-16-04 Eduardo Gurgel <edgurgel@gmail.com>
+2011-16-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Communicator patch done (implementation definition).
 * TODO updated.
 
-2010-11-04 Eduardo Gurgel <edgurgel@gmail.com>
+2011-11-04 Eduardo Gurgel <edgurgel@gmail.com>
 * Communicator patches, first pass.
 
-2010-22-03 Eduardo Gurgel <edgurgel@gmail.com>
+2011-22-03 Eduardo Gurgel <edgurgel@gmail.com>
 * Initial modification to new PobC++ spec.
 
-2010-25-01 Eduardo Gurgel <edgurgel@gmail.com>
+2011-25-01 Eduardo Gurgel <edgurgel@gmail.com>
 * PETSc example. 90%
 
 2010-25-12 Eduardo Gurgel <edgurgel@gmail.com>

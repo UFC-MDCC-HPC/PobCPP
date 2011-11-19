@@ -43,6 +43,7 @@ public:
   virtual bool visitMember(Member *member);
 	virtual bool visitIDeclarator(IDeclarator* idecl);
 	virtual bool visitExpression(Expression* exp);
+	virtual bool visitFunction(Function* func);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 

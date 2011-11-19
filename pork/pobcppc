@@ -7,7 +7,7 @@ suffix=".temp.cpp"
 temp=$src$suffix
 temp2=$src".pob"
 if [ -e $src ]; then
-	echo "#include \"pobcpp.h\"" > $temp
+	echo "#include \"pobcpp_preheader.h\"" > $temp
 	cat "$src" >> $temp
 	g++-4.1.2  -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E -Wp,-K $temp > $temp".ii"
 #	g++-4.2.4 -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E $temp > $temp".ii"
@@ -19,9 +19,9 @@ if [ -e $src ]; then
   cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
 #  rm "$temp"".patch"
-#echo "#include \"pobcpp.h\"" > $temp2
 	touch $temp2
-	cat "$src"".patched.cpp" > $temp2
+  echo "#include \"pobcpp_postheader.h\"" > $temp2
+	cat "$src"".patched.cpp" >> $temp2
 	rm "$src"".patched.cpp"
 else
 	echo "File not found"

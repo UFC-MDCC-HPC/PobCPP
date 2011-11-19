@@ -129,7 +129,7 @@ enum DeclFlags {
   // re-used for something that only occurs in C++ code, since the old
   // verifier only works with C code.
 //  DF_ADDRTAKEN   = 0x00008000,    // true if it's address has been (or can be) taken
-  DF_PARALLEL   = 0x00008000,    // PObC++ modification
+  DF_PARALLEL    = 0x00008000,    // PObC++ modification
   DF_UNIVERSAL   = 0x00020000,    // universally-quantified variable
   DF_EXISTENTIAL = 0x00040000,    // existentially-quantified
 
@@ -556,14 +556,11 @@ sm::string toString(UberModifiers m);
 
 // select particular subsets
 inline DeclFlags uberDeclFlags(UberModifiers m)  { 
-//  if(m & UM_STATIC != 0) {
-//    printf("STATICCC\n");
-//    return ((DeclFlags)(m & UM_DECLFLAGS) | DF_PARALLEL);
-//	}
-//  else {
-//    printf("NON-STATICCC\n");
-  return ((DeclFlags)(m & UM_DECLFLAGS));
-//  }
+  DeclFlags r = (DeclFlags) (m & UM_DECLFLAGS);
+  if((m & UM_PARALLEL) != 0) {
+    return r ^ DF_PARALLEL;
+  }
+  return r;
 }
 inline CVFlags uberCVFlags(UberModifiers m)
   { return (CVFlags)(m & UM_CVFLAGS); }
