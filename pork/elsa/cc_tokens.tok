@@ -69,6 +69,7 @@ TOK_PRIVATE,             "private",                   :    n  p
 TOK_PROTECTED,           "protected",                 :    n  p
 TOK_PUBLIC,              "public",                    :    n  p
 TOK_RANKSOF,             "ranksof",                   :    n  p
+TOK_RANKOF,              "rankof",                   :    n  p
 TOK_REGISTER,            "register",                  :    n
 TOK_REINTERPRET_CAST,    "reinterpret_cast",          :    n  p
 TOK_RETURN,              "return",                    :    n

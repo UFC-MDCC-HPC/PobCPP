@@ -8,7 +8,7 @@ class B {
 
 	unit K{ };
 
-	unit F;}; unit B::C d;
+	unit F { };}; unit B::C d;
 
 int main() {
 
@@ -19,6 +19,9 @@ int main() {
 void func(int a, int b)  [Communicator comma] 
 {
 	sizeof(comma);
-	ranksof(B, commun);
-	ranksof(B);
+	int* array;
+	ranksof(B::F, commun, array);
+	ranksof(B::K, array);
+	//rankof(B::C);
+
 }

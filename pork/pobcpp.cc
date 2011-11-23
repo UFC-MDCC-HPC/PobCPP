@@ -157,8 +157,12 @@ bool Pobcpp::visitExpression(Expression* exp) {
   (patchess[endParentLine]).push_back(erase2);
   
   if(e_ranksof->implicit) {	
-    PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, Unit_Type(this))"), endParentCol+1);
-    (patchess[endParentLine]).push_back(insert2);
+    PobcppPatch* erase2 = new PobcppPatch(Erase, string(), commaCol+1, 1);
+    (patchess[commaLine]).push_back(erase2);
+    PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, "), commaCol+1); //FIXME comm must be the communicator identifier of the function
+    (patchess[commaLine]).push_back(insert2);
+    PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
+    (patchess[endParentLine]).push_back(insert3);
   }
   else {
     PobcppPatch* erase2 = new PobcppPatch(Erase, string(), commaCol+1, 1);

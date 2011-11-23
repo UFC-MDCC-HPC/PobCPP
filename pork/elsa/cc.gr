@@ -543,20 +543,41 @@ nonterm(Expression*) UnaryExpression {
   // size of type
   -> "sizeof" "(" t:TypeId ")"   { return new E_sizeofType(EXPR_LOC(loc ENDLOCARG(endloc)) t); }
   // ranksof() PObC++
-  -> "ranksof" beg:beginParenthesis t:TypeId end:endParenthesis
-                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
-                  e->beginParenthesis = beg;
-                  e->endParenthesis = end;
-									e->implicit = true;
-                  return e;
-                }
   -> "ranksof" beg:beginParenthesis t:TypeId c:Comma id:Identifier end:endParenthesis
                 { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+                  e->singleUnit = false;
                   e->beginParenthesis = beg;
                   e->endParenthesis = end;
-									e->comma = c;
+                  e->implicit = true;
+                  e->comma = c;
+                  return e;
+                }
+  -> "ranksof" beg:beginParenthesis t:TypeId c:Comma id:Identifier "," id2:Identifier end:endParenthesis
+                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+                  e->singleUnit = false;
+                  e->beginParenthesis = beg;
+                  e->endParenthesis = end;
+                  e->comma = c;
                   e->idComm = id;
-									e->implicit= false;
+                  e->implicit= false;
+                  return e;
+                }
+  -> "rankof" beg:beginParenthesis t:TypeId end:endParenthesis
+                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+									e->singleUnit = true;
+                  e->beginParenthesis = beg;
+                  e->endParenthesis = end;
+                  e->implicit = true;
+                  return e;
+                }
+  -> "rankof" beg:beginParenthesis t:TypeId c:Comma id:Identifier end:endParenthesis
+                { E_ranksof* e = new E_ranksof(EXPR_LOC(loc ENDLOCARG(endloc)) t); 
+									e->singleUnit = true;
+                  e->beginParenthesis = beg;
+                  e->endParenthesis = end;
+                  e->comma = c;
+                  e->idComm = id;
+                  e->implicit= false;
                   return e;
                 }
   -> e:NewExpression             { return e; }

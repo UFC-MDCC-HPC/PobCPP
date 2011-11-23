@@ -694,6 +694,7 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
   // PObC++
   -> E_ranksof(ASTTypeId atype) {
 		//PObC++ info
+		public bool singleUnit;
 		public SourceLoc endParenthesis;
 		public SourceLoc beginParenthesis;
 		public SourceLoc comma;

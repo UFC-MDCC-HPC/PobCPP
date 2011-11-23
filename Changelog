@@ -1,3 +1,8 @@
+2011-23-11 Eduardo Gurgel <edgurgel@gmail.com>
+* ranksof() modified to receive a pointer to an array and returns the size of
+the array.
+* rankof inserted in ELSA grammar, but still buggy.
+
 2011-19-11 Eduardo Gurgel <edgurgel@gmail.com>
 * Changelog fixed.
 * parallel modifier on functions working finally.

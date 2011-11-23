@@ -1,5 +1,6 @@
-#include "pobcpp.h"
+//#include "pobcpp.h"
 #include <iostream>
+
 class HelloWorld {
 	public:
 	unit World;
@@ -12,8 +13,10 @@ class HelloWorld {
 			std::string value;
 			comm.recv(!rank, 1, value);
 			std::cout << value << std::endl;
-			unsigned int* ranks  = ranksof(HelloWorld::World);
+			unsigned int* ranks;
+			unsigned int size  = ranksof(HelloWorld::World, ranks);
 			std::cout << ranks[0] << std::endl;
+			std::cout << rank << " func() end" << std::endl;
 		}
 	};
 
@@ -21,13 +24,21 @@ class HelloWorld {
 		public:
 		void func() [Communicator comm] {
 			int rank = comm.rank();
+			if(rank > 1) {
+			unsigned int* ranks;
+			unsigned int size  = ranksof(void, ranks);
+				std::cout << "I'm " << rank << " but I wont participate." << std::endl;
+				return;
+			}
 			std::string value;
 			comm.recv(!rank, 1, value);
 			comm.send(!rank, 1, "World");
 			std::cout << value << std::endl;
-			//unsigned int* a = ranksof(HelloWorld::Hello);
-			unsigned int* ranks  = ranksof(HelloWorld::World);
+			unsigned int* ranks;
+			unsigned int size = ranksof(HelloWorld::Hello, comm, ranks);
+			//unsigned int* ranks  = ranksof(HelloWorld::World);
 			std::cout << ranks[0] << std::endl;
+			std::cout << rank << " func() end" << std::endl;
 		}
 	};
 
