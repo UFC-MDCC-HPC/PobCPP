@@ -22,6 +22,7 @@ void func(int a, int b)  [Communicator comma]
 	int* array;
 	ranksof(B::F, commun, array);
 	ranksof(B::K, array);
-	//rankof(B::C);
+	rankof(B::C);
+	rankof(B::C, comm);
 
 }
