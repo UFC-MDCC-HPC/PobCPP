@@ -3,6 +3,7 @@
 
 #include "unit_type.h"
 #include "environment.h"
+#include "group.h"
 #include <mpi.h>
 #include <map> // std::pair
 
@@ -44,6 +45,7 @@ public:
 	void set_intracomm(MPI_Comm _comm); // FIXME
 private:
 	friend class Unit;
+	Basic_Communicator(MPI_Comm comm);
 public:
 // Communicator handling	
 //Split
@@ -51,6 +53,7 @@ public:
 //etc
 	int rank() const;
 	int size() const;
+	Basic_Communicator create(Group group);
 
 // Send
 	send_decl(int)

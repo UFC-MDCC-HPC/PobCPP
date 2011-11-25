@@ -1,3 +1,11 @@
+2011-25-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Initial development of Group class to handle MPI_Group.
+* New function create included on Basic_Communicator class.
+
+2011-24-11 Eduardo Gurgel <edgurgel@gmail.com>
+* Patcher function to ranksof fixed.
+* rankof tokens fixed.
+
 2011-23-11 Eduardo Gurgel <edgurgel@gmail.com>
 * ranksof() modified to receive a pointer to an array and returns the size of
 the array.

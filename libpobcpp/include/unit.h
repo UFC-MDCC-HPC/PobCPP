@@ -20,10 +20,10 @@ protected:
 	template<typename AskedType>
 	unsigned int ranksof_(Basic_Communicator& comm, unsigned int*& array, Unit_Type unit_type);
 	template<typename AskedType>
-	unsigned int rankof_(Basic_Communicator& comm, Unit_Type unit_type);
+	int rankof_(Basic_Communicator& comm, Unit_Type unit_type);
 
-	unsigned int ranksof_impl(Basic_Communicator& comm, unsigned int*& array, Unit_Type& asked_type, Unit_Type& unit_type);
-	unsigned int rankof_impl(Basic_Communicator& comm, Unit_Type& asked_type, Unit_Type& unit_type);
+  unsigned int ranksof_impl(Basic_Communicator& comm, unsigned int*& array, Unit_Type& asked_type, Unit_Type& unit_type);
+  int rankof_impl(Basic_Communicator& comm, Unit_Type& asked_type, Unit_Type& unit_type);
 public:
 	Basic_Communicator* comm; //FIXME
 private:
@@ -40,7 +40,7 @@ unsigned int Unit::ranksof_(Basic_Communicator& comm, unsigned int*& array, Unit
 }
 
 template<typename AskedType>
-unsigned int Unit::rankof_(Basic_Communicator& comm, Unit_Type unit_type) {
+int Unit::rankof_(Basic_Communicator& comm, Unit_Type unit_type) {
 	AskedType* asked = 0;
 	Unit_Type asked_type(asked);
 	return rankof_impl(comm, asked_type, unit_type);

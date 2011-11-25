@@ -223,6 +223,10 @@ namespace Pobcpp {
 
 Basic_Communicator::Basic_Communicator() : env(0), comm(MPI_COMM_WORLD)  { }
 
+Basic_Communicator::Basic_Communicator(MPI_Comm comm) : comm(comm) {
+
+}
+
 Basic_Communicator::~Basic_Communicator() { }
 
 MPI_Comm Basic_Communicator::get_mpi_comm() {
@@ -247,6 +251,11 @@ int Basic_Communicator::size() const {
 	return world.size();
 }
 
+Basic_Communicator Basic_Communicator::create(Group group) {
+	MPI_Comm newcomm;
+	MPI_Comm_create(comm, group.get_mpi_group(), &newcomm);
+	return Basic_Communicator(newcomm);
+}
 
 
 Basic_Communicator_send_and_isend_impl(int);

@@ -1,4 +1,4 @@
 lib boost_mpi-mt ;
 
-lib pobcpp : src/create_unit.cpp src/unit_type.cpp src/basic_communicator.cpp src/rank.cpp src/unit.cpp src/environment.cpp boost_mpi-mt : 
+lib pobcpp : src/group.cpp src/create_unit.cpp src/unit_type.cpp src/basic_communicator.cpp src/rank.cpp src/unit.cpp src/environment.cpp boost_mpi-mt : 
 						 <include>include <include>/usr/lib/openmpi/include ;
