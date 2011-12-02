@@ -16,7 +16,7 @@ Unit::Unit (void) {
 
 Unit::~Unit (void) { }
 
-unsigned int Unit::ranksof_impl(Basic_Communicator& comm, unsigned int*& array, Unit_Type& asked_type, Unit_Type& unit_type) {
+unsigned int Unit::ranksof_impl(Basic_Communicator& comm, int*& array, Unit_Type& asked_type, Unit_Type& unit_type) {
 // Constructing the array.
 	boost::mpi::communicator world(comm.get_mpi_comm(), boost::mpi::comm_attach);
 	unsigned int rank = world.rank();

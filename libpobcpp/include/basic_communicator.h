@@ -53,6 +53,7 @@ public:
 //etc
 	int rank() const;
 	int size() const;
+	Group group() const;
 	Basic_Communicator create(Group group);
 
 // Send

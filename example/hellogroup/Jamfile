@@ -1,0 +1,5 @@
+lib mpi ;
+
+exe example1 : mpi hello2.cpp ../../libpobcpp : <include>.
+<include>../../libpobcpp/include <include>/usr/include/openmpi ;
+

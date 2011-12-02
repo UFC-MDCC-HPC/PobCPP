@@ -1,3 +1,7 @@
+2011-01-12 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfixes on Group class.
+* hellogroup folder included with some tests with Group and Communicator methods.
+
 2011-25-11 Eduardo Gurgel <edgurgel@gmail.com>
 * Initial development of Group class to handle MPI_Group.
 * New function create included on Basic_Communicator class.

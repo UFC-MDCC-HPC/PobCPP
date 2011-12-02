@@ -251,6 +251,12 @@ int Basic_Communicator::size() const {
 	return world.size();
 }
 
+Group Basic_Communicator::group() const {
+	MPI_Group grp;
+	MPI_Comm_group(comm, &grp);
+	return Group(grp);
+}
+
 Basic_Communicator Basic_Communicator::create(Group group) {
 	MPI_Comm newcomm;
 	MPI_Comm_create(comm, group.get_mpi_group(), &newcomm);
