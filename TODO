@@ -1,10 +1,7 @@
 * README.txt
 * Unit definition
   - Test with templates.
-* Create pobcpprun.
-  - Give information of number of copies to each executable.
 * Resolve "comm" problem! How to implicitly insert it?
 * Error treatment with expections.
 * Auto inheritance.
-* Create Group class to handle MPI_Groups
 * Unit and p-object relation
