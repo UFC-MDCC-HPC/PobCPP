@@ -49,6 +49,18 @@ MPI_Request Basic_Communicator::irecv(int source, int tag, datatype* values, int
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
 	return world.irecv(source, tag, values, n).m_requests[0];\
 }
+
+#define Basic_Communicator_bcast_impl(datatype) \
+	void Basic_Communicator::broadcast(datatype& value, int root) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	return boost::mpi::broadcast(world, value, root);	\
+}
+
+#define Basic_Communicator_bcast_array_impl(datatype) \
+	void Basic_Communicator::broadcast(datatype* value, int n, int root) { \
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+	return boost::mpi::broadcast(world, value, n, root);	\
+}
 /*
 #define Basic_Communicator_send_impl(datatype) \
 void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype& _data, const int _tag) { \
@@ -219,6 +231,9 @@ void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in
 	Basic_Communicator_recv_array_impl(datatype) \
 	Basic_Communicator_irecv_impl(datatype) \
 	Basic_Communicator_irecv_array_impl(datatype)
+#define Basic_Communicator_bcast(datatype) \
+	Basic_Communicator_bcast_impl(datatype) \
+	Basic_Communicator_bcast_array_impl(datatype) 
 namespace Pobcpp {
 
 Basic_Communicator::Basic_Communicator() : env(0), comm(MPI_COMM_WORLD)  { }
@@ -283,6 +298,16 @@ Basic_Communicator_recv_and_irecv_impl(std::string);
 Basic_Communicator_recv_and_irecv_impl(pair_int_int);
 Basic_Communicator_recv_and_irecv_impl(pair_float_int);
 Basic_Communicator_recv_and_irecv_impl(pair_double_int);
+
+Basic_Communicator_bcast_impl(int);
+Basic_Communicator_bcast_impl(unsigned int);
+Basic_Communicator_bcast_impl(float);
+Basic_Communicator_bcast_impl(double);
+Basic_Communicator_bcast_impl(char);
+Basic_Communicator_bcast_impl(std::string);
+Basic_Communicator_bcast_impl(pair_int_int);
+Basic_Communicator_bcast_impl(pair_float_int);
+Basic_Communicator_bcast_impl(pair_double_int);
 /*
 Basic_Communicator_receive_impl(int);
 Basic_Communicator_receive_impl(unsigned int);

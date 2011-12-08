@@ -32,6 +32,12 @@ MPI_Status recv(int source, int tag, datatype* values, int n) const;
 MPI_Request irecv(int source, int tag, datatype& value) const;
 #define irecv_array_decl(datatype) \
 MPI_Request irecv(int source, int tag, datatype* values, int n) const;
+
+#define bcast_decl(datatype) \
+	void broadcast(datatype& value, int root);
+#define bcast_array_decl(datatype) \
+	void broadcast(datatype* value, int n, int root);
+
 namespace Pobcpp {
 //Move to a new file
 
@@ -138,47 +144,30 @@ public:
 	irecv_array_decl(pair_float_int);
 	irecv_array_decl(pair_double_int);
 
-// Point-to-Point
-/*	template<typename Type, typename Data>
-	void send(const Data& data, const int tag);
-	template<typename Type, typename Data>
-	void send(const unsigned int _enumi, const Data& data, const int tag);
+	// Collective
 
-	template<typename Type, typename Data>
-	void send(const Data* data, int n, const int tag);
-	template<typename Type, typename Data>
-	void send(const unsigned int _enumi, const Data* data, int n, const int tag);
+	bcast_decl(int)
+	bcast_decl(unsigned int);
+	bcast_decl(float);
+	bcast_decl(double);
+	bcast_decl(char);
+	bcast_decl(std::string);
+	bcast_decl(pair_int_int);
+	bcast_decl(pair_float_int);
+	bcast_decl(pair_double_int);
 
-	template<typename Type, typename Data>
-	void isend(const Data& data, const int tag);
-	template<typename Type, typename Data>
-	void isend(const unsigned int _enumi, const Data& data, const int tag);
-
-	template<typename Type, typename Data>
-	void isend(const Data* data, int n, const int tag);
-	template<typename Type, typename Data>
-	void isend(const unsigned int _enumi, const Data* data, int n, const int tag);
-
-	template<typename Type, typename Data>
-	Data receive(const int _tag, MPI_Status* status);
-	template<typename Type, typename Data>
-	Data receive(const unsigned int _enumi, const int _tag, MPI_Status* status);
-
-	template<typename Type, typename Data>
-	void receive(Data* data, int n, const int _tag, MPI_Status* status);
-	template<typename Type, typename Data>
-	void receive(const unsigned int _enumi, Data* data, int n, const int _tag, MPI_Status* status);
+	bcast_array_decl(int)
+	bcast_array_decl(unsigned int);
+	bcast_array_decl(float);
+	bcast_array_decl(double);
+	bcast_array_decl(char);
+	bcast_array_decl(std::string);
+	bcast_array_decl(pair_int_int);
+	bcast_array_decl(pair_float_int);
+	bcast_array_decl(pair_double_int);
 
 // Collective
-	template<typename Type, typename Data>
-	void broadcast(Data& value);
-	template<typename Type, typename Data>
-	void broadcast(const unsigned int _enumi, Data& value);
-	template<typename Type, typename Data>
-	void broadcast(Data* values, int n);
-	template<typename Type, typename Data>
-	void broadcast(const unsigned int _enumi, Data* values, int n);
-
+/*
 	template<typename Type, typename Data>
 	void gather(const Data& in_value, Data* out_values);
 	template<typename Type, typename Data>
@@ -205,131 +194,7 @@ public:
 	void reduce(const Data* in_values, int n, Data* out_values);	
 	template<typename Type, typename Data>
 	void reduce(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);	
-
-private:
-	// Implementations
-	void send(const Unit_Type& _unit_type, const int& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const unsigned int& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const float& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const double& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const char& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::string& _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<int, int> & _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<float, int> & _data, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<double, int> & _data, const int _tag);
-
-	void send(const Unit_Type& _unit_type, const int* _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const unsigned int* _data, int n ,const int _tag);
-	void send(const Unit_Type& _unit_type, const float* _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const double* _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const char* _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::string* _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<int, int> * _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<float, int> * _data, int n, const int _tag);
-	void send(const Unit_Type& _unit_type, const std::pair<double, int> * _data, int n, const int _tag);
-
-	void isend(const Unit_Type& _unit_type, const int& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const unsigned int& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const float& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const double& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const char& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::string& _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<int, int> & _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<float, int> & _data, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<double, int> & _data, const int _tag);
-
-	void isend(const Unit_Type& _unit_type, const int* _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const unsigned int* _data, int n ,const int _tag);
-	void isend(const Unit_Type& _unit_type, const float* _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const double* _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const char* _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::string* _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<int, int> * _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<float, int> * _data, int n, const int _tag);
-	void isend(const Unit_Type& _unit_type, const std::pair<double, int> * _data, int n, const int _tag);
-	
-	int receive(const Unit_Type& _unit_type, const int& _data_type, const int _tag, MPI_Status* status);
-	unsigned int receive(const Unit_Type& _unit_type, const unsigned int& _data_type, const int _tag, MPI_Status* status);
-	float receive(const Unit_Type& _unit_type, const float& _data_type, const int _tag, MPI_Status* status);
-	double receive(const Unit_Type& _unit_type, const double& _data_type, const int _tag, MPI_Status* status);
-	char receive(const Unit_Type& _unit_type, const char& _data_type, const int _tag, MPI_Status* status);
-	std::string receive(const Unit_Type& _unit_type, const std::string& _data_type, const int _tag, MPI_Status* status);
-	std::pair<int, int> receive(const Unit_Type& _unit_type, const std::pair<int, int>& _data_type, const int _tag, MPI_Status* status);
-	std::pair<float, int> receive(const Unit_Type& _unit_type, const std::pair<float, int>& _data_type, const int _tag, MPI_Status* status);
-	std::pair<double, int> receive(const Unit_Type& _unit_type, const std::pair<double, int>& _data_type, const int _tag, MPI_Status* status);
-
-	void receive(const Unit_Type& _unit_type, int* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, unsigned int* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, float* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, double* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, char* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, std::string* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, std::pair<int, int>* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, std::pair<float, int>* _data_type, int n, const int _tag, MPI_Status* status);
-	void receive(const Unit_Type& _unit_type, std::pair<double, int>* _data_type, int n, const int _tag, MPI_Status* status);
-
-	void broadcast(const Unit_Type& _unit_type, int& value);
-	void broadcast(const Unit_Type& _unit_type, unsigned int& value);
-	void broadcast(const Unit_Type& _unit_type, float& value);
-	void broadcast(const Unit_Type& _unit_type, double& value);
-	void broadcast(const Unit_Type& _unit_type, char& value);
-	void broadcast(const Unit_Type& _unit_type, std::string& value);
-	void broadcast(const Unit_Type& _unit_type, std::pair<int, int>& value);
-	void broadcast(const Unit_Type& _unit_type, std::pair<float, int>& value);
-	void broadcast(const Unit_Type& _unit_type, std::pair<double, int>& value);
-
-	void broadcast(const Unit_Type& _unit_type, int* values, int n);
-	void broadcast(const Unit_Type& _unit_type, unsigned int* values, int n);
-	void broadcast(const Unit_Type& _unit_type, float* values, int n);
-	void broadcast(const Unit_Type& _unit_type, double* values, int n);
-	void broadcast(const Unit_Type& _unit_type, char* values, int n);
-	void broadcast(const Unit_Type& _unit_type, std::string* value, int n);
-	void broadcast(const Unit_Type& _unit_type, std::pair<int, int>* values, int n);
-	void broadcast(const Unit_Type& _unit_type, std::pair<float, int>* values, int n);
-	void broadcast(const Unit_Type& _unit_type, std::pair<double, int>* values, int n);
-
-	void gather(const Unit_Type& _unit_type, const int& in_value, int* out_values);
-	void gather(const Unit_Type& _unit_type, const unsigned int& in_value, unsigned int* out_values);
-	void gather(const Unit_Type& _unit_type, const float& in_value, float* out_values);
-	void gather(const Unit_Type& _unit_type, const double& in_value, double* out_values);
-	void gather(const Unit_Type& _unit_type, const char& in_value, char* out_values);
-	void gather(const Unit_Type& _unit_type, const std::string& in_value, std::string* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<int, int>& in_value, std::pair<int, int>* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<float, int>& in_value, std::pair<float, int>* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<double, int>& in_value, std::pair<double, int>* out_values);
-	
-	void gather(const Unit_Type& _unit_type, const int* in_values, int n, int* out_values);
-	void gather(const Unit_Type& _unit_type, const unsigned int* in_values, int n, unsigned int* out_values);
-	void gather(const Unit_Type& _unit_type, const float* in_values, int n, float* out_values);
-	void gather(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
-	void gather(const Unit_Type& _unit_type, const char* in_values, int n, char* out_values);
-	void gather(const Unit_Type& _unit_type, const std::string* in_values, int n, std::string* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<int, int>* in_values, int n, std::pair<int, int>* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<float, int>* in_values, int n, std::pair<float, int>* out_values);
-	void gather(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, int n, std::pair<double, int>* out_values);
-
-  void scatter(const Unit_Type& _unit_type, const int* in_value, int& out_values);
-  void scatter(const Unit_Type& _unit_type, const unsigned int* in_value, unsigned int& out_values);
-  void scatter(const Unit_Type& _unit_type, const float* in_value, float& out_values);
-  void scatter(const Unit_Type& _unit_type, const double* in_value, double& out_values);
-  void scatter(const Unit_Type& _unit_type, const char* in_value, char& out_values);
-  void scatter(const Unit_Type& _unit_type, const std::string* in_value, std::string& out_values);
-  void scatter(const Unit_Type& _unit_type, const std::pair<int, int>* in_value, std::pair<int, int>& out_values);
-  void scatter(const Unit_Type& _unit_type, const std::pair<float, int>* in_value, std::pair<float, int>& out_values);
-  void scatter(const Unit_Type& _unit_type, const std::pair<double, int>* in_value, std::pair<double, int>& out_values);
-
-  void scatter(const Unit_Type& _unit_type, const int* in_values, int* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const unsigned int* in_values, unsigned int* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const float* in_values, float* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const double* in_values, double* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const char* in_values, char* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const std::string* in_values, std::string* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const std::pair<int, int>* in_values, std::pair<int, int>* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const std::pair<float, int>* in_values, std::pair<float, int>* out_values, int n);
-  void scatter(const Unit_Type& _unit_type, const std::pair<double, int>* in_values, std::pair<double, int>* out_values, int n);
-
-	void reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values);
-	void reduce(const Unit_Type& _unit_type, const double* in_values, int n);*/
+*/
 
 private:
 

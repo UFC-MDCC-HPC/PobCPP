@@ -9,13 +9,15 @@ class HelloWorld {
 		void func() [Communicator comm] {
 			int rank = comm.rank();
 			int* ranks;
-			unsigned int size  = ranksof(HelloWorld::World, ranks);
+			unsigned int size  = ranksof(HelloWorld::Hello, ranks);
 			Group grp = comm.group();
 			Group newgroup = grp.include(size, ranks);
-			Communicator newcomm;
-			newcomm.create(newgroup);
+			Communicator newcomm = comm.create(newgroup);
+			std::cout << "[Rank] " << std::endl;
 			for(unsigned int i = 0; i < size; i++)
-				std::cout << ranks[i] << " " << std::endl;
+				std::cout << ranks[i] << " ";
+			std::cout << std::endl << "[/Rank] " << std::endl;
+			std::cout << "Old rank: " << comm.rank() << "," << newcomm.rank() << std::endl;
 			std::cout << rank << " func() end" << std::endl;
 		}
 	};
@@ -31,15 +33,22 @@ class HelloWorld {
 				return;
 			}*/
 			int* ranks;
-			unsigned int size = ranksof(HelloWorld::Hello, comm, ranks);
+			unsigned int size = ranksof(HelloWorld::World, comm, ranks);
 			Group grp = comm.group();
 			Group newgroup = grp.include(size, ranks);
-			Communicator newcomm;
-			newcomm.create(newgroup);
+			Communicator newcomm = comm.create(newgroup);
 //			Group group;
 //			group.
 			//int* ranks  = ranksof(HelloWorld::World);
-			std::cout << ranks[0] << std::endl;
+			std::cout << "[Rank] " << std::endl;
+			for(unsigned int i = 0; i < size; i++)
+				std::cout << ranks[i] << " ";
+			std::cout << std::endl << "[/Rank] " << std::endl;
+			std::cout << "Old rank: " << comm.rank() << "," << newcomm.rank() << std::endl;
+			int a = (comm.rank()+1)*newcomm.rank();
+			int b = a;
+			newcomm.broadcast(a, 2);
+			std::cout << "bcast-bf: " << b << " / bcast: " << a << std::endl;
 			std::cout << rank << " func() end" << std::endl;
 		}
 	};

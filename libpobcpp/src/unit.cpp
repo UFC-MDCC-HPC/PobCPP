@@ -34,7 +34,7 @@ unsigned int Unit::ranksof_impl(Basic_Communicator& comm, int*& array, Unit_Type
 			size++;
 		}
 	}
-	array = new unsigned int[size];
+	array = new int[size];
 	memcpy(array, &(ranks[0]), size * sizeof(unsigned int));
 	return size;
 }

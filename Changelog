@@ -1,3 +1,6 @@
+2011-08-12 Eduardo Gurgel <edgurgel@gmail.com>
+* Communicator broadcast() implementation.
+
 2011-02-12 Eduardo Gurgel <edgurgel@gmail.com>
 * Group excl function added.
 
