@@ -1,3 +1,7 @@
+2011-11-12 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix on elsa/pobcpp.cc
+* Comments added to help on further development.
+
 2011-08-12 Eduardo Gurgel <edgurgel@gmail.com>
 * Communicator broadcast() implementation.
 

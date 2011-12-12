@@ -28,37 +28,9 @@ bool PObCppPreTypedASTVisitor::visitTopForm(TopForm* tf) {
 }
 
 bool PObCppPreTypedASTVisitor::visitFunction(Function* func) {
-//  if(function->nameAndParams != NULL) {
-//    if(function->nameAndParams->decl->isD_func()) {
-//      if(function->nameAndParams->decl->asD_func()->base->isD_name()) {
-//        if(function->nameAndParams->decl->asD_func()->base->asD_name()->name->isPQ_name()) {
-//          PQ_name* funcName = function->nameAndParams->decl->asD_func()->base->asD_name()->name->asPQ_name();
-//          if(funcName->toString() == "add_type")
-//            addTypeStr =funcName->name;
-//        }
-//      }
-//		}
-//  }
-/*  if((func->dflags & DF_PARALLEL) != 0)
-    std::cout << "Parallel" << std::endl;
-	else
-		std::cout << "Non-Parallel" << std::endl;
-	std::cout << "Tostring: " << toString(func->dflags) << std::endl;*/
 	return true;
 }
 bool PObCppVisitor::visitFunction(Function* func) {
-//  std::cout << toString(func->dflags) << std::endl;
-//  if((func->dflags & DF_STATIC) != 0)
-//    std::cout << "Static" << std::endl;
-//  if((func->dflags & DF_VIRTUAL) != 0)
-//    std::cout << "Virtual" << std::endl;
-//  if((func->dflags & DF_PARALLEL) != 0)
-//    std::cout << "Parallel" << std::endl;
-//	else
-//		std::cout << "Non-Parallel" << std::endl;
-//	std::cout << toString(func->dflags);
-//  //std::cout << func->dflags << std::endl;
-//  return true;
 }
 
 bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
@@ -112,6 +84,8 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
         }
       }
     }
+		// check if attributes or methods are declared.
+		// Include them on inner units.
     unsigned short units = 0;  // How many units exist inside this class?
     FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
       if(iter.data()->isMR_decl()) {
@@ -139,7 +113,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     DeclFlags dflag = DF_STATIC;
     DeclFlags dflag_decl = DF_NONE;
 
-    checkStrings();
+    checkStrings(); // 
 
 		TS_name* tsname = new TS_name(loc, new PQ_qualifier(loc, pobCppNamespaceStr, NULL, new PQ_name(loc, pobTypeArrayStr)), false);
 		D_func *dfunc = new D_func(loc, 
@@ -178,7 +152,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 			} else {
       	addTypeArgs = FakeList<ArgExpression>::makeList(arg1);
 			}
-			// FIXME Find a sane way to instantiate the below statement.
+			// FIXME Find a sane way to instantiate the statement below.
       S_expr* sexpr = new S_expr(loc, SourceLoc(), new FullExpression(
                                  new E_funCall(loc, SourceLoc(),
                                                new E_fieldAcc(loc, SourceLoc(),
@@ -186,7 +160,6 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
                                                new PQ_template(loc, addTypeStr,
                                                                new TA_type(new ASTTypeId(new TS_name(loc, new PQ_name(loc, classes[i].u), false),new Declarator(new D_name(loc, NULL),NULL)), NULL))), addTypeArgs))); //   pobtypes.add_type<unit A>(0);
 
-//      stms->append(sexpr);
 			j++;
     }
 		S_return* sreturn = new S_return(loc, SourceLoc(), new FullExpression(new E_variable(loc, SourceLoc(), new PQ_name(SourceLoc(), "pobtypes")))); //   return pobtypes;
