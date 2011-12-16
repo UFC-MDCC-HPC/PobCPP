@@ -84,8 +84,6 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
         }
       }
     }
-		// check if attributes or methods are declared.
-		// Include them on inner units.
     unsigned short units = 0;  // How many units exist inside this class?
     FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
       if(iter.data()->isMR_decl()) {
@@ -184,15 +182,6 @@ void PObCppPreTypedASTVisitor::checkStrings() {
 }
 
 
-bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
-	// FIXME
-  /*if(spec->keyword == TI_UNIT) { // unit ?
-    PQName* pqname = new PQ_name(SourceLoc(), "Pobcpp::Unit"); // Creating base class
-    BaseClassSpec* bcs = new BaseClassSpec(false, AK_PUBLIC, pqname); 
-    spec->bases = spec->bases->prepend(bcs); // Adding to the unit
-  }*/
-  return true;
-}
 
 bool PObCppPreTypedASTVisitor::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func())
@@ -218,6 +207,40 @@ void PObCppPreTypedASTVisitor::removeCommunicatorDecl(D_func* func, bool noparam
 }
 
 bool PObCppVisitor::visitMember(Member *member) { }
+/*bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
+  if (type->isTS_classSpec()) {
+    return subvisitTS_classSpec(type->asTS_classSpec());
+  }
+  return true;
+}
+bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
+		// check if attributes or methods are declared.
+		// Include them on inner units.
+  if(spec->keyword == TI_CLASS) {
+    std::vector<MR_decl*> MR_decls;
+    unsigned short units = 0;  // How many units exist inside this class?
+    FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
+      if(iter.data()->isMR_decl()) {
+        MR_decl* iter_decl = iter.data()->asMR_decl();
+        if(iter_decl->d->spec->isTS_classSpec()) {
+          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
+           	for(int i = 0; i < MR_decls.size(); i++) {
+							std::cerr << "adding 1 to members" << std::endl;
+              iter_decl->d->spec->asTS_classSpec()->members->list.append(MR_decls[i]);
+            }
+          }
+        }
+        else {
+          std::cerr << "Cloning" << std::endl;
+          MR_decl* clone_decl = iter.data()->asMR_decl()->clone();
+          std::cerr << "Done cloning" << std::endl;
+          MR_decls.push_back(clone_decl);
+        }
+      }
+    }
+  }
+  return true;
+}*/
 
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;

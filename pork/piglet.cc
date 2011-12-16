@@ -27,7 +27,7 @@ static void handle_xBase(Env &env, xBase &x)
 }
 
 
-PigletParser::PigletParser() : parseWarnings(0) {
+PigletParser::PigletParser(bool prePobcpp) : parseWarnings(0), prePobcpp(prePobcpp) {
   lang.GNU_Cplusplus();
 }
 
@@ -44,6 +44,8 @@ TranslationUnit *
 PigletParser::getAST(const char *filename)
 {
   TranslationUnit *unit = parse(filename);
+	if(prePobcpp)
+		return unit;
   typeCheck(unit);
   elaborate(unit);
   return unit;
@@ -67,7 +69,7 @@ PigletParser::getASTNoExc(const char *filename)
     HANDLER();
     cout << x << endl;
     exit(10);
-  }
+	}
   catch (xBase &x) {
     HANDLER();
     cout << x << endl;
@@ -111,7 +113,9 @@ PigletParser::parse(const char *inputFname)
 
     // treeTop is a TranslationUnit pointer
 		TranslationUnit *unit = (TranslationUnit*) treeTop;
-		classes = PObCppPre(unit); // PObC++ modification.
+
+		if(!prePobcpp)
+	  	classes = PObCppPre(unit); // PObC++ modification.
     delete parseContext;
     delete tables;
 

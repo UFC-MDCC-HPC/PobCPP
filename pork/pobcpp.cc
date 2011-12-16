@@ -346,7 +346,7 @@ unsigned int Pobcpp::countUnits(ASTList<Member> *memberList) {
 }
 
 int main(int argc, char **argv) {
-  PigletParser parser;
+  PigletParser parser(false);
   Patcher p;
   Pobcpp visitor(p);
 	for (int i = 1 ;i< argc;i+=2) {

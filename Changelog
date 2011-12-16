@@ -1,3 +1,8 @@
+2011-16-12 Eduardo Gurgel <edgurgel@gmail.com>
+* Happy birthday Eduardo :D
+* Huge modifications. Now our compiler read the code twice.
+* Initial development of the pre-phase to anotate members from POb to unit.
+
 2011-11-12 Eduardo Gurgel <edgurgel@gmail.com>
 * Bugfix on elsa/pobcpp.cc
 * Comments added to help on further development.

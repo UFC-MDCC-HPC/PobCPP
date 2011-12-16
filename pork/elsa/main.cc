@@ -564,6 +564,7 @@ void doit(int argc, char **argv)
     #endif // CFG_EXTENSION
 
     // print abstract syntax tree annotated with types
+		//PObCppPos(unit);
     if (tracingSys("printTypedAST")) {
       unit->debugPrint(cout, 0);
     }

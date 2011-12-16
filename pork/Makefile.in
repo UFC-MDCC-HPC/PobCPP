@@ -9,7 +9,7 @@ PORK_OBJS = $(addsuffix .o, $(PORK_SRCS))
 
 .PHONY: all elsa_all clean distclean
 
-all: elsa_all stopwatch pobcpp
+all: elsa_all stopwatch pobcpp prepobcpp
 
 ## FIXME it would be nice to pass our CXXFLAGS to the configure scripts
 ## of elsa et al.
@@ -22,7 +22,10 @@ elsa_all: $(ELSA_DIR)/Makefile
 stopwatch: stopwatch.o $(LIBPORK)
 	$(CXX) $(CXXFLAGS) -o $@ $+
 
-pobcpp: pobcpp.o $(LIBPORK)
+pobcpp: pobcpp.o  $(LIBPORK)
+	$(CXX) $(CXXFLAGS) -o $@ $+
+
+prepobcpp: prepobcpp.o  $(LIBPORK)
 	$(CXX) $(CXXFLAGS) -o $@ $+
 
 piglet.o: piglet.h
@@ -32,7 +35,7 @@ $(LIBPORK): elsa_all $(PORK_OBJS)
 	ar rs $@ $(PORK_OBJS)
 
 clean:
-	rm -f $(LIBPORK) stopwatch pobcpp *.o *~ *.pyc
+	rm -f $(LIBPORK) stopwatch pobcpp prepobcpp *.o *~ *.pyc
 	$(MAKE) -C porky clean
 	for dir in smbase ast elkhound; do $(MAKE) -C $(ELSA_DIR)/$$dir clean; done
 	$(MAKE) -C $(ELSA_DIR) clean

@@ -9,26 +9,9 @@
 #include "patcher.h"
 #include "expr_visitor.h"
 #include "elsa/pobcpp.h"
+#include "prepobcpp.h"
+#include "pobpatch.h"
 
-enum PatchKind {
-	Erase = 0,
-	Insert,
-};
-
-struct PobcppPatch {
-  PobcppPatch(PatchKind _kind, std::string _str = std::string(), int _col = 1, int _erase = 0) : kind(_kind), str(_str) , col(_col), erase(_erase) { }
-	~PobcppPatch();
-	PatchKind kind;
-	std::string str;
-	int col;
-	int erase;
-
-};
-struct PobcppPatchCmp {
-	bool operator()( const PobcppPatch* p1, const PobcppPatch* p2 ) const {
-		return p1->col < p2->col;
-	}
-};
 
 class Pobcpp : public ExpressionVisitor {
 public:

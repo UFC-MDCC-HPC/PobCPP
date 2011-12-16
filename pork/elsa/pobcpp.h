@@ -40,7 +40,8 @@ class PObCppVisitor : public ASTVisitor {
   public:
   PObCppVisitor() { locBool = false; }
   virtual bool visitMember(Member *member);
-  virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+//  virtual bool visitTypeSpecifier(TypeSpecifier *type);
+//  virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   virtual bool visitFunction(Function* func);
   private:
   SourceLoc loc;

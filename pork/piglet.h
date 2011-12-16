@@ -27,6 +27,7 @@
 #include "xml_do_read.h"  // xmlDoRead()
 #include "xml_type_writer.h" // XmlTypeWriter
 #include "elsa/pobcpp.h"
+#include "prepobcpp.h"
 #include <functional>
 
 // C++ Parser
@@ -36,7 +37,7 @@
 //       manager fields declared here.)
 class PigletParser {
 public:
-  PigletParser();
+  PigletParser(bool prePobcpp = false);
 
   // Parse the file and call the given fn with the AST.
   template<typename R>
@@ -59,6 +60,7 @@ private:
   ArrayStack<Variable*> builtinVars;
 
   int parseWarnings;
+	bool prePobcpp;
 
   TranslationUnit *parse(const char *inputFname);
   void typeCheck(TranslationUnit *unit);
