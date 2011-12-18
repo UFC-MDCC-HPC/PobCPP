@@ -1,3 +1,6 @@
+2011-17-12 Eduardo Gurgel <edgurgel@gmail.com>
+* getMember() function created to copy a member complete definition.
+
 2011-16-12 Eduardo Gurgel <edgurgel@gmail.com>
 * Happy birthday Eduardo :D
 * Huge modifications. Now our compiler read the code twice.

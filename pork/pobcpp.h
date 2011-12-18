@@ -31,7 +31,7 @@ public:
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 
 private:
-	std::string getLine(SourceLoc loc, int line);
+  std::string getLine(int line);
   /**
    * Modify lines to exclude enumerators declarations.
    * @param enumCount Quantity of enumerators to be excluded.
@@ -76,7 +76,6 @@ private:
 
 	Patcher &patcher;
 	std::string file;
-	std::map<int, std::string> patches;
   // TODO
   // Clear patchess on object destruction.
 	std::map<int, std::vector<PobcppPatch*> > patchess;

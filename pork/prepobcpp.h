@@ -12,9 +12,12 @@
 class PrePObCppVisitor : public ExpressionVisitor {
   public:
 	PrePObCppVisitor(Patcher &patcher);
+  ~PrePObCppVisitor();
   void setFile(const char* _file) { file = _file;	}
+  std::string getMember(Member *member) const;
 	
 	private:
+  std::string getLine(int line) const;
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	Patcher &patcher;

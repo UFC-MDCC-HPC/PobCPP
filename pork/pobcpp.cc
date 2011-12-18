@@ -14,9 +14,7 @@
 
 extern char* itoa(int value); // elsa/pobcpp.cc FIXME
 
-Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) {
-
-}
+Pobcpp::Pobcpp(Patcher &patcher):patcher(patcher) { }
 
 Pobcpp::~Pobcpp() {
   using std::string;
@@ -24,47 +22,38 @@ Pobcpp::~Pobcpp() {
   using std::pair;
   using std::vector;
   string original_file = file;
-  //original_file.resize(file.size()-9);
   map<int, vector<PobcppPatch*> >::iterator iter;
-    for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
-      std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
-      vector<PobcppPatch*>::const_iterator viter;
-      int iline = iter->first;
-      std::string sline  = patcher.getLine(iline, file);
-      std::string line = sline;
-      int diff = 0;
-      for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
-        PobcppPatch* patch = *viter;
-        if(patch->kind == Insert) {
-          sline.insert(diff + patch->col-1, patch->str);
-          //std::cout << "Inserir na coluna " << patch->col << " a string " << patch->str << " com diff: " << diff << std::endl;
-//            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
-          diff += patch->str.length();
+  for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
+    std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
+    vector<PobcppPatch*>::const_iterator viter;
+    int iline = iter->first;
+    std::string sline  = patcher.getLine(iline, file);
+    std::string line = sline;
+    int diff = 0;
+    for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
+      PobcppPatch* patch = *viter;
+      if(patch->kind == Insert) {
+        sline.insert(diff + patch->col-1, patch->str);
+        diff += patch->str.length();
+      }
+      else {
+        if(patch->erase == 0) {
+          sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
         }
         else {
-          if(patch->erase == 0) {
-            sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
-          }
-          else {
-            diff -= patch->erase;
-            sline.erase(diff+ patch->col-1, patch->erase);
-          }
-//            std::cout << "Remover na coluna " << patch->col << " essa quantidade: " << patch->erase << " com diff: " << diff << std::endl;
-//            std::cout << "Linha com patch: " << sline << std::endl << std::endl;
-
+          diff -= patch->erase;
+          sline.erase(diff+ patch->col-1, patch->erase);
         }
       }
-
-      sline += " //";
-
-      //patcher.insertBefore(file.c_str(), UnboxedLoc(iter->first, 1), sline);
-      patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
+    }
+    sline += " //";
+    patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
   }
   // FIXME
-  patches.clear();
+  patchess.clear();
 }
 
-std::string Pobcpp::getLine(SourceLoc loc, int line) {
+std::string Pobcpp::getLine(int line) {
   return patcher.getLine(line, file);
 }
 
@@ -231,7 +220,7 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
 		return;
 	string typeName = func->comm->typeId->spec->asTS_name()->name->asPQ_name()->name;
 	int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);
-	int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
+  int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
 	PobcppCommunicatorSpec* spec = (func->comm);
   int iline = sourceLocManager->getLine(spec->endSquareBracket);
   int col = sourceLocManager->getCol(spec->endSquareBracket);
@@ -321,7 +310,7 @@ bool Pobcpp::removeUnitDecl(SourceLoc loc) {
   string sline;
   string::size_type found;
 
-  sline = getLine(loc, iline);
+  sline = getLine(iline);
 
   PobcppPatch* erase = new PobcppPatch(Erase, string(), col+4, 4);
   PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);

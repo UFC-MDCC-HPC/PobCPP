@@ -15,6 +15,63 @@
 
 PrePObCppVisitor::PrePObCppVisitor(Patcher &patcher) : patcher(patcher) { } 
 
+PrePObCppVisitor::~PrePObCppVisitor() {
+  using std::string;
+  using std::map;
+  using std::pair;
+  using std::vector;
+  string original_file = file;
+  map<int, vector<PobcppPatch*> >::iterator iter;
+  for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
+    std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
+    vector<PobcppPatch*>::const_iterator viter;
+    int iline = iter->first;
+    std::string sline  = patcher.getLine(iline, file);
+    std::string line = sline;
+    int diff = 0;
+    for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
+      PobcppPatch* patch = *viter;
+      if(patch->kind == Insert) {
+        sline.insert(diff + patch->col-1, patch->str);
+        diff += patch->str.length();
+      }
+      else {
+        if(patch->erase == 0) {
+          sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
+        }
+        else {
+          diff -= patch->erase;
+          sline.erase(diff+ patch->col-1, patch->erase);
+        }
+      }
+    }
+    sline += " //";
+    patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
+  }
+  // FIXME
+  patchess.clear();
+}
+
+std::string PrePObCppVisitor::getLine(int line) const {
+  return patcher.getLine(line, file);
+}
+
+std::string PrePObCppVisitor::getMember(Member *member) const {
+  SourceLoc beg = member->loc;
+  SourceLoc end = member->endloc;
+  int begLine = sourceLocManager->getLine(beg);
+  int begCol = sourceLocManager->getCol(beg);
+  int endLine = sourceLocManager->getLine(end);
+  int endCol = sourceLocManager->getCol(end);
+  if(begLine == endLine) {
+    std::string line = getLine(begLine).substr(begCol-1, endCol-begCol);
+    std::cerr << line << std::endl;
+
+  } else {
+    //FIXME
+  }
+}
+
 bool PrePObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
     return subvisitTS_classSpec(type->asTS_classSpec());
@@ -31,10 +88,14 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       if(iter.data()->isMR_decl()) {
         MR_decl* iter_decl = iter.data()->asMR_decl();
         if(iter_decl->d->spec->isTS_classSpec()) {
-          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
+          TS_classSpec* unitSpec = iter_decl->d->spec->asTS_classSpec();
+          if(unitSpec->keyword == TI_UNIT) {
            	for(unsigned int i = 0; i < MR_decls.size(); i++) {
 							std::cerr << "adding 1 to members" << std::endl;
-//              iter_decl->d->spec->asTS_classSpec()->members->list.append(MR_decls[i]);
+              int col = sourceLocManager->getCol(unitSpec->beginBracket);
+              int line = sourceLocManager->getLine(unitSpec->beginBracket);
+              PobcppPatch* insert1 = new PobcppPatch(Insert, getMember(MR_decls[i]), col+1);
+              (patchess[line]).push_back(insert1);
             }
           }
         }
