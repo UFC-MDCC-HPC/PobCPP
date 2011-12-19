@@ -22,7 +22,6 @@ class PrePObCppVisitor : public ExpressionVisitor {
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	Patcher &patcher;
 	std::string file;
-	std::map<int, std::string> patches;
   // TODO
   // Clear patchess on object destruction.
 	std::map<int, std::vector<PobcppPatch*> > patchess;

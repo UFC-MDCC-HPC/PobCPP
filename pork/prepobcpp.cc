@@ -65,10 +65,25 @@ std::string PrePObCppVisitor::getMember(Member *member) const {
   int endCol = sourceLocManager->getCol(end);
   if(begLine == endLine) {
     std::string line = getLine(begLine).substr(begCol-1, endCol-begCol);
-    std::cerr << line << std::endl;
-
+    return line;
   } else {
     //FIXME
+    std::string lines;
+    for(int i = begLine; i <= endLine; i++) {
+      if(i == begLine) {
+        std::string line =  getLine(i);
+        int size = line.size();
+        lines += line.substr(begCol-1, size-begCol);
+      } else if(i == endLine) {
+        std::string line =  getLine(i);
+        int size = line.size();
+        lines += line.substr(0, endCol);
+      }
+      else {
+        lines += getLine(i);
+      }
+    }
+    return lines;
   }
 }
 
@@ -79,30 +94,33 @@ bool PrePObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   return true;
 }
 bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
-		// check if attributes or methods are declared.
-		// Include them on inner units.
+  // check if attributes or methods are declared.
+  // Include them on inner units.
   if(spec->keyword == TI_CLASS) {
-    std::vector<MR_decl*> MR_decls;
-    unsigned short units = 0;  // How many units exist inside this class?
+    std::vector<Member*> decls;
     FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
       if(iter.data()->isMR_decl()) {
         MR_decl* iter_decl = iter.data()->asMR_decl();
         if(iter_decl->d->spec->isTS_classSpec()) {
           TS_classSpec* unitSpec = iter_decl->d->spec->asTS_classSpec();
           if(unitSpec->keyword == TI_UNIT) {
-           	for(unsigned int i = 0; i < MR_decls.size(); i++) {
-							std::cerr << "adding 1 to members" << std::endl;
+            for(unsigned int i = 0; i < decls.size(); i++) {
               int col = sourceLocManager->getCol(unitSpec->beginBracket);
               int line = sourceLocManager->getLine(unitSpec->beginBracket);
-              PobcppPatch* insert1 = new PobcppPatch(Insert, getMember(MR_decls[i]), col+1);
+              std::string member = getMember(decls[i]) + " ";
+              PobcppPatch* insert1 = new PobcppPatch(Insert, member, col+1);
               (patchess[line]).push_back(insert1);
             }
           }
         }
         else {
-          MR_decl* clone_decl = iter.data()->asMR_decl();
-          MR_decls.push_back(clone_decl);
+          Member* clone_decl = iter.data();
+          decls.push_back(clone_decl);
         }
+      }
+      else {
+        Member* clone_decl = iter.data();
+        decls.push_back(clone_decl);
       }
     }
   }
