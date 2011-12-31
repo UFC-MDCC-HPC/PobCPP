@@ -17,8 +17,8 @@ if [ -e $src ]; then
   cp "$temp" "$src"".patched.cpp"
 	rm "$temp"".ii" "$temp"
   cp "$src" "$src"".patched.cpp"
-  patch --quiet "$src"".patched.cpp" "$temp"".patch"
-#  rm "$temp"".patch"
+  patch --no-backup-if-mismatch -f --quiet "$src"".patched.cpp" "$temp"".patch"
+  rm "$temp"".patch"
 	touch $temp2
   echo "#include \"pobcpp_postheader.h\"" > $temp2
 	cat "$src"".patched.cpp" >> $temp2

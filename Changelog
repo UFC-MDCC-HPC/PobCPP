@@ -1,3 +1,9 @@
+2011-30-12 Eduardo Gurgel <edgurgel@gmail.com>
+* casestudy/ update
+
+2011-20-12 Eduardo Gurgel <edgurgel@gmail.com>
+* prepobcppc fixed to call pobcppc after first phase. It has a bug still...
+
 2011-19-12 Eduardo Gurgel <edgurgel@gmail.com>
 * getMember() fixed to handle different lines.
 * Now Members are included, not only MR_decls.

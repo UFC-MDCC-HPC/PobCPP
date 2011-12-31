@@ -73,7 +73,7 @@ std::string PrePObCppVisitor::getMember(Member *member) const {
       if(i == begLine) {
         std::string line =  getLine(i);
         int size = line.size();
-        lines += line.substr(begCol-1, size-begCol);
+        lines += line.substr(begCol-1, size-begCol+1);
       } else if(i == endLine) {
         std::string line =  getLine(i);
         int size = line.size();
