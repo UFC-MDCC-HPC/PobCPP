@@ -1,4 +1,4 @@
-#include "integrator.h"
+#include "integrator.h.pob"
 #include "nintlib/nintlib.H"
 #include <cmath>
 #include <iostream>
@@ -20,6 +20,7 @@ double access(double* a,int j, int k, int width) {
 void change(double* a,int j, int k, int width, double value) {
 		a[j*width + k] = value;
 }
+Worker::Worker(int i, int n) : i(i), n(n) { }
 
 void Romberg_Integrator::Manager::generate_subproblems() {
 	std::cout << "generated begin" << std::endl;

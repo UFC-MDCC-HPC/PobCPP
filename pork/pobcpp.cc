@@ -33,8 +33,11 @@ Pobcpp::~Pobcpp() {
     for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
       PobcppPatch* patch = *viter;
       if(patch->kind == Insert) {
-        sline.insert(diff + patch->col-1, patch->str);
-        diff += patch->str.length();
+        //std::cerr << "patch: " << patch->str << std::endl;
+        if(diff + patch->col-1 <= patch->str.size()) {
+          sline.insert(diff + patch->col-1, patch->str);
+          diff += patch->str.length();
+        }
       }
       else {
         if(patch->erase == 0) {
@@ -74,7 +77,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   using std::string;
   if(spec->keyword == TI_UNIT) { // unit?
     int enumCount = spec->enumerators->count();
-    removeUnitDecl(spec->loc);
+//    removeUnitDecl(spec->loc);
     removeEnumeratorDecls(spec);
     string sline;
     string::size_type found;
@@ -262,6 +265,8 @@ void Pobcpp::createEnumerator(TS_classSpec* spec) {
 }
 
 void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::size_type found, unsigned int units) {
+  //FIXME
+  return;
 	using std::string;
   //TODO FIXME
   // Append this definition:

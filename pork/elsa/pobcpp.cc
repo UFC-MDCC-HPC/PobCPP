@@ -164,7 +164,7 @@ bool PObCppPreTypedASTVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
 		stms->append(sreturn);
     Function *function = new Function(dflag, tsname, decl, NULL, new S_compound(loc, SourceLoc(), stms), NULL);
     MR_func *newFunc = new MR_func(loc, SourceLoc(), function);
-    spec->members->list.append(newFunc);
+    //spec->members->list.append(newFunc);
   }
   return true;
 }

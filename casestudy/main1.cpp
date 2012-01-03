@@ -1,9 +1,6 @@
-#include "communication.h"
 #include <iostream>
-#include "integrator_main.h"
-#include "create_unit.h"
+#include "integrator_main.h.pob"
 int main(int argc, char** argv) { 
-	pob_init;
 	int dim_num = 3;
 	int dim_partition_size = 2;
 	int number_of_partitions = 8;

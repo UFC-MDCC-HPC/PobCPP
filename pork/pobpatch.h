@@ -6,7 +6,12 @@ enum PatchKind {
 };
 
 struct PobcppPatch {
-  PobcppPatch(PatchKind _kind, std::string _str = std::string(), int _col = 1, int _erase = 0) : kind(_kind), str(_str) , col(_col), erase(_erase) { }
+  PobcppPatch(PatchKind _kind, std::string _str = std::string(), int _col = 1, int _erase = 0) : kind(_kind), str(_str) , col(_col), erase(_erase) { 
+/*		if(PatchKind == Insert) {
+			if(str.size() == 0)
+				std::cerr << "Insert invalido" << std::endl;
+		}*/
+	}
 	~PobcppPatch();
 	PatchKind kind;
 	std::string str;

@@ -4,9 +4,9 @@ class A {
 	unit B {
 	};
 
-//	unit C {
+	unit C {
 		void func() [Commd comm] { }
-//	};
+	};
 };
 
 int main() {

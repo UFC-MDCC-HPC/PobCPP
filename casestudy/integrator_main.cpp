@@ -1,7 +1,6 @@
-#include "create_unit.h"
-#include "integrator_main.h"
+#include "integrator_main.h.pob"
 
-#include "integrator.h"
+#include "integrator.h.pob"
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -17,7 +16,7 @@ int IntegratorMain::Root::main(int dim_num, int dim_partition_size, int number_o
 //	m->number_of_partitions = number_of_partitions;
 	Romberg_Integrator::Manager *m  = new Romberg_Integrator::Manager(dim_num, dim_partition_size, number_of_partitions, num_jobs, num_local_jobs, workers);
 	std::cout << "Trying to create Manager. " << std::endl;
-	create_unit<Romberg_Integrator>(m);
+//	create_unit<Romberg_Integrator>(m);
 	std::cout << "Manager created. " << std::endl;
 	double result;
 	std::cout << "Jobs created: " << num_jobs << std::endl;
@@ -42,7 +41,7 @@ int IntegratorMain::Peer::main(int it_max, double tol, int dim_num, int dim_part
 	w->dim_partition_size = dim_partition_size;
 	w->num_local_jobs = num_local_jobs;*/
 	Romberg_Integrator::Worker *w = new Romberg_Integrator::Worker(it_max, tol, dim_num,dim_partition_size, number_of_partitions, num_local_jobs, j,n);
-	create_unit<Romberg_Integrator>(w,std::make_pair(j, workers));
+	//create_unit<Romberg_Integrator>(w,std::make_pair(j, workers));
 	std::cout << "Worker " << j << "," << workers << " created." << std::endl;
 	w->synchronize_jobs();   
 	std::cout << "W(" << j << "," << n << ") " << "Jobs synchronized " << std::endl;

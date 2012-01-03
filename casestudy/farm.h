@@ -1,10 +1,5 @@
 #ifndef __FARM_H_
 #define __FARM_H_
-
-
-#include "unit_type.h"
-#include "unit.h"
-
 template<typename Job, typename Result> 
 class Farm {
 
@@ -32,7 +27,7 @@ class Farm {
 //		virtual Result work(Job job);              
 //		virtual Job unpackJob(void* job);
 //		virtual void* packResult(Result result);
-		protected:
+		//protected:
 		int i,j;
 	};
 };

@@ -1,6 +1,6 @@
 #ifndef __INTEGRATOR_H__
 #define __INTEGRATOR_H__
-#include "farm.h"
+#include "farm.h.pob"
 
 double func(int dim_num, double* a);
 class Romberg_Integrator: public Farm<double, double> {
@@ -22,11 +22,10 @@ class Romberg_Integrator: public Farm<double, double> {
 
 	parallel unit Worker : public Farm<double, double>::Worker	{
 		public: 
-		Worker(int i, int n) : i(i), n(n) { }
+		Worker(int i, int n);
 		int inf, sup, dim_num, dim_partition_size;
 		int number_of_partitions;
 		int next_unsolved_subproblem; 
-		int inf, sup, dim_num, dim_partition_size;
 		int num_local_jobs;
 		double tol;
 		void integrate();
