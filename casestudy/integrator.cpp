@@ -20,7 +20,7 @@ double access(double* a,int j, int k, int width) {
 void change(double* a,int j, int k, int width, double value) {
 		a[j*width + k] = value;
 }
-Worker::Worker(int i, int n) : i(i), n(n) { }
+//Romberg_Integrator::Worker::Worker(int i, int n) : i(i), n(n) { }
 
 void Romberg_Integrator::Manager::generate_subproblems() {
 	std::cout << "generated begin" << std::endl;
@@ -69,8 +69,8 @@ void Romberg_Integrator::Manager::synchronize_jobs() {
 	std::cout << "Workers: " << workers << std::endl;
 	for(unsigned int i = 0; i < workers; i++) {
 		std::cout << "Sending arrays - " << i << std::endl;
-		comm->isend<Worker>(i, all_jobs1[i], n, 100);
-		comm->isend<Worker>(i, all_jobs2[i], n, 100);
+//FIXME		comm->isend<Worker>(i, all_jobs1[i], n, 100);
+//FIXME		comm->isend<Worker>(i, all_jobs2[i], n, 100);
 	}
 }
 void Romberg_Integrator::Manager::synchronize_results() {
@@ -79,7 +79,7 @@ void Romberg_Integrator::Manager::synchronize_results() {
 		dummy_result[i] = 0.0;
 //	double* local_result = new double[num_local_jobs];
 	all_results = new double[num_local_jobs];
-	comm->reduce<Manager>(dummy_result, num_local_jobs, all_results);
+//FIXME	comm->reduce<Manager>(dummy_result, num_local_jobs, all_results);
 }
 
 void Romberg_Integrator::Worker::synchronize_jobs() {
@@ -87,13 +87,13 @@ void Romberg_Integrator::Worker::synchronize_jobs() {
 	local_jobs1 = new double[n]; 
 	local_jobs2 = new double[n]; 
 	std::cout << i << " - Receiving arrays." << std::endl;
-	comm->receive<Manager, double>(local_jobs1, n, 100);
-	comm->receive<Manager, double>(local_jobs2, n, 100);
+//FIXME	comm->receive<Manager, double>(local_jobs1, n, 100);
+//FIXME	comm->receive<Manager, double>(local_jobs2, n, 100);
 	std::cout << i << " - Arrays received." << std::endl;
 }
 
 void Romberg_Integrator::Worker::synchronize_results() {
-	comm->reduce<Manager>(local_results, num_local_jobs);
+//FIXME	comm->reduce<Manager>(local_results, num_local_jobs);
 }
 
 void Romberg_Integrator::Worker::work() {
@@ -114,7 +114,8 @@ void Romberg_Integrator::Worker::work() {
 		for (int i = 0; i < dim_num; i++) {
 			a[i] = access(local_jobs1, j, i , dim_num);
 			b[i] = access(local_jobs2, j, i , dim_num);
-		}                                        
+		}
+		int it_max = 9999;
 		local_results[j] = romberg_nd(func, a, b, dim_num, sub_num, it_max, tol, ind, eval_num);
 	}
 }

@@ -1,5 +1,6 @@
 #!/bin/bash
-pobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/prepobcpp
+prepobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/prepobcpp
+pobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/pobcppc
 src=$1
 pobcpp=$2
 petsc=$3
@@ -11,19 +12,18 @@ if [ -e $src ]; then
 	g++-4.1.2  -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E -Wp,-K $temp > $temp".ii"
 #	g++-4.2.4 -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E $temp > $temp".ii"
 #	mcpp -I- -I /usr/lib64/gcc/x86_64-pc-linux-gnu/4.1.2/include/g++-v4/ -I $pobcpp -+ -K $temp > $temp".ii"
-  echo ./prepobcpp "$temp"".ii" "$temp"
-  $pobcppexecutable "$temp"".ii" "$temp" > "$temp"".patch"
+  echo $prepobcppexecutable "$temp"".ii" "$temp"
+  $prepobcppexecutable "$temp"".ii" "$temp" > "$temp"".patch"
   cp "$temp" "$src"".patched.cpp"
 	rm "$temp"".ii" "$temp"
   cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
-#  rm "$temp"".patch"
+  rm "$temp"".patch"
 	touch $temp2
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"
-  echo ./pobcppc "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
-  $pobcppexecutable "$temp2" $2 
-#$3 $4 $5 $6 $7 $8 $9
+  echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 else
 	echo "File not found."
 fi

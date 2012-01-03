@@ -78,7 +78,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   if(spec->keyword == TI_UNIT) { // unit?
     int enumCount = spec->enumerators->count();
 //    removeUnitDecl(spec->loc);
-    removeEnumeratorDecls(spec);
+//    removeEnumeratorDecls(spec);
     string sline;
     string::size_type found;
     // Search for a ':' or a '{' and insert ' : public Pobcpp::Unit '

@@ -6,11 +6,13 @@ class IntegratorMain {
   public: int main();
 
   unit Root {
-    int main(int);
+		int main(int dim_num, int dim_partition_size, int number_of_partitions, int workers);
   };
 
   parallel unit Peer {
-    int main(int,int );
+		Peer(int j, int n) : j(j), n(n) { }
+		int main(int it_max, double tol, int dim_num, int dim_partition_size, int number_of_partitions);
+		int j,n;
   };
 };
 #endif
