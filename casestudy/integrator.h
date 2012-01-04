@@ -7,12 +7,12 @@ class Romberg_Integrator: public Farm<double, double> {
 	public:
 	unit Manager : public Farm<double, double>::Manager {   
 		public: 
-			Manager(int a) : workers(a) { }
-		int workers;
+		Manager(int dim_num, int dim_partition_size, int number_of_partitions, int num_jobs, int num_local_jobs, int workers);
 		int inf, sup, dim_num, dim_partition_size;
-		int num_local_jobs;
-		int num_jobs;
 		int number_of_partitions;
+		int num_jobs;
+		int num_local_jobs;
+		int workers;
 
 		void generate_subproblems();
 		double combine_subproblems_results();
@@ -20,9 +20,9 @@ class Romberg_Integrator: public Farm<double, double> {
 		void synchronize_results();
 	};
 
-	parallel unit Worker : public Farm<double, double>::Worker	{
+	parallel unit Worker : virtual public Farm<double, double>::Worker	{
 		public: 
-		Worker(int i, int n);
+		Worker(double tol, int dim_num, int dim_partition_size, int number_of_partitions, int num_local_jobs, int i, int j);
 		int inf, sup, dim_num, dim_partition_size;
 		int number_of_partitions;
 		int next_unsolved_subproblem; 

@@ -13,7 +13,6 @@ int main(int argc, char** argv) {
 	int i = world.rank() - 1;
 	std::cout << "Createing Peer(" << i << "," << size << ")" << std::endl;
 	IntegratorMain::Peer peer(i, size);
-//	create_unit<IntegratorMain>(&peer, i, size);
 	peer.main(it_max, tol, dim_num, dim_partition_size, number_of_partitions);
 
 	MPI_Finalize();

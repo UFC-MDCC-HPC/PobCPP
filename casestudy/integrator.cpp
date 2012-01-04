@@ -22,6 +22,12 @@ void change(double* a,int j, int k, int width, double value) {
 }
 //Romberg_Integrator::Worker::Worker(int i, int n) : i(i), n(n) { }
 
+Romberg_Integrator::Manager::Manager(int dim_num, int dim_partition_size, int number_of_partitions, int num_jobs, int num_local_jobs, int workers) :
+	dim_num(dim_num), dim_partition_size(dim_partition_size), number_of_partitions(number_of_partitions), num_jobs(num_jobs), num_local_jobs(num_local_jobs), workers(workers) { }
+
+Romberg_Integrator::Worker::Worker(double tol, int dim_num, int dim_partition_size, int number_of_partitions, int num_local_jobs, int _i, int _j) : dim_num(dim_num), dim_partition_size(dim_partition_size), number_of_partitions(number_of_partitions), num_local_jobs(num_local_jobs)//, i(i), j(j) { }
+																																	  { i = _i; j = _j; }
+
 void Romberg_Integrator::Manager::generate_subproblems() {
 	std::cout << "generated begin" << std::endl;
 	int size = workers;
@@ -69,6 +75,9 @@ void Romberg_Integrator::Manager::synchronize_jobs() {
 	std::cout << "Workers: " << workers << std::endl;
 	for(unsigned int i = 0; i < workers; i++) {
 		std::cout << "Sending arrays - " << i << std::endl;
+//	create_unit<IntegratorMain>(&peer, i, size);
+		comm.isend(i+1, 100, all_jobs1[i], n);
+		comm.isend(i+1, 100, all_jobs2[i], n);
 //FIXME		comm->isend<Worker>(i, all_jobs1[i], n, 100);
 //FIXME		comm->isend<Worker>(i, all_jobs2[i], n, 100);
 	}
@@ -87,6 +96,8 @@ void Romberg_Integrator::Worker::synchronize_jobs() {
 	local_jobs1 = new double[n]; 
 	local_jobs2 = new double[n]; 
 	std::cout << i << " - Receiving arrays." << std::endl;
+	comm.recv(0, 100, local_jobs1, n);
+	comm.recv(0, 100, local_jobs2, n);
 //FIXME	comm->receive<Manager, double>(local_jobs1, n, 100);
 //FIXME	comm->receive<Manager, double>(local_jobs2, n, 100);
 	std::cout << i << " - Arrays received." << std::endl;

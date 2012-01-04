@@ -38,6 +38,11 @@ MPI_Request irecv(int source, int tag, datatype* values, int n) const;
 #define bcast_array_decl(datatype) \
 	void broadcast(datatype* value, int n, int root);
 
+#define reduce_decl(datatype) \
+void reduce(const datatype* in_values, int n, int root);
+#define reduce_decl2(datatype) \
+void reduce(const datatype* in_values, int n, datatype* out_values, int root);
+
 namespace Pobcpp {
 //Move to a new file
 
@@ -166,6 +171,27 @@ public:
 	bcast_array_decl(pair_float_int);
 	bcast_array_decl(pair_double_int);
 
+  reduce_decl(int)
+  reduce_decl(unsigned int);
+  reduce_decl(float);
+  reduce_decl(double);
+  reduce_decl(char);
+  reduce_decl(std::string);
+  reduce_decl(pair_int_int);
+  reduce_decl(pair_float_int);
+  reduce_decl(pair_double_int);
+
+  reduce_decl2(int)
+  reduce_decl2(unsigned int);
+  reduce_decl2(float);
+  reduce_decl2(double);
+  reduce_decl2(char);
+  reduce_decl2(std::string);
+  reduce_decl2(pair_int_int);
+  reduce_decl2(pair_float_int);
+  reduce_decl2(pair_double_int);
+
+
 // Collective
 /*
 	template<typename Type, typename Data>
@@ -185,15 +211,6 @@ public:
   void scatter(const Data* in_values, Data* out_values, int n);
   template<typename Type, typename Data>
   void scatter(const unsigned int _enumi, const Data* in_values, Data* out_values, int n);
-
-	template<typename Type, typename Data>
-	void reduce(const Data* in_values, int n);	
-	template<typename Type, typename Data>
-	void reduce(const unsigned int _enumi, const Data* in_values, int n);	
-	template<typename Type, typename Data>
-	void reduce(const Data* in_values, int n, Data* out_values);	
-	template<typename Type, typename Data>
-	void reduce(const unsigned int _enumi, const Data* in_values, int n, Data* out_values);	
 */
 
 private:

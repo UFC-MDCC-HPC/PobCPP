@@ -61,6 +61,28 @@ MPI_Request Basic_Communicator::irecv(int source, int tag, datatype* values, int
 	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
 	return boost::mpi::broadcast(world, value, n, root);	\
 }
+
+
+#define Basic_Communicator_reduce_impl(datatype) \
+void Basic_Communicator::reduce(const datatype* in_values, int n, datatype* out_values, int root) { \
+  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+  if(env && world) { \
+    if(env->isComplete()) { \
+      boost::mpi::reduce(world, in_values, n, out_values, std::plus<datatype>(), root); \
+    } \
+  } \
+}
+
+#define Basic_Communicator_reduce_impl2(datatype) \
+void Basic_Communicator::reduce(const datatype* in_values, int n, int root) { \
+  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
+  if(env && world) { \
+    if(env->isComplete()) { \
+      boost::mpi::reduce(world, in_values, n, std::plus<datatype>(), root); \
+    } \
+  } \
+}
+
 /*
 #define Basic_Communicator_send_impl(datatype) \
 void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype& _data, const int _tag) { \
@@ -305,9 +327,14 @@ Basic_Communicator_bcast_impl(float);
 Basic_Communicator_bcast_impl(double);
 Basic_Communicator_bcast_impl(char);
 Basic_Communicator_bcast_impl(std::string);
-Basic_Communicator_bcast_impl(pair_int_int);
-Basic_Communicator_bcast_impl(pair_float_int);
-Basic_Communicator_bcast_impl(pair_double_int);
+
+Basic_Communicator_reduce_impl(int);
+Basic_Communicator_reduce_impl(unsigned int);
+Basic_Communicator_reduce_impl(float);
+Basic_Communicator_reduce_impl(double);
+Basic_Communicator_reduce_impl(char);
+Basic_Communicator_reduce_impl(std::string);
+
 /*
 Basic_Communicator_receive_impl(int);
 Basic_Communicator_receive_impl(unsigned int);
@@ -388,25 +415,7 @@ Basic_Communicator_scatter_array_impl(std::string);
 Basic_Communicator_scatter_array_impl(pair_int_int);
 Basic_Communicator_scatter_array_impl(pair_float_int);
 Basic_Communicator_scatter_array_impl(pair_double_int);
-
-void Basic_Communicator::reduce(const Unit_Type& _unit_type, const double* in_values, int n, double* out_values) {
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
-	if(env && world) {
-		if(env->isComplete()) {
-			unsigned int unit_rank = env->get_rank(_unit_type);
-			boost::mpi::reduce(world, in_values, n, out_values, std::plus<double>(), unit_rank);
-		}
-	}
-}
-void Basic_Communicator::reduce(const Unit_Type& _unit_type, const double* in_values, int n) {
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
-	if(env && world) {
-		if(env->isComplete()) {
-			unsigned int unit_rank = env->get_rank(_unit_type);
-			boost::mpi::reduce(world, in_values, n, std::plus<double>(), unit_rank);
-		}
-	}
-}*/
+*/
 }
 
 

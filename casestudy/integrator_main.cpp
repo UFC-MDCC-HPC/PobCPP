@@ -40,7 +40,7 @@ int IntegratorMain::Peer::main(int it_max, double tol, int dim_num, int dim_part
 	w->dim_num = dim_num;
 	w->dim_partition_size = dim_partition_size;
 	w->num_local_jobs = num_local_jobs;*/
-	Romberg_Integrator::Worker *w = new Romberg_Integrator::Worker(it_max, tol, dim_num,dim_partition_size, number_of_partitions, num_local_jobs, j,n);
+	Romberg_Integrator::Worker *w = new Romberg_Integrator::Worker(tol, dim_num,dim_partition_size, number_of_partitions, num_local_jobs, j,n);
 	//create_unit<Romberg_Integrator>(w,std::make_pair(j, workers));
 	std::cout << "Worker " << j << "," << workers << " created." << std::endl;
 	w->synchronize_jobs();   
