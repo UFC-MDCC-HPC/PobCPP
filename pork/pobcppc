@@ -5,7 +5,7 @@ pobcpp=$2
 petsc=$3
 suffix=".temp.cpp"
 temp=$src$suffix
-temp2=$src".pob"
+temp2=${src%.prepob}".pob"
 if [ -e $src ]; then
 	echo "#include \"pobcpp_preheader.h\"" > $temp
 	cat "$src" >> $temp
@@ -17,7 +17,7 @@ if [ -e $src ]; then
   cp "$temp" "$src"".patched.cpp"
   rm "$temp"".ii" "$temp"
   cp "$src" "$src"".patched.cpp"
-  patch --quiet "$src"".patched.cpp" "$temp"".patch"
+  patch --no-backup-if-mismatch  --quiet "$src"".patched.cpp" "$temp"".patch"
   rm "$temp"".patch"
 	touch $temp2
   echo "#include \"pobcpp_postheader.h\"" > $temp2

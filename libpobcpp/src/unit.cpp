@@ -11,7 +11,7 @@
 namespace Pobcpp {
 
 Unit::Unit (void) { 
-	comm = new Basic_Communicator;
+//	comm = new Basic_Communicator;
 }
 
 Unit::~Unit (void) { }

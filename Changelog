@@ -1,3 +1,7 @@
+2012-05-01 Eduardo Gurgel <edgurgel@gmail.com>
+* pobcppc now removes prepob suffix.
+* casestudy almost there!
+
 2012-04-01 Eduardo Gurgel <edgurgel@gmail.com>
 * libpobcpp updated to handle reduce collective calls.
 * casestudy fixed.

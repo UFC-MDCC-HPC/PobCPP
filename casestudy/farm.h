@@ -3,6 +3,7 @@
 template<typename Job, typename Result> 
 class Farm {
 	public: 
+		Communicator comm;
 	unit Manager {   
 		public: 
 		Job** all_jobs1;
@@ -15,7 +16,6 @@ class Farm {
 		Result* getAllResults();              
 //		virtual void* packJob(Job* jobs);
 //		virtual Result unpackResult(void* result);
-		Communicator comm;
 	};
 	parallel unit Worker {                    
 		public: 
@@ -29,7 +29,6 @@ class Farm {
 //		virtual void* packResult(Result result);
 		//protected:
 		int i,j;
-		Communicator comm;
 	};
 };
 

@@ -1,7 +1,8 @@
 #include <iostream>
 #include "integrator_main.h.pob"
 int main(int argc, char** argv) { 
-	pob_init;
+	MPI_Init(&argc, &argv);
+	Communicator world;
 	int it_max = 5;
 	double tol = 0.000001;
 

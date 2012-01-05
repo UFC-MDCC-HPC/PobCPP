@@ -25,7 +25,7 @@ protected:
   unsigned int ranksof_impl(Basic_Communicator& comm, int*& array, Unit_Type& asked_type, Unit_Type& unit_type);
   int rankof_impl(Basic_Communicator& comm, Unit_Type& asked_type, Unit_Type& unit_type);
 public:
-	Basic_Communicator* comm; //FIXME
+//	Basic_Communicator* comm; //FIXME
 private:
 	// No copy allowed.
 	Unit(const Unit&);

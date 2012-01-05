@@ -2,7 +2,7 @@
 #define __INTEGRATOR_MAIN_H__
 
 class IntegratorMain {
-
+	public:
   unit Root {
 		public:
 		int main(int dim_num, int dim_partition_size, int number_of_partitions, int workers);
