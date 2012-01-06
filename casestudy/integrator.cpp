@@ -89,6 +89,7 @@ void Romberg_Integrator::Manager::synchronize_results() {
 //	double* local_result = new double[num_local_jobs];
 	all_results = new double[num_local_jobs];
 //FIXME	comm->reduce<Manager>(dummy_result, num_local_jobs, all_results);
+	comm.reduce(dummy_result, num_local_jobs, all_results, 0);
 }
 
 void Romberg_Integrator::Worker::synchronize_jobs() {
@@ -105,6 +106,7 @@ void Romberg_Integrator::Worker::synchronize_jobs() {
 
 void Romberg_Integrator::Worker::synchronize_results() {
 //FIXME	comm->reduce<Manager>(local_results, num_local_jobs);
+	comm.reduce(local_results, num_local_jobs, 0);
 }
 
 void Romberg_Integrator::Worker::work() {

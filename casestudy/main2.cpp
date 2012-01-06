@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
 	int it_max = 5;
 	double tol = 0.000001;
 
-	int dim_num = 3;
+	int dim_num = 6;
 	int dim_partition_size = 2;
 	int number_of_partitions = 8;
 

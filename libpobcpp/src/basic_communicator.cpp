@@ -335,6 +335,12 @@ Basic_Communicator_reduce_impl(double);
 Basic_Communicator_reduce_impl(char);
 Basic_Communicator_reduce_impl(std::string);
 
+Basic_Communicator_reduce_impl2(int);
+Basic_Communicator_reduce_impl2(unsigned int);
+Basic_Communicator_reduce_impl2(float);
+Basic_Communicator_reduce_impl2(double);
+Basic_Communicator_reduce_impl2(char);
+Basic_Communicator_reduce_impl2(std::string);
 /*
 Basic_Communicator_receive_impl(int);
 Basic_Communicator_receive_impl(unsigned int);

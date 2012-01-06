@@ -2,7 +2,7 @@
 #include "integrator_main.h.pob"
 int main(int argc, char** argv) { 
 	MPI_Init(&argc, &argv);
-	int dim_num = 3;
+	int dim_num = 6;
 	int dim_partition_size = 2;
 	int number_of_partitions = 8;
 	Communicator world;
