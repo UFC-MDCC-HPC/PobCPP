@@ -6,7 +6,7 @@
 #include "vec.h.pob"
 class ParallelMat {
 public:
-	unit PMat [i:n] {
+	parallel unit PMat {
 	public:
 		PMat(unsigned int i, unsigned int n);
 		~PMat();
@@ -25,6 +25,8 @@ public:
 	public:
 		Mat mat;
 		MPI_Comm petscomm;
+	private:
+		int i,n;
 	};
 
 };

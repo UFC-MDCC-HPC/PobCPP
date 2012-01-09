@@ -15,7 +15,7 @@ int main() {
 	unit B::C a;
 
 }
-
+void func() [Communicator comm];
 void func(int a, int b)  [Communicator comma] 
 {
 	sizeof(comma);

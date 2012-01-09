@@ -6,7 +6,7 @@
 #include "petscksp.h" // FIXME
 class ParallelKSP {
 public:
-	unit PKSP [i:n] {
+	parallel unit PKSP {
 		public:
 		PKSP(unsigned int i, unsigned int n);
 		~PKSP();
@@ -17,6 +17,8 @@ public:
 		public: // Should be private
 		KSP ksp;
 		MPI_Comm petscomm;
+		private:
+		int i,n;
 	};
 
 };

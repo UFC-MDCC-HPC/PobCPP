@@ -5,7 +5,7 @@
 #include "petscvec.h" // FIXME
 class ParallelVec {
 public:
-	unit PVec [i:n] {
+	parallel unit PVec {
 		public:
 		PVec(unsigned int i, unsigned int n);
 		~PVec();
@@ -33,6 +33,8 @@ public:
 		public: // Should be private
 		Vec vec; // Petsc Vec
 		MPI_Comm petscomm;
+		private:
+		int i,n;
 	};
 };
 

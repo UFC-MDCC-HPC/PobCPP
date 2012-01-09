@@ -4,6 +4,8 @@
 #include <cstdlib> /* for random function */
 #include <iostream>
 
+BucketSort::Worker::Worker(int i, int n) : Sorter::Worker(i, n) { }
+
 void make_numbers(long int big_array[], int n, int n_bar, int p) {
 	/* Puts numbers in "buckets" but we can treat it otherwise */
 	int i, q;
@@ -82,7 +84,7 @@ void Bucketsort::Worker::sort() {
 	/* Can use scatter if numbers are grouped in the big_array */
 /*	MPI_Scatter(big_array, n_bar, MPI_LONG,
 	local_array, n_bar, MPI_LONG, 0, MPI_COMM_WORLD);*/
-	comm->scatter<Worker>(0, big_array, n_bar, local_array);
+	//comm->scatter<Worker>(0, big_array, n_bar, local_array);
 
 	/* Put_numbers_in_bucket(big_array, local_array, n, n_bar, p,
 	my_rank); */
@@ -91,7 +93,7 @@ void Bucketsort::Worker::sort() {
 
 /*	MPI_Gather(local_array, n_bar, MPI_LONG,
 	big_array, n_bar, MPI_LONG, 0, MPI_COMM_WORLD);*/
-	comm->gather<Worker>(0, local_array, big_array, n_bar);
+	//comm->gather<Worker>(0, local_array, big_array, n_bar);
 
 	stop = MPI_Wtime();
 

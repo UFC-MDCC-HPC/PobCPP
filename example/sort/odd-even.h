@@ -3,9 +3,7 @@
 #include "pob_sort.h"
 class OddEven : public Sorter {
 public:
-	void parallel sort();
-
-	unit Worker [i:n] : public Sorter::Worker {
+	unit Worker :  public Sorter::Worker {
 		public:
       Worker(int i, int n);
 			void /*parallel*/ sort();

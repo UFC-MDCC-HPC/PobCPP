@@ -34,10 +34,10 @@ Pobcpp::~Pobcpp() {
       PobcppPatch* patch = *viter;
       if(patch->kind == Insert) {
         //std::cerr << "patch: " << patch->str << std::endl;
-        if(diff + patch->col-1 <= patch->str.size()) {
+//        if(diff + patch->col-1 <= patch->str.size()-1) {
           sline.insert(diff + patch->col-1, patch->str);
           diff += patch->str.length();
-        }
+//        }
       }
       else {
         if(patch->erase == 0) {

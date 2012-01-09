@@ -1,3 +1,8 @@
+2012-09-01 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfix on patcher.
+* Initial modifications on PetSC code
+* Initial modifications on Sorter code
+
 2012-06-01 Eduardo Gurgel <edgurgel@gmail.com>
 * casestudy ready.
 

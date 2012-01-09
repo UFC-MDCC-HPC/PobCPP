@@ -30,7 +30,7 @@ class Romberg_Integrator: public Farm<double, double> {
 		double tol;
 		void integrate();
 		void work(); 
-		void synchronize_jobs();
+		void synchronize_jobs(); 
 		void synchronize_results();
 	};
 };

@@ -70,7 +70,7 @@ double Romberg_Integrator::Manager::combine_subproblems_results() {
 	return result;
 }
 
-void Romberg_Integrator::Manager::synchronize_jobs() {
+void Romberg_Integrator::Manager::synchronize_jobs(){
 	unsigned int n = num_local_jobs*dim_num;
 	std::cout << "Workers: " << workers << std::endl;
 	for(unsigned int i = 0; i < workers; i++) {

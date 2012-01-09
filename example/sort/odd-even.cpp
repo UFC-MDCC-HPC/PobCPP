@@ -1,8 +1,8 @@
 #include "odd-even.h.pob"
 #include <cstdlib>
 
-OddEven::Worker::Worker(unsigned int _i, unsigned int _n) : Sorter::Worker(_i, _n), i(_i), n(_n) {
-}
+OddEven::Worker::Worker(unsigned int _i, unsigned int _n) : Sorter::Worker(_i, _n) { }
+
 int IncOrder(const void *e1, const void *e2)  { 
   return (*((int *)e1) - *((int *)e2)); 
 }

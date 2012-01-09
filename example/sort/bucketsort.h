@@ -5,7 +5,7 @@ class BucketSort : public Sorter {
 public:
 	void /*parallel*/ sort();
 
-	unit Worker [i:n] : public Sorter::Worker {
+	parallel unit Worker : public Sorter::Worker {
 		public:
       Worker(int i, int n);
 			void /*parallel*/ sort();
