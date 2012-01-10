@@ -13,8 +13,8 @@ public:
 		PetscErrorCode AssemblyBegin();
 		PetscErrorCode AssemblyEnd();
 		PetscErrorCode Copy(Vec y);
-		PetscErrorCode Create(); 
-		PetscErrorCode CreateSeq(PetscInt);
+		PetscErrorCode Create() [Communicator comm]; 
+		PetscErrorCode CreateSeq(PetscInt) [Communicator comm];
 		PetscErrorCode Destroy();
 		PetscErrorCode Duplicate(PVec *newv);
 		PetscErrorCode Exp();
@@ -32,8 +32,8 @@ public:
 
 		public: // Should be private
 		Vec vec; // Petsc Vec
-		MPI_Comm petscomm;
 		private:
+		MPI_Comm petscomm;
 		int i,n;
 	};
 };

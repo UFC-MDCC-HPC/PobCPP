@@ -1,3 +1,8 @@
+2012-10-01 Eduardo Gurgel <edgurgel@gmail.com>
+* removeCommunicatorDecl now works to Function definition and Function
+implementation.
+* PVec modified to use [Communicator comm] on creation function.
+
 2012-09-01 Eduardo Gurgel <edgurgel@gmail.com>
 * Bugfix on patcher.
 * Initial modifications on PetSC code

@@ -39,7 +39,7 @@ private:
    */
   void removeEnumeratorDecls(TS_classSpec *spec);
 
-  void removeCommunicatorDecl(D_func* dfunc, bool noparams);
+  void removeCommunicatorDecl(D_func* dfunc, bool noparams, bool body);
 	
   /**
    * Modify line to include enumerator information.

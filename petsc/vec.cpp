@@ -1,11 +1,10 @@
 #include "vec.h.pob"
 #include "petscsys.h"
 
-ParallelVec::PVec::PVec(unsigned int i, unsigned int n) : i(i), n(n) {
-	create_unit<ParallelVec>(this, i, n);
-}
-ParallelVec::PVec::~PVec() {	
-}
+ParallelVec::PVec::PVec(unsigned int i, unsigned int n) : i(i), n(n) { }
+
+ParallelVec::PVec::~PVec() { }
+
 PetscErrorCode ParallelVec::PVec::AssemblyBegin() {
 	return VecAssemblyBegin(vec);
 }
@@ -18,16 +17,17 @@ PetscErrorCode ParallelVec::PVec::Exp() {
 	return VecExp(vec);
 }
 PetscErrorCode ParallelVec::PVec::Copy(Vec y) {
-	return VecCopy(vec, y);
+	return VecCopy(vec, y); //FIXME
 }
 
-PetscErrorCode ParallelVec::PVec::Create() {
+PetscErrorCode ParallelVec::PVec::Create() [Communicator comm] {
+	petscomm = comm->get_mpi_comm();
 	int data = 1000;
 	std::cout << "Testing Broadcast before: " << data << std::endl;
 	if(i == 0)
 		data = 250;
 
-	comm->broadcast<PVec>(0, data);
+//	comm->broadcast<PVec>(0, data);
 	std::cout << "Broadcast: " << data << std::endl;
 
 //	return VecCreate(comm->get_mpi_comm(), &vec);
@@ -35,7 +35,8 @@ PetscErrorCode ParallelVec::PVec::Create() {
 	return VecCreate(petscomm, &vec); //FIXME	
 }
 
-PetscErrorCode ParallelVec::PVec::CreateSeq(PetscInt n) {
+PetscErrorCode ParallelVec::PVec::CreateSeq(PetscInt n) [Communicator comm] {
+	petscomm = comm->get_mpi_comm();
 	int data = 1000;
 	std::cout << "Testing Broadcast before: " << data << std::endl;
 	if(i == 0)

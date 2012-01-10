@@ -454,6 +454,7 @@ class IDeclarator(SourceLoc loc) {
             ExceptionSpec /*nullable*/ exnSpec)    // throwable exceptions
 	          {
 		          public PobcppCommunicatorSpec* comm = 0;
+							public bool inspected = false;
 						}
 
   // "a[5]" or "b[]"

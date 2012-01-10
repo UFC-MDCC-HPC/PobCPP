@@ -126,7 +126,7 @@ bool Pobcpp::visitMember(Member *member) {
 
 bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1);
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, false);
   return true;
 }
 bool Pobcpp::visitExpression(Expression* exp) {
@@ -179,12 +179,17 @@ bool Pobcpp::visitFunction(Function* func) {
   if(((func->dflags) & DF_PARALLEL) != 0) {
     // TODO
   }
+  IDeclarator* idecl = func->nameAndParams->decl;
+  if(idecl->isD_func()) {
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, true);
+  }
+
   return true;
 }
 
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
   using std::string;
-
+return;
   FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
     int iline = sourceLocManager->getLine(pobcppEnumSpec->beginSquareBracket);
     int line = sourceLocManager->getLine(pobcppEnumSpec->endSquareBracket);
@@ -212,7 +217,10 @@ void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
     }
   }
 }
-void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
+
+void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams, bool body) {
+  if(func->inspected)
+    return;
   using std::string;
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() call" << std::endl;
@@ -230,7 +238,11 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   int colbeg = sourceLocManager->getCol(spec->beginSquareBracket);
   PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1, 1);
   (patchess[iline]).push_back(erase);
-  PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("())"), col+1);
+  if(!body) {
+    PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("()"), col+1);
+    (patchess[iline]).push_back(insert);
+  }
+  PobcppPatch* insert = new PobcppPatch(Insert, string(")"), col+1);
   (patchess[iline]).push_back(insert);
 
   PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);
@@ -245,6 +257,8 @@ void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams) {
   #ifdef POBCPPDEBUG
   std::cout << "removeCommunicator() end" << std::endl;
   #endif
+  func->inspected = true;
+  return;
 }
 
 void Pobcpp::createEnumerator(TS_classSpec* spec) {
