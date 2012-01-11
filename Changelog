@@ -1,3 +1,9 @@
+2012-11-01 Eduardo Gurgel <edgurgel@gmail.com>
+* prepobcppc and pobcppc adjusted to generate files in this fashion:
+  IN: file.cpp OUT: file.pob.cpp
+	IN: file.h   OUT: file.pob.h
+* casestudy/ updated
+
 2012-10-01 Eduardo Gurgel <edgurgel@gmail.com>
 * removeCommunicatorDecl now works to Function definition and Function
 implementation.

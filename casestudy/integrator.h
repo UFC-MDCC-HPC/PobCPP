@@ -1,6 +1,6 @@
 #ifndef __INTEGRATOR_H__
 #define __INTEGRATOR_H__
-#include "farm.h.pob"
+#include "farm.pob.h"
 
 double func(int dim_num, double* a);
 class Romberg_Integrator: public Farm<double, double> {

@@ -3,10 +3,11 @@ prepobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/prepobcpp
 pobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/pobcppc
 src=$1
 pobcpp=$2
-petsc=$3
 suffix=".temp.cpp"
 temp=$src$suffix
-temp2=$src".prepob"
+temp2=${src/".h"/".prepob.h"}
+temp2=${temp2/".cpp"/".prepob.cpp"}
+#temp2=$src".prepob"
 if [ -e $src ]; then
 	cat "$src" > $temp
 	g++-4.1.2  -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E -Wp,-K $temp > $temp".ii"
@@ -23,6 +24,7 @@ if [ -e $src ]; then
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"
   echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+	echo $temp2
   $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 	rm $temp2
 else

@@ -1,4 +1,4 @@
-#include "integrator.h.pob"
+#include "integrator.pob.h"
 #include "nintlib/nintlib.H"
 #include <cmath>
 #include <iostream>

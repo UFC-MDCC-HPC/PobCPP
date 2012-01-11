@@ -11,12 +11,12 @@ public:
 		PKSP(unsigned int i, unsigned int n);
 		~PKSP();
 		
-		PetscErrorCode Create();
+		PetscErrorCode Create() [Communicator comm];
 		PetscErrorCode Solve(ParallelVec::PVec& b, ParallelVec::PVec& x);
 		PetscErrorCode SetOperators(ParallelMat::PMat& Amat,ParallelMat::PMat& Pmat,MatStructure flag);
 		public: // Should be private
 		KSP ksp;
-		MPI_Comm petscomm;
+//		MPI_Comm petscomm;
 		private:
 		int i,n;
 	};

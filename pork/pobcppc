@@ -2,10 +2,9 @@
 pobcppexecutable=/home/eduardo/projects/mestrado/pobcpp/pork/pobcpp
 src=$1
 pobcpp=$2
-petsc=$3
 suffix=".temp.cpp"
 temp=$src$suffix
-temp2=${src%.prepob}".pob"
+temp2=${src/prepob/pob}
 if [ -e $src ]; then
 	echo "#include \"pobcpp_preheader.h\"" > $temp
 	cat "$src" >> $temp

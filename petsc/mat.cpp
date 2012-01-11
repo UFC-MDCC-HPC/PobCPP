@@ -2,7 +2,6 @@
 #include "petscsys.h"
 
 ParallelMat::PMat::PMat(unsigned int i, unsigned int n) : i(i), n(n) {
-	create_unit<ParallelMat>(this, i, n);
 }
 
 ParallelMat::PMat::~PMat() {	
@@ -15,17 +14,16 @@ PetscErrorCode ParallelMat::PMat::AssemblyBegin(MatAssemblyType type) {
 PetscErrorCode ParallelMat::PMat::AssemblyEnd(MatAssemblyType type) {
 	return MatAssemblyEnd(mat, type);
 }
-PetscErrorCode ParallelMat::PMat::Create() {
+PetscErrorCode ParallelMat::PMat::Create() [Communicator comm] {
 	int data = 1000;
 	std::cout << "Testing Broadcast before: " << data << std::endl;
 	if(i == 0)
 		data = 250;
 
-	comm->broadcast<PMat>(0, data);
+	comm.broadcast<PMat>(0, data);
 	std::cout << "Broadcast: " << data << std::endl;
 
-//	return VecCreate(comm->get_mpi_comm(), &vec);
-	PetscCommDuplicate(comm->get_mpi_comm(), &petscomm, PETSC_NULL);
+	PetscCommDuplicate(comm.get_mpi_comm(), &petscomm, PETSC_NULL);
 	return MatCreate(petscomm, &mat); //FIXME	
 }
 

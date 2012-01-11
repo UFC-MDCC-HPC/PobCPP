@@ -1,6 +1,6 @@
-#include "integrator_main.h.pob"
+#include "integrator_main.pob.h"
 
-#include "integrator.h.pob"
+#include "integrator.pob.h"
 #include <iostream>
 #include <cmath>
 #include <algorithm>

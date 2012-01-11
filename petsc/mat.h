@@ -14,7 +14,7 @@ public:
 		PetscErrorCode AssemblyBegin(MatAssemblyType type);
 		PetscErrorCode AssemblyEnd(MatAssemblyType type);
 		PetscErrorCode Copy(Mat y, MatStructure str);
-		PetscErrorCode Create(); 
+		PetscErrorCode Create() [Communicator comm]; 
 		PetscErrorCode Destroy();
 		PetscErrorCode GetSize(PetscInt* sizem, PetscInt* sizen);
 		PetscErrorCode Mult(ParallelVec::PVec& x, ParallelVec::PVec& y);
