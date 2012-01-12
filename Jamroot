@@ -9,4 +9,5 @@
 project parallel_object_cpp ;
 
 build-project libpobcpp ;
-build-project example ;
+build-project casestudy ;
+#build-project example ;

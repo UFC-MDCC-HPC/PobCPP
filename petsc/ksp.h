@@ -1,7 +1,7 @@
 #ifndef __PKSP__
 #define __PKSP__
-#include "vec.h.pob"
-#include "mat.h.pob"
+#include "vec.pob.h"
+#include "mat.pob.h"
 #include "workarounds.h"
 #include "petscksp.h" // FIXME
 class ParallelKSP {

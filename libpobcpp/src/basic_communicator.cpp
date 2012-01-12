@@ -66,21 +66,13 @@ MPI_Request Basic_Communicator::irecv(int source, int tag, datatype* values, int
 #define Basic_Communicator_reduce_impl(datatype) \
 void Basic_Communicator::reduce(const datatype* in_values, int n, datatype* out_values, int root) { \
   boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  if(env && world) { \
-    if(env->isComplete()) { \
-      boost::mpi::reduce(world, in_values, n, out_values, std::plus<datatype>(), root); \
-    } \
-  } \
+  boost::mpi::reduce(world, in_values, n, out_values, std::plus<datatype>(), root); \
 }
 
 #define Basic_Communicator_reduce_impl2(datatype) \
 void Basic_Communicator::reduce(const datatype* in_values, int n, int root) { \
   boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  if(env && world) { \
-    if(env->isComplete()) { \
-      boost::mpi::reduce(world, in_values, n, std::plus<datatype>(), root); \
-    } \
-  } \
+  boost::mpi::reduce(world, in_values, n, std::plus<datatype>(), root); \
 }
 
 /*
@@ -288,6 +280,11 @@ int Basic_Communicator::size() const {
 	return world.size();
 }
 
+void Basic_Communicator::barrier() const {
+	boost::mpi::communicator world(comm, boost::mpi::comm_attach);
+	return world.barrier();
+}
+
 Group Basic_Communicator::group() const {
 	MPI_Group grp;
 	MPI_Comm_group(comm, &grp);
@@ -299,7 +296,6 @@ Basic_Communicator Basic_Communicator::create(Group group) {
 	MPI_Comm_create(comm, group.get_mpi_group(), &newcomm);
 	return Basic_Communicator(newcomm);
 }
-
 
 Basic_Communicator_send_and_isend_impl(int);
 Basic_Communicator_send_and_isend_impl(unsigned int);

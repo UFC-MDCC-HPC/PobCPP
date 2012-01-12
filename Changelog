@@ -1,3 +1,7 @@
+2012-12-01 Eduardo Gurgel <edgurgel@gmail.com>
+* reduce() bugfixed on Basic_Communicator
+* casestudy working.
+
 2012-11-01 Eduardo Gurgel <edgurgel@gmail.com>
 * prepobcppc and pobcppc adjusted to generate files in this fashion:
   IN: file.cpp OUT: file.pob.cpp

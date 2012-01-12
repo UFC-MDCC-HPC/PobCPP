@@ -1,4 +1,4 @@
-#include "vec.h.pob"
+#include "vec.pob.h"
 #include "petscsys.h"
 
 ParallelVec::PVec::PVec(unsigned int i, unsigned int n) : i(i), n(n) { }

@@ -3,7 +3,7 @@
 
 #include "workarounds.h"
 #include "petscmat.h" // FIXME
-#include "vec.h.pob"
+#include "vec.pob.h"
 class ParallelMat {
 public:
 	parallel unit PMat {

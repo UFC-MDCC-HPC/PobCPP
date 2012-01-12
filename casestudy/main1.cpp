@@ -1,5 +1,5 @@
 #include <iostream>
-#include "integrator_main.h.pob"
+#include "integrator_main.pob.h"
 int main(int argc, char** argv) { 
 	MPI_Init(&argc, &argv);
 	int dim_num = 6;

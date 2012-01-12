@@ -6,5 +6,4 @@
 	boost::mpi::environment __env(argc, argv);	\
 	boost::mpi::communicator world;
 
-#define barrier world.barrier ()
 

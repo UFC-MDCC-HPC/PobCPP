@@ -1,4 +1,4 @@
-#include "ksp.h.pob"
+#include "ksp.pob.h"
 
 ParallelKSP::PKSP::PKSP(unsigned int i, unsigned int n) : i(i), n(n) {
 }

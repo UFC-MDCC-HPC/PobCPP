@@ -64,6 +64,7 @@ public:
 //etc
 	int rank() const;
 	int size() const;
+	void barrier() const;
 	Group group() const;
 	Basic_Communicator create(Group group);
 

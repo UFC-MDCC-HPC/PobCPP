@@ -1,4 +1,4 @@
-#include "mat.h.pob"
+#include "mat.pob.h"
 #include "petscsys.h"
 
 ParallelMat::PMat::PMat(unsigned int i, unsigned int n) : i(i), n(n) {
