@@ -83,7 +83,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     string::size_type found;
     // Search for a ':' or a '{' and insert ' : public Pobcpp::Unit '
     if(spec->enumerators->count()) {
-      createEnumerator(spec);
+      //createEnumerator(spec);
     }
     int inheritance = !(spec->bases->count()-1);
     //    std::cout << inheritance << std::endl;
@@ -124,11 +124,6 @@ bool Pobcpp::visitMember(Member *member) {
   return true;
 }
 
-bool Pobcpp::visitIDeclarator(IDeclarator* idecl) {
-  if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, false);
-  return true;
-}
 bool Pobcpp::visitExpression(Expression* exp) {
   using std::string;
   if(!(exp->kind() == Expression::E_RANKSOF))
@@ -175,18 +170,6 @@ bool Pobcpp::visitExpression(Expression* exp) {
   return true;
 }
 
-bool Pobcpp::visitFunction(Function* func) {
-  if(((func->dflags) & DF_PARALLEL) != 0) {
-    // TODO
-  }
-  IDeclarator* idecl = func->nameAndParams->decl;
-  if(idecl->isD_func()) {
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, true);
-  }
-
-  return true;
-}
-
 void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
   using std::string;
 return;
@@ -218,65 +201,7 @@ return;
   }
 }
 
-void Pobcpp::removeCommunicatorDecl(D_func* func, bool noparams, bool body) {
-  if(func->inspected)
-    return;
-  using std::string;
-  #ifdef POBCPPDEBUG
-  std::cout << "removeCommunicator() call" << std::endl;
-  #endif
-	if(func->comm == 0)
-		return;
-	if(!func->comm->defined)
-		return;
-	string typeName = func->comm->typeId->spec->asTS_name()->name->asPQ_name()->name;
-	int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);
-  int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
-	PobcppCommunicatorSpec* spec = (func->comm);
-  int iline = sourceLocManager->getLine(spec->endSquareBracket);
-  int col = sourceLocManager->getCol(spec->endSquareBracket);
-  int colbeg = sourceLocManager->getCol(spec->beginSquareBracket);
-  PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1, 1);
-  (patchess[iline]).push_back(erase);
-  if(!body) {
-    PobcppPatch* insert = new PobcppPatch(Insert, string(" =") + typeName + string("()"), col+1);
-    (patchess[iline]).push_back(insert);
-  }
-  PobcppPatch* insert = new PobcppPatch(Insert, string(")"), col+1);
-  (patchess[iline]).push_back(insert);
 
-  PobcppPatch* erase2 = new PobcppPatch(Erase, string(), colbeg+1, 1);
-  (patchess[iline]).push_back(erase2);
-
-  PobcppPatch* erase3 = new PobcppPatch(Erase, string(), endParenthesisCol+1, 1);
-  (patchess[endParenthesisLine]).push_back(erase3);
-	if(noparams) {
-	  PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+1);
-  	(patchess[endParenthesisLine]).push_back(insert3);
-	}
-  #ifdef POBCPPDEBUG
-  std::cout << "removeCommunicator() end" << std::endl;
-  #endif
-  func->inspected = true;
-  return;
-}
-
-void Pobcpp::createEnumerator(TS_classSpec* spec) {
-  using std::string;
-  // unit Name [i:m] { }
-  // Insert two statements:
-  // const unsigned int i;
-  // const unsigned int m;
-
-  int iline = sourceLocManager->getLine(spec->beginBracket);
-  int col = sourceLocManager->getCol(spec->beginBracket);
-  FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
-    string name = string(" public: const unsigned int ") + string(pobcppEnumSpec->name);
-    string size = string("; const unsigned int ") + string(pobcppEnumSpec->size) + string("; private:");
-    PobcppPatch* insert = new PobcppPatch(Insert, name+size, col+1);
-    (patchess[iline]).push_back(insert);
-  }
-}
 
 void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::size_type found, unsigned int units) {
   //FIXME

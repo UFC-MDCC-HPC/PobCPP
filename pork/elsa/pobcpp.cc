@@ -31,6 +31,7 @@ bool PObCppPreTypedASTVisitor::visitFunction(Function* func) {
 	return true;
 }
 bool PObCppVisitor::visitFunction(Function* func) {
+	return true;
 }
 
 bool PObCppPreTypedASTVisitor::visitTypeSpecifier(TypeSpecifier *type) {
@@ -183,65 +184,8 @@ void PObCppPreTypedASTVisitor::checkStrings() {
 
 
 
-bool PObCppPreTypedASTVisitor::visitIDeclarator(IDeclarator* idecl) {
-  if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count());
-  return true;
-}
-
-void PObCppPreTypedASTVisitor::removeCommunicatorDecl(D_func* func, bool noparams) {
-  if(func->comm == 0)
-    return;
-	if(!func->comm->defined)
-		return;
-  if(func->comm->typeId->decl->decl->isD_name()) {
-    func->comm->typeId->decl->decl->asD_name()->name = func->comm->pqname;
-		SourceLoc loc = func->comm->pqname->loc;
-    IN_expr* expr = new IN_expr(loc, new E_constructor(loc, loc, func->comm->typeId->spec->clone(), NULL));
-		func->comm->typeId->decl->init = expr;
-    if(func->params != NULL)
-      func->params->nth(func->params->count()-1)->next = func->comm->typeId;
-    else
-     func->params = FakeList<ASTTypeId>::makeList(func->comm->typeId);
-  }
-}
 
 bool PObCppVisitor::visitMember(Member *member) { }
-/*bool PObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
-  if (type->isTS_classSpec()) {
-    return subvisitTS_classSpec(type->asTS_classSpec());
-  }
-  return true;
-}
-bool PObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
-		// check if attributes or methods are declared.
-		// Include them on inner units.
-  if(spec->keyword == TI_CLASS) {
-    std::vector<MR_decl*> MR_decls;
-    unsigned short units = 0;  // How many units exist inside this class?
-    FOREACH_ASTLIST_NC(Member, spec->members->list, iter) {
-      if(iter.data()->isMR_decl()) {
-        MR_decl* iter_decl = iter.data()->asMR_decl();
-        if(iter_decl->d->spec->isTS_classSpec()) {
-          if(iter_decl->d->spec->asTS_classSpec()->keyword == TI_UNIT) {
-           	for(int i = 0; i < MR_decls.size(); i++) {
-							std::cerr << "adding 1 to members" << std::endl;
-              iter_decl->d->spec->asTS_classSpec()->members->list.append(MR_decls[i]);
-            }
-          }
-        }
-        else {
-          std::cerr << "Cloning" << std::endl;
-          MR_decl* clone_decl = iter.data()->asMR_decl()->clone();
-          std::cerr << "Done cloning" << std::endl;
-          MR_decls.push_back(clone_decl);
-        }
-      }
-    }
-  }
-  return true;
-}*/
-
 std::vector<ClassAndUnit> PObCppPre(TranslationUnit *unit) {
   PObCppPreTypedASTVisitor fp;
 	fp.pobCppNamespaceStr = NULL;

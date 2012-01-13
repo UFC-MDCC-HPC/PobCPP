@@ -24,9 +24,7 @@ public:
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
 	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
   virtual bool visitMember(Member *member);
-	virtual bool visitIDeclarator(IDeclarator* idecl);
 	virtual bool visitExpression(Expression* exp);
-	virtual bool visitFunction(Function* func);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 
@@ -38,8 +36,6 @@ private:
    * @param loc Initial localization.
    */
   void removeEnumeratorDecls(TS_classSpec *spec);
-
-  void removeCommunicatorDecl(D_func* dfunc, bool noparams, bool body);
 	
   /**
    * Modify line to include enumerator information.

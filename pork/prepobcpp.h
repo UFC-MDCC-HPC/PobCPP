@@ -20,6 +20,10 @@ class PrePObCppVisitor : public ExpressionVisitor {
   std::string getLine(int line) const;
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
+  virtual bool visitIDeclarator(IDeclarator* idecl);
+  virtual bool visitFunction(Function* func);
+  void removeCommunicatorDecl(D_func* dfunc, bool noparams, bool body);
+
 	Patcher &patcher;
 	std::string file;
   // TODO

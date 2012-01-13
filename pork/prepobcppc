@@ -24,9 +24,9 @@ if [ -e $src ]; then
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"
   echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+	$pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 	echo $temp2
-  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
-	rm $temp2
+  rm $temp2
 else
 	echo "File not found."
 fi

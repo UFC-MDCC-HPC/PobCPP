@@ -26,11 +26,9 @@ class PObCppPreTypedASTVisitor : public ASTVisitor {
   virtual bool visitTopForm(TopForm* tf);
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
-	virtual bool visitIDeclarator(IDeclarator* idecl);
   virtual bool visitFunction(Function* func);
 
   private:
-	void removeCommunicatorDecl(D_func* func, bool noparams);
   void checkStrings();
   SourceLoc loc;
   bool locBool;
@@ -40,8 +38,6 @@ class PObCppVisitor : public ASTVisitor {
   public:
   PObCppVisitor() { locBool = false; }
   virtual bool visitMember(Member *member);
-//  virtual bool visitTypeSpecifier(TypeSpecifier *type);
-//  virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   virtual bool visitFunction(Function* func);
   private:
   SourceLoc loc;
