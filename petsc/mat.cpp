@@ -15,14 +15,6 @@ PetscErrorCode ParallelMat::PMat::AssemblyEnd(MatAssemblyType type) {
 	return MatAssemblyEnd(mat, type);
 }
 PetscErrorCode ParallelMat::PMat::Create() [Communicator comm] {
-	int data = 1000;
-	std::cout << "Testing Broadcast before: " << data << std::endl;
-	if(i == 0)
-		data = 250;
-
-	comm.broadcast<PMat>(0, data);
-	std::cout << "Broadcast: " << data << std::endl;
-
 	PetscCommDuplicate(comm.get_mpi_comm(), &petscomm, PETSC_NULL);
 	return MatCreate(petscomm, &mat); //FIXME	
 }

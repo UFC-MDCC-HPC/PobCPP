@@ -16,7 +16,7 @@ public:
 		PetscErrorCode SetOperators(ParallelMat::PMat& Amat,ParallelMat::PMat& Pmat,MatStructure flag);
 		public: // Should be private
 		KSP ksp;
-//		MPI_Comm petscomm;
+		MPI_Comm petscomm;
 		private:
 		int i,n;
 	};

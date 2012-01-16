@@ -22,27 +22,30 @@ PetscErrorCode ParallelVec::PVec::Copy(Vec y) {
 
 PetscErrorCode ParallelVec::PVec::Create() [Communicator comm] {
 //	petscomm = comm.get_mpi_comm();
-	int data = 1000;
-	std::cerr << "Testing Broadcast before: " << data << std::endl;
-	if(i == 0)
+  int data;
+	data = 15;
+	//int data = 1000;
+	std::cerr << "Le me Testing Broadcast before: " << data << std::endl;
+	if(i == 0) {
 		data = 250;
+	}
 
-//	comm.broadcast<PVec>(0, data);
+	comm.broadcast(data, 0);
 	std::cerr << "Broadcast: " << data << std::endl;
 
-//	return VecCreate(comm->get_mpi_comm(), &vec);
+//	return VecCreate(comm.get_mpi_comm(), &vec);
 	PetscCommDuplicate(comm.get_mpi_comm(), &petscomm, PETSC_NULL);
 	return VecCreate(petscomm, &vec); //FIXME	
 }
 
 PetscErrorCode ParallelVec::PVec::CreateSeq(PetscInt n) [Communicator comm] {
-	int data = 1000;
+/*	int data = 1000;
 	std::cerr << "Testing Broadcast before: " << data << std::endl;
 	if(i == 0)
 		data = 250;
 
-	//comm.broadcast<PVec>(0, data);
-	std::cerr << "Broadcast: " << data << std::endl;
+	comm.broadcast(data, 0);
+	std::cerr << "Broadcast: " << data << std::endl;*/
 
 	PetscCommDuplicate(comm.get_mpi_comm(), &petscomm, PETSC_NULL);
 	return VecCreateSeq(petscomm, n, &vec); //FIXME	

@@ -14,27 +14,28 @@ T*/
      petscviewer.h - viewers
 */
 //#include "petscvec.h"
-#include "ksp.h.pob"
-#include "vec.h.pob"
-#include "mat.h.pob"
+#include "ksp.pob.h"
+#include "vec.pob.h"
+#include "mat.pob.h"
 #include <iostream>
-#include "communication.h"
 extern int PetscSetCommWorld(MPI_Comm comm);
 #undef __FUNCT__
 #define __FUNCT__ "main"
 int main(int argc,char **argv)
 {
-	pob_init(argc, argv);
+	MPI_Init(&argc, &argv);
   PetscInitialize(&argc,&argv,(char *)0,help);
   PetscErrorCode ierr;
   PetscInt       N = 0;
+	PetscInt       M = 2;
   PetscReal      norm;
 	int rank = -1;
 	int size = 0;
 
 	std::cout << "PetscInitialize" << std::endl;
-	MPI_Comm_size(PETSC_COMM_WORLD, &size);
-	MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+	Communicator comm;
+	size = comm.size();
+	rank = comm.rank();
 	std::cout << "PVec sera construido - (" << rank << "," << size << ")" << std::endl;
 	ParallelKSP::PKSP            ksp(rank, size);
 	ParallelMat::PMat            C(rank,size); 
@@ -43,29 +44,28 @@ int main(int argc,char **argv)
 	ParallelVec::PVec            x(rank,size);
 
   /* create stiffness matrix */
-  ierr = C.Create();CHKERRQ(ierr);
+  ierr = C.Create(comm);CHKERRQ(ierr);
   ierr = C.SetSizes(PETSC_DECIDE,PETSC_DECIDE,N,N);CHKERRQ(ierr);
   ierr = C.SetFromOptions();CHKERRQ(ierr);
   ierr = C.AssemblyBegin(MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
   ierr = C.AssemblyEnd(MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 
-  ierr = u.CreateSeq(N);CHKERRQ(ierr); 
+ // ierr = u.CreateSeq(N, comm);CHKERRQ(ierr); 
+  ierr = u.Create(comm);CHKERRQ(ierr); 
+	ierr = u.SetSizes(PETSC_DECIDE, M);CHKERRQ(ierr);
+	ierr = u.SetFromOptions();
+  ierr = u.Set(0.0);CHKERRQ(ierr);
   ierr = u.Duplicate(&b);CHKERRQ(ierr);
   ierr = u.Duplicate(&x);CHKERRQ(ierr);
-  ierr = u.Set(0.0);CHKERRQ(ierr);
-  ierr = b.Set(0.0);CHKERRQ(ierr);
 
+ierr = b.Set(0.0);CHKERRQ(ierr);
   ierr = b.AssemblyBegin();CHKERRQ(ierr);
   ierr = b.AssemblyEnd();CHKERRQ(ierr);
   
-	std::cout << "Finalize" << std::endl;
-  ierr = PetscFinalize();CHKERRQ(ierr);
-	MPI_Finalize();	
-  return 0;
+	ierr = ksp.Create(comm);CHKERRQ(ierr);
 
-/*
 
-  ierr = KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
+/*  ierr = KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);
   ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
   ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr);
   ierr = KSPSolve(ksp,b,u);CHKERRQ(ierr);
@@ -79,5 +79,9 @@ int main(int argc,char **argv)
   ierr = VecDestroy(x);CHKERRQ(ierr);
   ierr = VecDestroy(b);CHKERRQ(ierr);
   ierr = MatDestroy(C);CHKERRQ(ierr);*/
+	std::cout << "Finalize" << std::endl;
+  ierr = PetscFinalize();CHKERRQ(ierr);
+	MPI_Finalize();	
+  return 0;
 }
  
