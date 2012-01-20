@@ -39,9 +39,9 @@ MPI_Request irecv(int source, int tag, datatype* values, int n) const;
 	void broadcast(datatype* value, int n, int root);
 
 #define reduce_decl(datatype) \
-void reduce(const datatype* in_values, int n, int root);
+void reduce(const datatype* in_values, int n, MPI_Op op, int root);
 #define reduce_decl2(datatype) \
-void reduce(const datatype* in_values, int n, datatype* out_values, int root);
+void reduce(const datatype* in_values, int n, datatype* out_values, MPI_Op op, int root);
 
 namespace Pobcpp {
 //Move to a new file

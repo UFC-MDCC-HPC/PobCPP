@@ -1,3 +1,6 @@
+2012-20-01 Eduardo Gurgel <edgurgel@gmail.com>
+* reduce() now handles different MPI_Op's
+
 2012-18-01 Eduardo Gurgel <edgurgel@gmail.com>
 * Integer Sort code provided by NAS Parallel Benchmark Team (http://www.nas.nasa.gov/Software/NPB)
 * casestudy moved to farm (Better definition)

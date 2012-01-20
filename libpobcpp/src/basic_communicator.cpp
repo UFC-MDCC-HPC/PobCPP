@@ -2,6 +2,7 @@
 #include "communication.h"
 #include <boost/mpi/collectives.hpp>
 #include <iostream>
+#include <algorithm>
 #include <mpi.h>
 
 #define Basic_Communicator_send_impl(datatype) \
@@ -64,177 +65,27 @@ MPI_Request Basic_Communicator::irecv(int source, int tag, datatype* values, int
 
 
 #define Basic_Communicator_reduce_impl(datatype) \
-void Basic_Communicator::reduce(const datatype* in_values, int n, datatype* out_values, int root) { \
+void Basic_Communicator::reduce(const datatype* in_values, int n, datatype* out_values, MPI_Op op, int root) { \
   boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  boost::mpi::reduce(world, in_values, n, out_values, std::plus<datatype>(), root); \
+	if(op == MPI_SUM) \
+			return boost::mpi::reduce(world, in_values, n, out_values, std::plus<datatype>(), root); \
+	if(op == MPI_MAX) \
+			return boost::mpi::reduce(world, in_values, n, out_values, boost::mpi::maximum<datatype>(), root); \
+	if(op == MPI_MIN) \
+			return boost::mpi::reduce(world, in_values, n, out_values, boost::mpi::minimum<datatype>(), root); \
 }
 
 #define Basic_Communicator_reduce_impl2(datatype) \
-void Basic_Communicator::reduce(const datatype* in_values, int n, int root) { \
+void Basic_Communicator::reduce(const datatype* in_values, int n, MPI_Op op, int root) { \
   boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  boost::mpi::reduce(world, in_values, n, std::plus<datatype>(), root); \
+	if(op == MPI_SUM) \
+			return boost::mpi::reduce(world, in_values, n, std::plus<datatype>(), root); \
+	if(op == MPI_MAX) \
+			return boost::mpi::reduce(world, in_values, n, boost::mpi::maximum<datatype>(), root); \
+	if(op == MPI_MIN) \
+			return boost::mpi::reduce(world, in_values, n, boost::mpi::minimum<datatype>(), root); \
 }
 
-/*
-#define Basic_Communicator_send_impl(datatype) \
-void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype& _data, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.send(unit_rank, _tag, _data);	\
-		} \
-	} \
-} 
-
-#define Basic_Communicator_send_array_impl(datatype) \
-void Basic_Communicator::send(const Unit_Type& _unit_type, const datatype* _data, int n, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.send(unit_rank, _tag, _data, n);	\
-		} \
-	} \
-} 
-
-#define Basic_Communicator_isend_impl(datatype) \
-void Basic_Communicator::isend(const Unit_Type& _unit_type, const datatype& _data, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.isend(unit_rank, _tag, _data);	\
-		} \
-	} \
-} 
-
-#define Basic_Communicator_isend_array_impl(datatype) \
-void Basic_Communicator::isend(const Unit_Type& _unit_type, const datatype* _data, int n, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.isend(unit_rank, _tag, _data, n);	\
-		} \
-	} \
-} 
-
-#define Basic_Communicator_receive_impl(datatype) \
-datatype Basic_Communicator::receive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag, MPI_Status* status) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	datatype data; \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			*status = (world.recv(unit_rank , _tag, data)); \
-		} \
-	} \
-	return data; \
-} 
-
-#define Basic_Communicator_receive_array_impl(datatype) \
-void Basic_Communicator::receive(const Unit_Type& _unit_type, datatype* data, int n, const int _tag, MPI_Status* status) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			*status = world.recv(unit_rank , _tag, data, n); \
-		} \
-	} \
-} 
-
-#define Basic_Communicator_ireceive_impl(datatype) \
-datatype Basic_Communicator::ireceive(const Unit_Type& _unit_type, const datatype& _data_type, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	datatype data; \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.irecv(unit_rank , _tag, data); \
-		} \
-	} \
-	return data; \
-} 
-
-#define Basic_Communicator_ireceive_array_impl(datatype) \
-datatype Basic_Communicator::ireceive(const Unit_Type& _unit_type, const datatype* _data_type, int n, const int _tag) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	datatype data; \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			world.irecv(unit_rank , _tag, data, n); \
-		} \
-	} \
-	return data; \
-} 
-
-#define Basic_Communicator_broadcast_impl(datatype) \
-void Basic_Communicator::broadcast(const Unit_Type& _unit_type, datatype& value) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			boost::mpi::broadcast(world, value, unit_rank); \
-		} \
-	} \
-}
-#define Basic_Communicator_broadcast_array_impl(datatype) \
-void Basic_Communicator::broadcast(const Unit_Type& _unit_type, datatype* values, int n) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			boost::mpi::broadcast(world, values, n, unit_rank); \
-		} \
-	} \
-}
-
-#define Basic_Communicator_gather_impl(datatype) \
-void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype& in_value, datatype* out_values) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			boost::mpi::gather(world, in_value, out_values, unit_rank); \
-		} \
-	} \
-}
-
-#define Basic_Communicator_gather_array_impl(datatype) \
-void Basic_Communicator::gather(const Unit_Type& _unit_type, const datatype* in_values, int n, datatype* out_values) { \
-	boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-	if(env && world) { \
-		if(env->isComplete()) { \
-			unsigned int unit_rank = env->get_rank(_unit_type); \
-			boost::mpi::gather(world, in_values, n, out_values, unit_rank); \
-		} \
-	} \
-}
-
-#define Basic_Communicator_scatter_impl(datatype) \
-void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in_values, datatype& out_value) { \
-  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  if(env && world) { \
-    if(env->isComplete()) { \
-      unsigned int unit_rank = env->get_rank(_unit_type); \
-      boost::mpi::scatter(world, in_values, out_value, unit_rank); \
-    } \
-  } \
-}
-
-#define Basic_Communicator_scatter_array_impl(datatype) \
-void Basic_Communicator::scatter(const Unit_Type& _unit_type, const datatype* in_values, datatype* out_values, int n) { \
-  boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
-  if(env && world) { \
-    if(env->isComplete()) { \
-      unsigned int unit_rank = env->get_rank(_unit_type); \
-      boost::mpi::scatter(world, in_values, out_values, n, unit_rank); \
-    } \
-  } \
-}
-*/
 #define Basic_Communicator_send_and_isend_impl(datatype) \
 	Basic_Communicator_send_impl(datatype) \
 	Basic_Communicator_send_array_impl(datatype) \
