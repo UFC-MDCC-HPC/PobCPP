@@ -6,6 +6,8 @@ include ../config/make.def
 
 include ../sys/make.common
 
+libpobcpp=/home/eduardo/projects/mestrado/pobcpp/libpobcpp/include
+
 OBJS = is.o ${COMMON}/c_print_results.o ${COMMON}/c_timers.o
 
 
@@ -15,7 +17,7 @@ ${PROGRAM}: config ${OBJS}
 .c.o:
 	${CCOMPILE} $<
 
-is.o:             is.c  npbparams.h
+is.o:             is.cpp  npbparams.h is.pob.h
 
 
 clean:

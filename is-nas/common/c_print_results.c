@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 void c_print_results( char   *name,
-                      char   class,
+                      char   _class,
                       int    n1, 
                       int    n2,
                       int    n3,
@@ -29,7 +29,7 @@ void c_print_results( char   *name,
 
     printf( "\n\n %s Benchmark Completed\n", name ); 
 
-    printf( " Class           =                        %c\n", class );
+    printf( " Class           =                        %c\n", _class );
 
     if( n3 == 0 ) {
         long nn = n1;

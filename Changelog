@@ -1,3 +1,11 @@
+2012-22-01 Eduardo Gurgel <edgurgel@gmail.com>
+* Parallel IS using PObC++ implemented.
+
+2012-22-01 Eduardo Gurgel <edgurgel@gmail.com>
+* elsa/pobcpp.cc will be deleted. Useless now with prepobcpp
+* is.h already being compiled by pobcppc
+* pobcppc and prepobcppc using pobcpp_preheader
+
 2012-20-01 Eduardo Gurgel <edgurgel@gmail.com>
 * reduce() now handles different MPI_Op's
 

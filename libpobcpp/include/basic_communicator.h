@@ -39,9 +39,22 @@ MPI_Request irecv(int source, int tag, datatype* values, int n) const;
 	void broadcast(datatype* value, int n, int root);
 
 #define reduce_decl(datatype) \
-void reduce(const datatype* in_values, int n, MPI_Op op, int root);
+void reduce(const datatype& in_value, datatype& out_value, MPI_Op op, int root);
 #define reduce_decl2(datatype) \
+void reduce(const datatype* in_values, int n, MPI_Op op, int root);
+#define reduce_decl3(datatype) \
 void reduce(const datatype* in_values, int n, datatype* out_values, MPI_Op op, int root);
+
+
+#define allreduce_decl(datatype) \
+void allreduce(const datatype& in_value, datatype& out_value, MPI_Op op);
+#define allreduce_decl2(datatype) \
+void allreduce(const datatype* in_values, int n, datatype* out_values, MPI_Op op);
+
+#define alltoall_decl(datatype) \
+void alltoall(const datatype* in_values, datatype* out_values);
+#define alltoall_decl2(datatype) \
+void alltoall(const datatype* in_values, int n, datatype* out_values);
 
 namespace Pobcpp {
 //Move to a new file
@@ -192,6 +205,43 @@ public:
   reduce_decl2(pair_float_int);
   reduce_decl2(pair_double_int);
 
+  reduce_decl3(int)
+  reduce_decl3(unsigned int);
+  reduce_decl3(float);
+  reduce_decl3(double);
+  reduce_decl3(char);
+  reduce_decl3(std::string);
+  reduce_decl3(pair_int_int);
+  reduce_decl3(pair_float_int);
+  reduce_decl3(pair_double_int);
+
+  allreduce_decl(int)
+  allreduce_decl(unsigned int);
+  allreduce_decl(float);
+  allreduce_decl(double);
+  allreduce_decl(char);
+  allreduce_decl(std::string);
+
+  allreduce_decl2(int)
+  allreduce_decl2(unsigned int);
+  allreduce_decl2(float);
+  allreduce_decl2(double);
+  allreduce_decl2(char);
+  allreduce_decl2(std::string);
+
+  alltoall_decl(int)
+  alltoall_decl(unsigned int);
+  alltoall_decl(float);
+  alltoall_decl(double);
+  alltoall_decl(char);
+  alltoall_decl(std::string);
+
+  alltoall_decl2(int)
+  alltoall_decl2(unsigned int);
+  alltoall_decl2(float);
+  alltoall_decl2(double);
+  alltoall_decl2(char);
+  alltoall_decl2(std::string);
 
 // Collective
 /*

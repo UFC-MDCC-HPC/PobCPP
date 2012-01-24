@@ -9,7 +9,8 @@ temp2=${src/".h"/".prepob.h"}
 temp2=${temp2/".cpp"/".prepob.cpp"}
 #temp2=$src".prepob"
 if [ -e $src ]; then
-	cat "$src" > $temp
+	echo "#include \"pobcpp_preheader.h\"" > $temp
+	cat "$src" >> $temp
 	g++-4.1.2  -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E -Wp,-K $temp > $temp".ii"
 #	g++-4.2.4 -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E $temp > $temp".ii"
 #	mcpp -I- -I /usr/lib64/gcc/x86_64-pc-linux-gnu/4.1.2/include/g++-v4/ -I $pobcpp -+ -K $temp > $temp".ii"
@@ -24,8 +25,8 @@ if [ -e $src ]; then
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"
   echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
-	$pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
-	echo $temp2
+  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+	echo $temp2 " generated."
   rm $temp2
 else
 	echo "File not found."

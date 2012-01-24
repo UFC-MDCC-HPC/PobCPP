@@ -32,6 +32,10 @@ IS: is
 is: header
 	cd IS; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS)
 
+PIS: pis
+par-is: header
+	cd parallel-IS; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS)
+
 CG: cg
 cg: header
 	cd CG; $(MAKE) NPROCS=$(NPROCS) CLASS=$(CLASS)

@@ -4,7 +4,6 @@
 #include "basic_communicator.h"
 #include "unit_type.h"
 namespace Pobcpp {
-class Basic_Communicator;
 class Unit {
 protected:
 

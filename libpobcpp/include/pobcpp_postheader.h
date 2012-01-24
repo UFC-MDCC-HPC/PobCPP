@@ -1,5 +1,3 @@
-#include "unit.h"
-#include "create_unit.h"
+#include "pobcpp_preheader.h"
 #define parallel
 #define unit class
-using namespace Pobcpp;

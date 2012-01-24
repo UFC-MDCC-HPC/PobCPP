@@ -85,7 +85,7 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
     if(spec->enumerators->count()) {
       //createEnumerator(spec);
     }
-    int inheritance = !(spec->bases->count()-1);
+    int inheritance = !(spec->bases->count());
     //    std::cout << inheritance << std::endl;
     int iline = sourceLocManager->getLine(spec->beginBracket);
     int col = sourceLocManager->getCol(spec->beginBracket);
@@ -235,8 +235,6 @@ void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::
 }
 
 void Pobcpp::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found) {
-  // FIXME
-  // maybe here we need to insert "virtual" public Pobcpp::Unit in case of multiple inheritance
   if(firstBaseClass) {
     PobcppPatch* insert = new PobcppPatch(Insert, std::string(" : virtual public Pobcpp::Unit "), found);
     (patchess[line]).push_back(insert);
