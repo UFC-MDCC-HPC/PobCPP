@@ -8,7 +8,7 @@ class ParallelKSP {
 public:
 	parallel unit PKSP {
 		public:
-		PKSP(unsigned int i, unsigned int n);
+		PKSP();
 		~PKSP();
 		
 		PetscErrorCode Create() [Communicator comm];
@@ -18,7 +18,6 @@ public:
 		KSP ksp;
 		MPI_Comm petscomm;
 		private:
-		int i,n;
 	};
 
 };

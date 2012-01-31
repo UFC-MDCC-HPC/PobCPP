@@ -1,3 +1,6 @@
+2012-31-01 Eduardo Gurgel <edgurgel@gmail.com>
+* petsc updated.
+
 2012-22-01 Eduardo Gurgel <edgurgel@gmail.com>
 * Parallel IS using PObC++ implemented.
 

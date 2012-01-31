@@ -1,7 +1,7 @@
 #include "vec.pob.h"
 #include "petscsys.h"
 
-ParallelVec::PVec::PVec(unsigned int i, unsigned int n) : i(i), n(n) { }
+ParallelVec::PVec::PVec() { }
 
 ParallelVec::PVec::~PVec() { }
 
@@ -26,7 +26,7 @@ PetscErrorCode ParallelVec::PVec::Create() [Communicator comm] {
 	data = 15;
 	//int data = 1000;
 	std::cerr << "Le me Testing Broadcast before: " << data << std::endl;
-	if(i == 0) {
+	if(comm.rank() == 0) {
 		data = 250;
 	}
 

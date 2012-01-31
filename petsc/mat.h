@@ -8,7 +8,7 @@ class ParallelMat {
 public:
 	parallel unit PMat {
 	public:
-		PMat(unsigned int i, unsigned int n);
+		PMat();
 		~PMat();
 
 		PetscErrorCode AssemblyBegin(MatAssemblyType type);
@@ -26,7 +26,6 @@ public:
 		Mat mat;
 		MPI_Comm petscomm;
 	private:
-		int i,n;
 	};
 
 };

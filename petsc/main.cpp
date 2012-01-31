@@ -37,11 +37,11 @@ int main(int argc,char **argv)
 	size = comm.size();
 	rank = comm.rank();
 	std::cout << "PVec sera construido - (" << rank << "," << size << ")" << std::endl;
-	ParallelKSP::PKSP            ksp(rank, size);
-	ParallelMat::PMat            C(rank,size); 
-	ParallelVec::PVec            u(rank,size);
-	ParallelVec::PVec            b(rank,size);
-	ParallelVec::PVec            x(rank,size);
+	ParallelKSP::PKSP            ksp;
+	ParallelMat::PMat            C;
+	ParallelVec::PVec            u;
+	ParallelVec::PVec            b;
+	ParallelVec::PVec            x;
 
   /* create stiffness matrix */
   ierr = C.Create(comm);CHKERRQ(ierr);

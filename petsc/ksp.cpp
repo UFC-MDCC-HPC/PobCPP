@@ -1,6 +1,6 @@
 #include "ksp.pob.h"
 
-ParallelKSP::PKSP::PKSP(unsigned int i, unsigned int n) : i(i), n(n) {
+ParallelKSP::PKSP::PKSP() {
 }
 
 ParallelKSP::PKSP::~PKSP() { }

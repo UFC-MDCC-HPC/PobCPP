@@ -7,7 +7,7 @@ class ParallelVec {
 public:
 	parallel unit PVec {
 		public:
-		PVec(unsigned int i, unsigned int n);
+		PVec();
 		~PVec();
 		
 		PetscErrorCode AssemblyBegin();
@@ -34,7 +34,6 @@ public:
 		Vec vec; // Petsc Vec
 		private:
 		MPI_Comm petscomm;
-		int i,n;
 	};
 };
 
