@@ -1,3 +1,6 @@
+using gcc : 4.4.1 :  :  
+			   <compileflags>-O2
+; 
 lib boost_mpi-mt ;
 lib mpi ;
 lib nintlib : nintlib/nintlib.cpp ;

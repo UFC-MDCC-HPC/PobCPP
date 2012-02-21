@@ -375,12 +375,10 @@ void IntegerSort::Sorter::full_verify( void )
                   my_rank+1,
                   1000,
                   MPI_COMM_WORLD );*/
-	  	std::cout << my_rank << " - send " << key_array[last_local_key] << std::endl;
   		comm.send(my_rank+1, 1000, key_array[last_local_key]);
 		}
     if( my_rank > 0 ) {
         MPI_Wait( &request, &status );
-		  	std::cout << my_rank << " - irecv " << k << std::endl;
 		}
 
 /*  Confirm that neighbor's greatest key value 
@@ -565,7 +563,7 @@ void IntegerSort::Sorter::rank( int iteration )
 
 
 /*  Now send the keys to respective processors  */    
-    MPI_Alltoallv( key_buff1,
+/*    MPI_Alltoallv( key_buff1,
                    send_count,
                    send_displ,
                    MP_KEY_TYPE,
@@ -573,7 +571,8 @@ void IntegerSort::Sorter::rank( int iteration )
                    recv_count,
                    recv_displ,
                    MP_KEY_TYPE,
-                   comm.get_mpi_comm() ); //FIXME
+                   comm.get_mpi_comm() ); //FIXME*/
+		comm.alltoall(key_buff1, send_count, send_displ, key_buff2, recv_count, recv_displ);
 
 #ifdef  TIMING_ENABLED
     timer_stop( 3 ); 

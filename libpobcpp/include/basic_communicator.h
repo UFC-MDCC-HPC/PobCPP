@@ -56,6 +56,10 @@ void alltoall(const datatype* in_values, datatype* out_values);
 #define alltoall_decl2(datatype) \
 void alltoall(const datatype* in_values, int n, datatype* out_values);
 
+#define alltoallv_decl(datatype) \
+void alltoall(datatype* in_values, int* sendcnts, int* sdispls, datatype* out_values, int* recvcnts, int* rdispls);
+
+
 namespace Pobcpp {
 //Move to a new file
 
@@ -242,6 +246,8 @@ public:
   alltoall_decl2(double);
   alltoall_decl2(char);
   alltoall_decl2(std::string);
+
+	alltoallv_decl(int);
 
 // Collective
 /*

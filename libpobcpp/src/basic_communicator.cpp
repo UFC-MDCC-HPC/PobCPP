@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <mpi.h>
+#include <typeinfo>
 
 #define Basic_Communicator_send_impl(datatype) \
 void Basic_Communicator::send(int dest, int tag, const datatype& value) const { \
@@ -130,7 +131,10 @@ void Basic_Communicator::alltoall(const datatype* in_values, int n, datatype* ou
   boost::mpi::communicator world(comm, boost::mpi::comm_attach); \
 	boost::mpi::all_to_all(world, in_values, n, out_values); \
 }
-
+#define Basic_Communicator_alltoallv_impl(datatype, mpi_dt) \
+void Basic_Communicator::alltoall(datatype* in_values, int* sendcnts, int* sdispls, datatype* out_values, int* recvcnts, int* rdispls) { \
+	MPI_Alltoallv(in_values, sendcnts, sdispls, mpi_dt, out_values, recvcnts, rdispls, mpi_dt, comm); \
+}
 
 #define Basic_Communicator_send_and_isend_impl(datatype) \
 	Basic_Communicator_send_impl(datatype) \
@@ -269,6 +273,12 @@ Basic_Communicator_alltoall_impl2(float);
 Basic_Communicator_alltoall_impl2(double);
 Basic_Communicator_alltoall_impl2(char);
 Basic_Communicator_alltoall_impl2(std::string);
+
+Basic_Communicator_alltoallv_impl(int, MPI_INT);
+/*Basic_Communicator_alltoallv_impl(unsigned int, MPI_UINT);
+Basic_Communicator_alltoallv_impl(float, MPI_FLOAT);
+Basic_Communicator_alltoallv_impl(double, MPI_DOUBLE);
+Basic_Communicator_alltoallv_impl(char, MPI_CHAR);*/
 
 /*
 Basic_Communicator_receive_impl(int);
