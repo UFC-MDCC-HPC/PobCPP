@@ -5,11 +5,11 @@ src=$1
 pobcpp=$2
 suffix=".temp.cpp"
 temp=$src$suffix
-temp2=${src/".h"/".prepob.h"}
-temp2=${temp2/".cpp"/".prepob.cpp"}
+temp2=${src/".h"/".pob.h"}
+temp2=${temp2/".cpp"/".pob.cpp"}
 #temp2=$src".prepob"
 if [ -e $src ]; then
-	echo "#include \"pobcpp_preheader.h\"" > $temp
+	echo "#include \"pobcpp_postheader.h\"" > $temp
 	cat "$src" >> $temp
 	g++-4.1.2  -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E -Wp,-K $temp > $temp".ii"
 #	g++-4.2.4 -mmmx -msse2 -msse -I $pobcpp $3 $4 $5 $6 $7 $8 $9 -E $temp > $temp".ii"
@@ -24,10 +24,10 @@ if [ -e $src ]; then
 	touch $temp2
 	cat "$src"".patched.cpp" > $temp2
 	rm "$src"".patched.cpp"
-  echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
-  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+#  echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
+#  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 	echo $temp2 " generated."
-  rm $temp2
+# rm $temp2
 else
 	echo "File not found."
 fi

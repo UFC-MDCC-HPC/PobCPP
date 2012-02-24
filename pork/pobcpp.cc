@@ -64,9 +64,6 @@ bool Pobcpp::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
     return subvisitTS_classSpec(type->asTS_classSpec());
   }
-  if(type->isTS_elaborated()) {
-    return subvisitTS_elaborated(type->asTS_elaborated());
-  }
   return true;
 }
 
@@ -109,18 +106,6 @@ bool Pobcpp::subvisitTS_classSpec(TS_classSpec *spec) {
   #ifdef POBCPPDEBUG
   std::cout << "subvisitTS_classSpec() end" << std::endl;
   #endif
-  return true;
-}
-
-bool Pobcpp::subvisitTS_elaborated(TS_elaborated *spec) {
-  using std::string;
-  if(spec->keyword == TI_UNIT) { // unit?
-    removeUnitDecl(spec->loc);
-  }
-  return true;
-}
-
-bool Pobcpp::visitMember(Member *member) {
   return true;
 }
 
@@ -170,39 +155,6 @@ bool Pobcpp::visitExpression(Expression* exp) {
   return true;
 }
 
-void Pobcpp::removeEnumeratorDecls(TS_classSpec *spec) {
-  using std::string;
-return;
-  FAKELIST_FOREACH_NC(PobcppEnumeratorSpec, spec->enumerators, pobcppEnumSpec) {
-    int iline = sourceLocManager->getLine(pobcppEnumSpec->beginSquareBracket);
-    int line = sourceLocManager->getLine(pobcppEnumSpec->endSquareBracket);
-    if(iline == line) {
-      int col = sourceLocManager->getCol(pobcppEnumSpec->endSquareBracket);
-      int stringSize = sourceLocManager->getCol(pobcppEnumSpec->endSquareBracket) - sourceLocManager->getCol(pobcppEnumSpec->beginSquareBracket)+1;
-      PobcppPatch* erase = new PobcppPatch(Erase, string(), col+1 , stringSize);
-      (patchess[iline]).push_back(erase);
-    }
-    else {
-      int col = sourceLocManager->getCol(pobcppEnumSpec->beginSquareBracket);
-      PobcppPatch* erase1 = new PobcppPatch(Erase, string(), col , 0);
-      (patchess[iline]).push_back(erase1);
-      iline++;
-      while(iline < line) {
-        PobcppPatch* erase = new PobcppPatch(Erase, string(), 1 , 0);
-        (patchess[iline]).push_back(erase);
-        iline++;
-      }
-      col = sourceLocManager->getCol(pobcppEnumSpec->endSquareBracket);
-      PobcppPatch* erase2 = new PobcppPatch(Erase, string(), col-1 , 0);
-      (patchess[line]).push_back(erase2);
-      //FIXME
-      // Here we are not removing correctly!
-    }
-  }
-}
-
-
-
 void Pobcpp::appendPobTypeArrayFunc(TS_classSpec* spec, int iline, std::string::size_type found, unsigned int units) {
   //FIXME
   return;
@@ -243,22 +195,6 @@ void Pobcpp::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::
     PobcppPatch* insert = new PobcppPatch(Insert, std::string(" ,virtual public Pobcpp::Unit "), found);
     (patchess[line]).push_back(insert);
   }
-}
-
-bool Pobcpp::removeUnitDecl(SourceLoc loc) {
-  using std::string;
-  int iline = sourceLocManager->getLine(loc);
-  int col = sourceLocManager->getCol(loc);
-  string sline;
-  string::size_type found;
-
-  sline = getLine(iline);
-
-  PobcppPatch* erase = new PobcppPatch(Erase, string(), col+4, 4);
-  PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col);
-  (patchess[iline]).push_back(erase);
-  (patchess[iline]).push_back(insert);
-  return true;
 }
 
 unsigned int Pobcpp::countUnits(ASTList<Member> *memberList) {

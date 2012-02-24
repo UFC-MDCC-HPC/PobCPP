@@ -22,7 +22,9 @@ class PrePObCppVisitor : public ExpressionVisitor {
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   virtual bool visitIDeclarator(IDeclarator* idecl);
   virtual bool visitFunction(Function* func);
+	virtual bool visitExpression(Expression* exp);
   void removeCommunicatorDecl(D_func* dfunc, int noparams, bool body);
+  void appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found);
 
 	Patcher &patcher;
 	std::string file;

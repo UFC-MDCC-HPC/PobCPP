@@ -22,52 +22,16 @@ public:
 
 	virtual bool visitTypeSpecifier(TypeSpecifier *type);
 	virtual bool subvisitTS_classSpec(TS_classSpec *spec);
-	virtual bool subvisitTS_elaborated(TS_elaborated *spec);
-  virtual bool visitMember(Member *member);
 	virtual bool visitExpression(Expression* exp);
 
   std::vector<ClassAndUnit> classes; // PObC++ modification.
 
 private:
   std::string getLine(int line);
-  /**
-   * Modify lines to exclude enumerators declarations.
-   * @param enumCount Quantity of enumerators to be excluded.
-   * @param loc Initial localization.
-   */
-  void removeEnumeratorDecls(TS_classSpec *spec);
 	
-  /**
-   * Modify line to include enumerator information.
-   * @param spec Current unit.
-   * @param line Line with first '{'
-   * @param found Column to insert
-   */
   void createEnumerator(TS_classSpec *spec);
-  /**
-   * Modify line to include the reflective function '__get_types()'.
-   * @param spec Current unit
-   * @param line Line
-   * @param found Column to insert
-   * @param units Number of units
-   */
   void appendPobTypeArrayFunc(TS_classSpec *spec, int line, std::string::size_type found, unsigned int units);
-  /**
-   * Modify line to include 'Pobcpp::Unit' as base class.
-   * @param bool Is there a base class already?
-   * @param line Line
-   * @param found Column to insert
-   */
   void appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found);
-  /**
-   * Modify line to replace 'unit' for 'class'
-   * @param loc (Line+Column) from ELSA pointing to a 'unit' keyword
-   */
-	bool removeUnitDecl(SourceLoc loc);
-  /**
-   * Helper function to count how many units a parallel class has.
-   * @param memberList ELSA's structure
-   */
   unsigned int countUnits(ASTList<Member> *memberList);
 
 	Patcher &patcher;
