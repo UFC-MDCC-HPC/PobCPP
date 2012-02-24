@@ -1,7 +1,5 @@
 class A { };
-unit KK { }; unit KKK { };
 class B {
-	B() { }
 	unit C : public A { };	unit D { };	unit E {
 
 	};
@@ -16,9 +14,10 @@ int main() {
 
 }
 void func() [Communicator comm];
-void func(int a, int b)  [Communicator comma] 
+void func1(int a) [Communicator comm];
+void func2(int a, int b) [Communicator comm];
+void func(int a, int b, int c)  [Communicator comm] 
 {
-	sizeof(comma);
 	int* array;
 	ranksof(B::F, commun, array);
 	ranksof(B::K, array);

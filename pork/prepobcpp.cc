@@ -133,7 +133,7 @@ bool PrePObCppVisitor::visitFunction(Function* func) {
   }
   IDeclarator* idecl = func->nameAndParams->decl;
   if(idecl->isD_func()) {
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, true);
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count(), true);
   }
 
   return true;
@@ -141,16 +141,16 @@ bool PrePObCppVisitor::visitFunction(Function* func) {
 
 bool PrePObCppVisitor::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count()-1, false);
+    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count(), false);
   return true;
 }
 
-void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, bool noparams, bool body) {
+void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, int params, bool body) {
   if(func->inspected)
     return;
   using std::string;
   #ifdef POBCPPDEBUG
-  std::cout << "removeCommunicator() call" << std::endl;
+  std::cerr << "removeCommunicator() call" << std::endl;
   #endif
   if(func->comm == 0)
     return;
@@ -177,8 +177,8 @@ void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, bool noparams, bool 
 
   PobcppPatch* erase3 = new PobcppPatch(Erase, string(), endParenthesisCol+1, 1);
   (patchess[endParenthesisLine]).push_back(erase3);
-  if(!noparams) {
-    PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+1);
+  if(params) {
+    PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+2);
     (patchess[endParenthesisLine]).push_back(insert3);
   }
   #ifdef POBCPPDEBUG

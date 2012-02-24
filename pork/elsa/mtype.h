@@ -161,7 +161,8 @@ private:     // funcs
 
 
 // the public interface
-class MType : protected IMType {
+//class MType : protected IMType {
+class MType : public IMType {
 private:     // funcs
   // This flag is true if the client is using the non-const interface.
   //
