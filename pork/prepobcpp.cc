@@ -156,48 +156,71 @@ bool PrePObCppVisitor::visitIDeclarator(IDeclarator* idecl) {
 
 bool PrePObCppVisitor::visitExpression(Expression* exp) {
   using std::string;
-  if(!(exp->kind() == Expression::E_RANKSOF))
-    return false;
-  E_ranksof* e_ranksof = dynamic_cast<E_ranksof*>(exp);
-  int beginParentCol = sourceLocManager->getCol(e_ranksof->beginParenthesis);
-  int beginParentLine = sourceLocManager->getLine(e_ranksof->beginParenthesis);
-  int endParentCol = sourceLocManager->getCol(e_ranksof->endParenthesis);
-  int endParentLine = sourceLocManager->getLine(e_ranksof->endParenthesis);
-  int commaCol = sourceLocManager->getCol(e_ranksof->comma);
-  int commaLine = sourceLocManager->getLine(e_ranksof->comma);
+	if(exp->kind() == Expression::E_FUNCALL) {
+		E_funCall* e_funCall = dynamic_cast<E_funCall*>(exp);
+		if(e_funCall != NULL)
+			if(e_funCall->commCall != NULL) {
+				PobcppCommunicatorCall* commCall = e_funCall->commCall;
+				int beginCol = sourceLocManager->getCol(commCall->b1SquareBracket);
+				int beginLine = sourceLocManager->getLine(commCall->b1SquareBracket);
+				int endCol = sourceLocManager->getCol(commCall->e1SquareBracket);
+				int endLine = sourceLocManager->getLine(commCall->e1SquareBracket);
+				PobcppPatch* erase1 = new PobcppPatch(Erase, string(), beginCol+2, 3); //FIXME We should remove ( too, but here we just assume his position
+				(patchess[beginLine]).push_back(erase1);
+				if(e_funCall->args->count()) {
+					PobcppPatch* insert = new PobcppPatch(Insert, string(","), beginCol+2); 
+					(patchess[beginLine]).push_back(insert);
+					std::cerr << "Inserint ',' - count()" << e_funCall->args->count() << std::endl;
+				}
+				PobcppPatch* erase2 = new PobcppPatch(Erase, string(), endCol+2, 2);
+				(patchess[endLine]).push_back(erase2);
+				PobcppPatch* insert = new PobcppPatch(Insert, string(")"), endCol+2); 
+				(patchess[endLine]).push_back(insert);
+				std::cerr << "Found a call to commCall: " << beginLine << "," << beginCol << std::endl;
+			}
+	}
+	else if((exp->kind() == Expression::E_RANKSOF)) {
+		E_ranksof* e_ranksof = dynamic_cast<E_ranksof*>(exp);
+		int beginParentCol = sourceLocManager->getCol(e_ranksof->beginParenthesis);
+		int beginParentLine = sourceLocManager->getLine(e_ranksof->beginParenthesis);
+		int endParentCol = sourceLocManager->getCol(e_ranksof->endParenthesis);
+		int endParentLine = sourceLocManager->getLine(e_ranksof->endParenthesis);
+		int commaCol = sourceLocManager->getCol(e_ranksof->comma);
+		int commaLine = sourceLocManager->getLine(e_ranksof->comma);
 
-  PobcppPatch* erase1 = new PobcppPatch(Erase, string(), beginParentCol+1, 1);
-  (patchess[beginParentLine]).push_back(erase1);
-  PobcppPatch* insert1 = new PobcppPatch(Insert, string("_<"), beginParentCol+1);
-  (patchess[beginParentLine]).push_back(insert1);
-  PobcppPatch* erase2 = new PobcppPatch(Erase, string(), endParentCol+1, 1);
-  (patchess[endParentLine]).push_back(erase2);
-  if(!e_ranksof->singleUnit || !e_ranksof->implicit) {
-    PobcppPatch* erase2 = new PobcppPatch(Erase, string(), commaCol+1, 1);
-    (patchess[commaLine]).push_back(erase2);
-  } else {
-    
-  }
-  
-  if(e_ranksof->implicit) {	
-    if(!e_ranksof->singleUnit) {
-      PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, "), commaCol+1); //FIXME comm must be the communicator identifier of the function
-      (patchess[commaLine]).push_back(insert2);
-    } else {
-      PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm"), endParentCol+1); //FIXME comm must be the communicator identifier of the function
-      (patchess[endParentLine]).push_back(insert2);
-      
-    }
-    PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
-    (patchess[endParentLine]).push_back(insert3);
-  }
-  else {
-    PobcppPatch* insert2 = new PobcppPatch(Insert, string(">("), commaCol+1);
-    (patchess[commaLine]).push_back(insert2);
-    PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
-    (patchess[endParentLine]).push_back(insert3);
-  }
-  return true;
+		PobcppPatch* erase1 = new PobcppPatch(Erase, string(), beginParentCol+1, 1);
+		(patchess[beginParentLine]).push_back(erase1);
+		PobcppPatch* insert1 = new PobcppPatch(Insert, string("_<"), beginParentCol+1);
+		(patchess[beginParentLine]).push_back(insert1);
+		PobcppPatch* erase2 = new PobcppPatch(Erase, string(), endParentCol+1, 1);
+		(patchess[endParentLine]).push_back(erase2);
+		if(!e_ranksof->singleUnit || !e_ranksof->implicit) {
+			PobcppPatch* erase2 = new PobcppPatch(Erase, string(), commaCol+1, 1);
+			(patchess[commaLine]).push_back(erase2);
+		} else {
+			
+		}
+		
+		if(e_ranksof->implicit) {	
+			if(!e_ranksof->singleUnit) {
+				PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm, "), commaCol+1); //FIXME comm must be the communicator identifier of the function
+				(patchess[commaLine]).push_back(insert2);
+			} else {
+				PobcppPatch* insert2 = new PobcppPatch(Insert, string(">(comm"), endParentCol+1); //FIXME comm must be the communicator identifier of the function
+				(patchess[endParentLine]).push_back(insert2);
+				
+			}
+			PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
+			(patchess[endParentLine]).push_back(insert3);
+		}
+		else {
+			PobcppPatch* insert2 = new PobcppPatch(Insert, string(">("), commaCol+1);
+			(patchess[commaLine]).push_back(insert2);
+			PobcppPatch* insert3 = new PobcppPatch(Insert, string(", Unit_Type(this))"), endParentCol+1);
+			(patchess[endParentLine]).push_back(insert3);
+		}
+	}
+		return true;
 }
 
 void PrePObCppVisitor::appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found) {

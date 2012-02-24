@@ -409,6 +409,14 @@ class PobcppCommunicatorSpec (
 	public PobcppCommunicatorSpec();
 }
 
+class PobcppCommunicatorCall (
+  StringRef name,
+	SourceLoc b1SquareBracket,
+	SourceLoc b2SquareBracket,
+	SourceLoc e1SquareBracket,
+	SourceLoc e2SquareBracket
+) { }
+
 // inner declarator; things *recursively* buried inside declarators;
 // cannot have initializers; the internal structure can be ignored
 // once typechecking determines what type is denoted
@@ -636,7 +644,9 @@ class Expression(SourceLoc loc, SourceLoc endloc)  {
   // 1/30/04: split E_this off so now 'name' is never "this"
   -> E_variable(PQName name);
 
-  -> E_funCall(Expression func, FakeList<ArgExpression> *args);
+  -> E_funCall(Expression func, FakeList<ArgExpression> *args) {
+		public PobcppCommunicatorCall *commCall = NULL;
+	}
 
   // call to constructor as an expression; the expression's overall
   // type says which type is being constructed

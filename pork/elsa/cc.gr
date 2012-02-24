@@ -410,8 +410,11 @@ nonterm(Expression*) PostfixExpression {
        { return new E_binary(EXPR_LOC(loc ENDLOCARG(endloc)) a, BIN_BRACKETS, e); }
 
   // fn call
-  -> f:PostfixExpression a:ArgumentList
-       { return new E_funCall(EXPR_LOC(loc ENDLOCARG(endloc)) f, a); }
+  -> f:PostfixExpression a:ArgumentList comm:PobcppCommClauseCallOpt
+       { E_funCall* e = new E_funCall(EXPR_LOC(loc ENDLOCARG(endloc)) f, a);
+				 e->commCall = comm;
+			   return e;
+			 }
 
   // cppstd has two things with "typename", but I can't find anyplace
   // where their semantics are spelled out.. I have some code from
@@ -1765,7 +1768,7 @@ nonterm(Declarator*) ParameterDeclarator {
        { return new Declarator(d, new IN_expr(loc, e)); }
 }
 
-// PObC++ Enumerator 
+// PObC++ Communicator Clause Decl
 nonterm(PobcppCommunicatorSpec*) PobcppCommClauseOpt {
   -> empty                               
      { return NULL; }
@@ -1777,6 +1780,14 @@ nonterm(PobcppCommunicatorSpec*) PobcppCommClauseOpt {
 		 }
 }
 
+// PObC++ Communicator Clause Call
+nonterm(PobcppCommunicatorCall*) PobcppCommClauseCallOpt {
+  -> empty                               
+     { return NULL; }
+ 	-> beg1:beginSquareBracket beg2:beginSquareBracket i:Identifier 
+		 end1:endSquareBracket end2:endSquareBracket
+     { return new PobcppCommunicatorCall(i, beg1, beg2, end1, end2);}
+}
 
 // -- function definition --
 nonterm(Function*) FunctionDefinition {

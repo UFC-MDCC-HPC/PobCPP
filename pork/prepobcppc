@@ -17,13 +17,13 @@ if [ -e $src ]; then
   echo $prepobcppexecutable "$temp"".ii" "$temp"
   $prepobcppexecutable "$temp"".ii" "$temp" > "$temp"".patch"
   cp "$temp" "$src"".patched.cpp"
-	rm "$temp"".ii" "$temp"
+#	rm "$temp"".ii" "$temp"
   cp "$src" "$src"".patched.cpp"
   patch --quiet "$src"".patched.cpp" "$temp"".patch"
-  rm "$temp"".patch"
+#  rm "$temp"".patch"
 	touch $temp2
 	cat "$src"".patched.cpp" > $temp2
-	rm "$src"".patched.cpp"
+#	rm "$src"".patched.cpp"
 #  echo $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 #  $pobcppexecutable "$temp2" $2 $3 $4 $5 $6 $7 $8 $9
 	echo $temp2 " generated."
