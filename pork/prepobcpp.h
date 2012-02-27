@@ -23,8 +23,8 @@ class PrePObCppVisitor : public ExpressionVisitor {
   virtual void postvisitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   virtual bool visitIDeclarator(IDeclarator* idecl);
-  virtual void postvisitIDeclarator(IDeclarator* idecl);
   virtual bool visitFunction(Function* func);
+	virtual void postvisitFunction(Function* func);
 	virtual bool visitExpression(Expression* exp);
   void removeCommunicatorDecl(D_func* dfunc, int noparams, bool body);
   void appendPobunitBaseClass(bool firstBaseClass, int line,
@@ -36,7 +36,7 @@ class PrePObCppVisitor : public ExpressionVisitor {
   // Clear patchess on object destruction.
 	std::map<int, std::vector<PobcppPatch*> > patchess;
 	std::stack<TS_classSpec*> sclass;
-	std::stack<D_func*> sfuncs;
+	std::stack<Function*> sfuncs;
 	std::map<TS_classSpec*, std::vector<IDeclarator*> > classDecl;
 
 };

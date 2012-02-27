@@ -154,24 +154,21 @@ bool PrePObCppVisitor::visitFunction(Function* func) {
   if(idecl->isD_func()) {
     removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count(), true);
   }
-
+	sfuncs.push(func);
   return true;
 }
 
+void PrePObCppVisitor::postvisitFunction(Function* func) {
+	sfuncs.pop();
+}
 bool PrePObCppVisitor::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func()) {
 		D_func* dfunc = idecl->asD_func();
-		sfuncs.push(dfunc);
     removeCommunicatorDecl(dfunc, dfunc->params->count(), false);
 		if((!sclass.empty()) && (dfunc->comm != NULL))
 			classDecl[sclass.top()].push_back(dfunc);
 	}
   return true;
-}
-
-void PrePObCppVisitor::postvisitIDeclarator(IDeclarator* idecl) {
-	if(idecl->isD_func())
-			sfuncs.pop();
 }
 
 //FIXME create visitE_funcall() function;
@@ -223,16 +220,20 @@ bool PrePObCppVisitor::visitExpression(Expression* exp) {
 							//FIXME check args
 							//Create patch
 							if(!sfuncs.empty()) {
-								D_func* currentFunc = sfuncs.top();
+								Function* func = sfuncs.top();
+								D_func* currentFunc = func->nameAndParams->decl->asD_func();
 								if(currentFunc->comm != 0) {
 									std::cerr << "Miracle" << std::endl;
-									PQ_name* curFuncName = currentFunc->base->asD_name()->name->asPQ_name();
+									string commAdd = currentFunc->comm->name;
+									if(e_funCall->args->count())
+										commAdd = "," + commAdd;
 									int col = sourceLocManager->getCol(exp->endloc);
 									int line = sourceLocManager->getLine(exp->endloc);
-									PobcppPatch* insert = new PobcppPatch(Insert, string(curFuncName->name), col+1);
+									PobcppPatch* insert = new PobcppPatch(Insert, commAdd, col-1);
 									(patchess[line]).push_back(insert);
 								}
-							}
+							} else
+								std::cerr << "sfuncs empty" << std::endl;
 							break;
 						}
 					}
