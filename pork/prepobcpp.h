@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <stack>
 #include "patcher.h"
 #include "pobpatch.h"
 #include "expr_visitor.h"
@@ -19,18 +20,24 @@ class PrePObCppVisitor : public ExpressionVisitor {
 	private:
   std::string getLine(int line) const;
   virtual bool visitTypeSpecifier(TypeSpecifier *type);
+  virtual void postvisitTypeSpecifier(TypeSpecifier *type);
   virtual bool subvisitTS_classSpec(TS_classSpec *spec);
   virtual bool visitIDeclarator(IDeclarator* idecl);
+  virtual void postvisitIDeclarator(IDeclarator* idecl);
   virtual bool visitFunction(Function* func);
 	virtual bool visitExpression(Expression* exp);
   void removeCommunicatorDecl(D_func* dfunc, int noparams, bool body);
-  void appendPobunitBaseClass(bool firstBaseClass, int line, std::string::size_type found);
+  void appendPobunitBaseClass(bool firstBaseClass, int line,
+			                        std::string::size_type found);
 
 	Patcher &patcher;
 	std::string file;
   // TODO
   // Clear patchess on object destruction.
 	std::map<int, std::vector<PobcppPatch*> > patchess;
+	std::stack<TS_classSpec*> sclass;
+	std::stack<D_func*> sfuncs;
+	std::map<TS_classSpec*, std::vector<IDeclarator*> > classDecl;
 
 };
 

@@ -1,3 +1,6 @@
+2012-27-02 Eduardo Gurgel <edgurgel@gmail.com>
+* Initial code to complete functions with Communicator arguments.
+
 2012-24-02 Eduardo Gurgel <edgurgel@gmail.com>
 * CommClauseCall initial development. Bugfixes incoming.
 

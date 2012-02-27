@@ -13,6 +13,8 @@
 #include "expr_visitor.h"
 #include "elsa/pobcpp.h"
 
+//#define POBCPPDEBUG
+
 PrePObCppVisitor::PrePObCppVisitor(Patcher &patcher) : patcher(patcher) { } 
 
 PrePObCppVisitor::~PrePObCppVisitor() {
@@ -93,6 +95,13 @@ bool PrePObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   }
   return true;
 }
+
+void PrePObCppVisitor::postvisitTypeSpecifier(TypeSpecifier *type) {
+  if (type->isTS_classSpec()) 
+		if(type->asTS_classSpec()->keyword == TI_UNIT)
+			sclass.pop();
+}
+
 bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
   // check if attributes or methods are declared.
   // Include them on inner units.
@@ -125,6 +134,7 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
 	else if(spec->keyword == TI_UNIT) { // unit?
+		sclass.push(spec); // Taking note of each unit/function list
     int inheritance = !(spec->bases->count());
     int iline = sourceLocManager->getLine(spec->beginBracket);
     int col = sourceLocManager->getCol(spec->beginBracket);
@@ -149,17 +159,28 @@ bool PrePObCppVisitor::visitFunction(Function* func) {
 }
 
 bool PrePObCppVisitor::visitIDeclarator(IDeclarator* idecl) {
-  if (idecl->isD_func())
-    removeCommunicatorDecl(idecl->asD_func(), idecl->asD_func()->params->count(), false);
+  if (idecl->isD_func()) {
+		D_func* dfunc = idecl->asD_func();
+		sfuncs.push(dfunc);
+    removeCommunicatorDecl(dfunc, dfunc->params->count(), false);
+		if((!sclass.empty()) && (dfunc->comm != NULL))
+			classDecl[sclass.top()].push_back(dfunc);
+	}
   return true;
 }
 
+void PrePObCppVisitor::postvisitIDeclarator(IDeclarator* idecl) {
+	if(idecl->isD_func())
+			sfuncs.pop();
+}
+
+//FIXME create visitE_funcall() function;
 bool PrePObCppVisitor::visitExpression(Expression* exp) {
   using std::string;
 	if(exp->kind() == Expression::E_FUNCALL) {
 		E_funCall* e_funCall = dynamic_cast<E_funCall*>(exp);
-		if(e_funCall != NULL)
-			if(e_funCall->commCall != NULL) {
+		if(e_funCall != NULL) {
+			if(e_funCall->commCall != NULL) { // func(...) [[comm]]
 				PobcppCommunicatorCall* commCall = e_funCall->commCall;
 				int beginCol = sourceLocManager->getCol(commCall->b1SquareBracket);
 				int beginLine = sourceLocManager->getLine(commCall->b1SquareBracket);
@@ -178,6 +199,46 @@ bool PrePObCppVisitor::visitExpression(Expression* exp) {
 				(patchess[endLine]).push_back(insert);
 				std::cerr << "Found a call to commCall: " << beginLine << "," << beginCol << std::endl;
 			}
+			else { // func(...)
+				if(!sclass.empty()) {
+					std::vector<IDeclarator*> funcs = classDecl[sclass.top()];
+					PQ_name* funcallName = NULL;
+					if(e_funCall->func->isE_variable()) {
+						E_variable* evar = e_funCall->func->asE_variable();
+						if(evar->name->isPQ_name()) {
+							std::cerr << "E_funcall called: " << evar->name->asPQ_name()->name << std::endl;
+							funcallName = evar->name->asPQ_name();
+						}
+					}
+					if(sclass.top()->name->isPQ_name()) {
+						std::cerr << "Functions from " << sclass.top()->name->asPQ_name()->name << std::endl;
+					}
+					//FIXME need to check funcallName nullness
+					for(unsigned int i = 0; i < funcs.size(); i++) {
+						D_func* dfunc = funcs[i]->asD_func();;
+						std::cerr << "Checking D_func: " << dfunc->base->asD_name()->name->asPQ_name()->name << std::endl;
+						PQ_name* defFuncName = dfunc->base->asD_name()->name->asPQ_name();
+						if(string(defFuncName->name) == string(funcallName->name)) {
+							std::cerr << "Equal names" << std::endl;
+							//FIXME check args
+							//Create patch
+							if(!sfuncs.empty()) {
+								D_func* currentFunc = sfuncs.top();
+								if(currentFunc->comm != 0) {
+									std::cerr << "Miracle" << std::endl;
+									PQ_name* curFuncName = currentFunc->base->asD_name()->name->asPQ_name();
+									int col = sourceLocManager->getCol(exp->endloc);
+									int line = sourceLocManager->getLine(exp->endloc);
+									PobcppPatch* insert = new PobcppPatch(Insert, string(curFuncName->name), col+1);
+									(patchess[line]).push_back(insert);
+								}
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 	else if((exp->kind() == Expression::E_RANKSOF)) {
 		E_ranksof* e_ranksof = dynamic_cast<E_ranksof*>(exp);
@@ -235,16 +296,16 @@ void PrePObCppVisitor::appendPobunitBaseClass(bool firstBaseClass, int line, std
 }
 
 void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, int params, bool body) {
-  if(func->inspected)
-    return;
-  using std::string;
   #ifdef POBCPPDEBUG
   std::cerr << "removeCommunicator() call" << std::endl;
   #endif
+  if(func->inspected)
+    return;
   if(func->comm == 0)
     return;
   if(!func->comm->defined)
     return;
+  using std::string;
   string typeName = func->comm->typeId->spec->asTS_name()->name->asPQ_name()->name;
   int endParenthesisCol = sourceLocManager->getCol(func->endParenthesis);
   int endParenthesisLine = sourceLocManager->getLine(func->endParenthesis);
@@ -270,10 +331,10 @@ void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, int params, bool bod
     PobcppPatch* insert3 = new PobcppPatch(Insert, string(","), endParenthesisCol+2);
     (patchess[endParenthesisLine]).push_back(insert3);
   }
-  #ifdef POBCPPDEBUG
-  std::cout << "removeCommunicator() end" << std::endl;
-  #endif
   func->inspected = true;
+  #ifdef POBCPPDEBUG
+  std::cerr << "removeCommunicator() end" << std::endl;
+  #endif
   return;
 }
 
