@@ -16,6 +16,7 @@ class PrePObCppVisitor : public ExpressionVisitor {
   ~PrePObCppVisitor();
   void setFile(const char* _file) { file = _file;	}
   std::string getMember(Member *member) const;
+	std::map<TS_classSpec*, std::vector<IDeclarator*> >* classDecl;
 	
 	private:
   std::string getLine(int line) const;
@@ -37,7 +38,6 @@ class PrePObCppVisitor : public ExpressionVisitor {
 	std::map<int, std::vector<PobcppPatch*> > patchess;
 	std::stack<TS_classSpec*> sclass;
 	std::stack<Function*> sfuncs;
-	std::map<TS_classSpec*, std::vector<IDeclarator*> > classDecl;
 
 };
 

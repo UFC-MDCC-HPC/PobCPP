@@ -8,7 +8,9 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include <string>
+#include "pobcpp1st.h"
 #include "patcher.h"
 #include "expr_visitor.h"
 #include "elsa/pobcpp.h"
@@ -97,7 +99,7 @@ bool PrePObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
 }
 
 void PrePObCppVisitor::postvisitTypeSpecifier(TypeSpecifier *type) {
-  if (type->isTS_classSpec()) 
+	if(type->isTS_classSpec())
 		if(type->asTS_classSpec()->keyword == TI_UNIT)
 			sclass.pop();
 }
@@ -134,7 +136,7 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
 	else if(spec->keyword == TI_UNIT) { // unit?
-		sclass.push(spec); // Taking note of each unit/function list
+		sclass.push(spec);
     int inheritance = !(spec->bases->count());
     int iline = sourceLocManager->getLine(spec->beginBracket);
     int col = sourceLocManager->getCol(spec->beginBracket);
@@ -165,8 +167,6 @@ bool PrePObCppVisitor::visitIDeclarator(IDeclarator* idecl) {
   if (idecl->isD_func()) {
 		D_func* dfunc = idecl->asD_func();
     removeCommunicatorDecl(dfunc, dfunc->params->count(), false);
-		if((!sclass.empty()) && (dfunc->comm != NULL))
-			classDecl[sclass.top()].push_back(dfunc);
 	}
   return true;
 }
@@ -188,17 +188,17 @@ bool PrePObCppVisitor::visitExpression(Expression* exp) {
 				if(e_funCall->args->count()) {
 					PobcppPatch* insert = new PobcppPatch(Insert, string(","), beginCol+2); 
 					(patchess[beginLine]).push_back(insert);
-					std::cerr << "Inserint ',' - count()" << e_funCall->args->count() << std::endl;
+//					std::cerr << "Inserint ',' - count()" << e_funCall->args->count() << std::endl;
 				}
 				PobcppPatch* erase2 = new PobcppPatch(Erase, string(), endCol+2, 2);
 				(patchess[endLine]).push_back(erase2);
 				PobcppPatch* insert = new PobcppPatch(Insert, string(")"), endCol+2); 
 				(patchess[endLine]).push_back(insert);
-				std::cerr << "Found a call to commCall: " << beginLine << "," << beginCol << std::endl;
+//				std::cerr << "Found a call to commCall: " << beginLine << "," << beginCol << std::endl;
 			}
 			else { // func(...)
 				if(!sclass.empty()) {
-					std::vector<IDeclarator*> funcs = classDecl[sclass.top()];
+					std::vector<IDeclarator*> funcs = (*classDecl)[sclass.top()];
 					PQ_name* funcallName = NULL;
 					if(e_funCall->func->isE_variable()) {
 						E_variable* evar = e_funCall->func->asE_variable();
@@ -344,10 +344,13 @@ void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, int params, bool bod
 int main(int argc, char **argv) {
   Patcher p;
   PrePObCppVisitor visitor(p);
+  Pobcpp1stPass firstPass;
   PigletParser parser(true);
 	for (int i = 1 ;i< argc;i+=2) {
     visitor.setFile(argv[i+1]);
     TranslationUnit *unit = parser.getASTNoExc(argv[i]);
+		unit->traverse(firstPass);
+		visitor.classDecl = &(firstPass.classDecl);
     unit->traverse(visitor);
   }
   return 0;

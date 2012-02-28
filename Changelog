@@ -1,3 +1,10 @@
+2012-28-02 Eduardo Gurgel <edgurgel@gmail.com>
+* 1st Pass Pobcpp Visitor implemented to store each function from each Unit on a
+Mapp
+* PrePobcppVisitor starts with this structure and use it to handle
+CommunicatorCalls
+* PrePobcppVisitor will turn in PObcpp2ndPass. 
+
 2012-27-02 Eduardo Gurgel <edgurgel@gmail.com>
 * Prototype working.
 

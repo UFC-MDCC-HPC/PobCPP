@@ -25,7 +25,7 @@ stopwatch: stopwatch.o $(LIBPORK)
 pobcpp: pobcpp.o  $(LIBPORK)
 	$(CXX) $(CXXFLAGS) -o $@ $+
 
-prepobcpp: prepobcpp.o  $(LIBPORK)
+prepobcpp: prepobcpp.o pobcpp1st.o $(LIBPORK)
 	$(CXX) $(CXXFLAGS) -o $@ $+
 
 piglet.o: piglet.h
