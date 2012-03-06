@@ -10,6 +10,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <exception>
 #include "pobcpp1st.h"
 #include "patcher.h"
 #include "expr_visitor.h"
@@ -26,32 +27,40 @@ PrePObCppVisitor::~PrePObCppVisitor() {
   using std::vector;
   string original_file = file;
   map<int, vector<PobcppPatch*> >::iterator iter;
-  for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
-    std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
-    vector<PobcppPatch*>::const_iterator viter;
-    int iline = iter->first;
-    std::string sline  = patcher.getLine(iline, file);
-    std::string line = sline;
-    int diff = 0;
-    for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
-      PobcppPatch* patch = *viter;
-      if(patch->kind == Insert) {
-        sline.insert(diff + patch->col-1, patch->str);
-        diff += patch->str.length();
-      }
-      else {
-        if(patch->erase == 0) {
-          sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
-        }
-        else {
-          diff -= patch->erase;
-          sline.erase(diff+ patch->col-1, patch->erase);
-        }
-      }
-    }
-    sline += " //";
-    patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
-  }
+	for(iter = patchess.begin(); iter != patchess.end(); ++iter ) {
+		std::sort(iter->second.begin(), iter->second.end(), PobcppPatchCmp());
+		vector<PobcppPatch*>::const_iterator viter;
+		int iline = iter->first;
+		std::string sline  = patcher.getLine(iline, file);
+		std::string line = sline;
+		int diff = 0;
+		try {
+			for(viter = iter->second.begin(); viter != iter->second.end(); ++viter) {
+				PobcppPatch* patch = *viter;
+				if(patch->kind == Insert) {
+					sline.insert(diff + patch->col-1, patch->str);
+					diff += patch->str.length();
+				}
+				else {
+					if(patch->erase == 0) {
+						sline.erase(diff+ patch->col-1, sline.size() - patch->col+1);
+					}
+					else {
+						diff -= patch->erase;
+						sline.erase(diff+ patch->col-1, patch->erase);
+					}
+				}
+			}
+		} catch(std::exception& e) {
+			std::cerr << "Caught exception during patching:" << std::endl;
+			std::cerr << e.what() << std::endl;
+			std::cerr << "Line number " << iline << ":" << std::endl;
+			std::cerr << sline << std::endl;
+			continue;
+		}
+		sline += " //";
+		patcher.insertBefore(original_file.c_str(), UnboxedLoc(iter->first, 1), sline);
+	}
   // FIXME
   patchess.clear();
 }
@@ -81,7 +90,7 @@ std::string PrePObCppVisitor::getMember(Member *member) const {
       } else if(i == endLine) {
         std::string line =  getLine(i);
         int size = line.size();
-        lines += line.substr(0, endCol);
+        lines += line.substr(0, endCol-1);
       }
       else {
         lines += getLine(i);
@@ -94,7 +103,9 @@ std::string PrePObCppVisitor::getMember(Member *member) const {
 bool PrePObCppVisitor::visitTypeSpecifier(TypeSpecifier *type) {
   if (type->isTS_classSpec()) {
     return subvisitTS_classSpec(type->asTS_classSpec());
-  }
+  } else if(type->isTS_elaborated()) {
+		return subvisitTS_elaborated(type->asTS_elaborated());
+	}
   return true;
 }
 
@@ -118,9 +129,15 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
             for(unsigned int i = 0; i < decls.size(); i++) {
               int col = sourceLocManager->getCol(unitSpec->beginBracket);
               int line = sourceLocManager->getLine(unitSpec->beginBracket);
-              std::string member = getMember(decls[i]) + " ";
-              PobcppPatch* insert1 = new PobcppPatch(Insert, member, col+1);
-              (patchess[line]).push_back(insert1);
+							try {
+	              std::string member = getMember(decls[i]) + " ";
+  	            PobcppPatch* insert1 = new PobcppPatch(Insert, member, col+1);
+    	          (patchess[line]).push_back(insert1);
+							} catch(std::exception& e) {
+								std::cerr << "Caught exception during getMember() call:" << std::endl;
+								std::cerr << e.what() << std::endl;
+								std::cerr << "Line " << line << std::endl;
+							}
             }
           }
         }
@@ -136,6 +153,7 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
     }
   }
 	else if(spec->keyword == TI_UNIT) { // unit?
+		removeUnitDecl(spec->loc);
 		sclass.push(spec);
     int inheritance = !(spec->bases->count());
     int iline = sourceLocManager->getLine(spec->beginBracket);
@@ -146,6 +164,14 @@ bool PrePObCppVisitor::subvisitTS_classSpec(TS_classSpec *spec) {
       appendPobunitBaseClass(inheritance, iline, col);
 	}
   return true;
+}
+
+bool PrePObCppVisitor::subvisitTS_elaborated(TS_elaborated *spec) {
+	using std::string;
+	if(spec->keyword == TI_UNIT) { // unit?
+		removeUnitDecl(spec->loc);
+	}
+	return true;
 }
 
 bool PrePObCppVisitor::visitFunction(Function* func) {
@@ -337,6 +363,20 @@ void PrePObCppVisitor::removeCommunicatorDecl(D_func* func, int params, bool bod
   std::cerr << "removeCommunicator() end" << std::endl;
   #endif
   return;
+}
+bool PrePObCppVisitor::removeUnitDecl(SourceLoc loc) {
+  using std::string;
+  int iline = sourceLocManager->getLine(loc);
+  int col = sourceLocManager->getCol(loc);
+  string sline;
+
+  sline = getLine(iline);
+
+  PobcppPatch* erase = new PobcppPatch(Erase, string(), col+4, 4);
+  PobcppPatch* insert = new PobcppPatch(Insert, std::string("class"), col-1);
+  (patchess[iline]).push_back(insert);
+  (patchess[iline]).push_back(erase);
+  return true;
 }
 
 

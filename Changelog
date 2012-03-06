@@ -1,3 +1,6 @@
+2012-05-03 Eduardo Gurgel <edgurgel@gmail.com>
+* Bugfixes
+
 2012-28-02 Eduardo Gurgel <edgurgel@gmail.com>
 * 1st Pass Pobcpp Visitor implemented to store each function from each Unit on a
 Mapp

@@ -17,7 +17,7 @@ class Farm {
 //		virtual void* packJob(Job* jobs);
 //		virtual Result unpackResult(void* result);
 	};
-	parallel unit Worker {                    
+	/*parallel*/ unit Worker {                    
 		public: 
 		Job* local_jobs1;
 		Job* local_jobs2;

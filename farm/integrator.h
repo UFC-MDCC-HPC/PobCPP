@@ -1,7 +1,7 @@
 #ifndef __INTEGRATOR_H__
 #define __INTEGRATOR_H__
 #include "farm.pob.h"
-
+#define parallel 
 double func(int dim_num, double* a);
 class Romberg_Integrator: public Farm<double, double> {
 	public:
@@ -20,7 +20,8 @@ class Romberg_Integrator: public Farm<double, double> {
 		void synchronize_results();
 	};
 
-	parallel unit Worker : virtual public Farm<double, double>::Worker	{
+	/*parallel*/ unit Worker : 
+		virtual public Farm<double, double>::Worker	{
 		public: 
 		Worker(double tol, int dim_num, int dim_partition_size, int number_of_partitions, int num_local_jobs, int i, int j);
 		int inf, sup, dim_num, dim_partition_size;

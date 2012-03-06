@@ -1,5 +1,6 @@
 class A { };
 class B {
+	int teste;
 	unit C : public A { };	unit D { };	unit E {
 
 	};
@@ -19,6 +20,7 @@ void func2(int a, int b) [Communicator comm];
 void func(int a, int b, int c)  [Communicator comm] 
 {
 	int* array;
+	unit B::C;
 	ranksof(B::F, commun, array);
 	ranksof(B::K, array);
 	rankof(B::C);

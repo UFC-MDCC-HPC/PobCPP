@@ -252,7 +252,7 @@ double	randlc( double *X, double *A );
 void full_verify( void );
 
 void c_print_results( char   *name,
-                      char   class,
+                      char   class_,
                       int    n1, 
                       int    n2,
                       int    n3,

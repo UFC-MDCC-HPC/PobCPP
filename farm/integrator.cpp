@@ -29,7 +29,6 @@ Romberg_Integrator::Worker::Worker(double tol, int dim_num, int dim_partition_si
 																																	  { i = _i; j = _j; }
 
 void Romberg_Integrator::Manager::generate_subproblems() {
-	std::cout << "generated begin" << std::endl;
 	int size = workers;
 	all_jobs1 = new double*[(workers)];
 	all_jobs2 = new double*[(workers)];
@@ -59,27 +58,19 @@ void Romberg_Integrator::Manager::generate_subproblems() {
 				break;
 		}
 	}
-	std::cout << "generated end" << std::endl;
 }
 double Romberg_Integrator::Manager::combine_subproblems_results() {
 	double result = 0.0;
-	std::cout << "calculate results" << std::endl;
 	for(int i = 0; i < num_local_jobs; ++i)
 		result += all_results[i];
-	std::cout << "local_result: " << result << std::endl;
 	return result;
 }
 
 void Romberg_Integrator::Manager::synchronize_jobs(){
 	unsigned int n = num_local_jobs*dim_num;
-	std::cout << "Workers: " << workers << std::endl;
 	for(unsigned int i = 0; i < workers; i++) {
-		std::cout << "Sending arrays - " << i << std::endl;
-//	create_unit<IntegratorMain>(&peer, i, size);
 		comm.isend(i+1, 100, all_jobs1[i], n);
 		comm.isend(i+1, 100, all_jobs2[i], n);
-//FIXME		comm->isend<Worker>(i, all_jobs1[i], n, 100);
-//FIXME		comm->isend<Worker>(i, all_jobs2[i], n, 100);
 	}
 }
 void Romberg_Integrator::Manager::synchronize_results() {
@@ -88,7 +79,6 @@ void Romberg_Integrator::Manager::synchronize_results() {
 		dummy_result[i] = 0.0;
 //	double* local_result = new double[num_local_jobs];
 	all_results = new double[num_local_jobs];
-//FIXME	comm->reduce<Manager>(dummy_result, num_local_jobs, all_results);
 	comm.reduce(dummy_result, num_local_jobs, all_results, MPI_SUM, 0);
 }
 
@@ -96,16 +86,11 @@ void Romberg_Integrator::Worker::synchronize_jobs() {
 	unsigned int n = num_local_jobs*dim_num;
 	local_jobs1 = new double[n]; 
 	local_jobs2 = new double[n]; 
-	std::cout << i << " - Receiving arrays." << std::endl;
 	comm.recv(0, 100, local_jobs1, n);
 	comm.recv(0, 100, local_jobs2, n);
-//FIXME	comm->receive<Manager, double>(local_jobs1, n, 100);
-//FIXME	comm->receive<Manager, double>(local_jobs2, n, 100);
-	std::cout << i << " - Arrays received." << std::endl;
 }
 
 void Romberg_Integrator::Worker::synchronize_results() {
-//FIXME	comm->reduce<Manager>(local_results, num_local_jobs);
 	comm.reduce(local_results, num_local_jobs, MPI_SUM, 0);
 }
 
